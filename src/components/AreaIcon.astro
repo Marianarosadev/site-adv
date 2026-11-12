@@ -1,0 +1,37 @@
+---
+// Ícones de linha fina (Lucide) para os cards de "Como posso ajudar".
+import receiptText from 'lucide-static/icons/receipt-text.svg?raw';
+import clock from 'lucide-static/icons/clock.svg?raw';
+import doorOpen from 'lucide-static/icons/door-open.svg?raw';
+import gavel from 'lucide-static/icons/gavel.svg?raw';
+import idCard from 'lucide-static/icons/id-card.svg?raw';
+import shieldAlert from 'lucide-static/icons/shield-alert.svg?raw';
+import hardHat from 'lucide-static/icons/hard-hat.svg?raw';
+import piggyBank from 'lucide-static/icons/piggy-bank.svg?raw';
+import triangleAlert from 'lucide-static/icons/triangle-alert.svg?raw';
+import baby from 'lucide-static/icons/baby.svg?raw';
+import type { AreaIconName } from '../data/site';
+
+const icons: Record<AreaIconName, string> = {
+  'receipt-text': receiptText,
+  clock,
+  'door-open': doorOpen,
+  gavel,
+  'id-card': idCard,
+  'shield-alert': shieldAlert,
+  'hard-hat': hardHat,
+  'piggy-bank': piggyBank,
+  'triangle-alert': triangleAlert,
+  baby,
+};
+
+interface Props {
+  name: AreaIconName;
+  class?: string;
+}
+
+const svg = icons[Astro.props.name]
+  .replace(/<!--[\s\S]*?-->/, '')
+  .replace('stroke-width="2"', 'stroke-width="1.5" aria-hidden="true" focusable="false"');
+---
+<span class:list={['area__icon', Astro.props.class]} set:html={svg} />

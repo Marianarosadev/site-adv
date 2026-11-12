@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://giovannacabral.adv.br/sitemap-index.xml

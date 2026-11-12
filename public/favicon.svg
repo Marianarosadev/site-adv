@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs><clipPath id="over"><rect x="26" y="33" width="38" height="31"/></clipPath></defs>
+  <rect width="64" height="64" rx="12" fill="#5e2230"/>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="34" paint-order="stroke" stroke-linejoin="round">
+    <text x="9" y="43" fill="#fcf7f5">G</text>
+    <text x="25" y="47" fill="#e0b3b9" stroke="#5e2230" stroke-width="3" font-size="30">C</text>
+    <text x="9" y="43" fill="#fcf7f5" clip-path="url(#over)">G</text>
+  </g>
+</svg>

@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+<Layout
+  title="Política de Privacidade | Dra. Giovanna Cabral, Advogada Trabalhista"
+  description="Como os dados pessoais enviados pelo site da Dra. Giovanna Cabral são tratados, conforme a Lei Geral de Proteção de Dados (LGPD)."
+>
+  <section class="page">
+    <div class="container prose">
+      <p class="eyebrow">Última atualização: novembro de 2026</p>
+      <h1>Política de Privacidade</h1>
+      <p>
+        Esta política explica como os dados pessoais enviados por este site são tratados, em conformidade com a Lei
+        Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD).
+      </p>
+
+      <h2>Quem é a responsável pelos dados</h2>
+      <p>
+        {site.fullName}, advogada inscrita na {site.oab}, com atendimento online.
+        Contato: <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+
+      <h2>Quais dados são coletados</h2>
+      <ul>
+        <li>
+          <strong>Formulário de contato:</strong> nome, número de WhatsApp, assunto e, se você quiser, uma breve
+          descrição. O formulário não armazena nada neste site: ele apenas monta a mensagem e abre o WhatsApp, onde você
+          decide se envia.
+        </li>
+        <li>
+          <strong>Mensagens pelo WhatsApp, telefone ou e-mail:</strong> as informações que você mesmo decidir enviar.
+        </li>
+        <li>
+          <strong>Dados de navegação:</strong> este site pode usar ferramentas de medição (como Google Analytics e Google
+          Ads) para entender quantas pessoas o visitam e quais anúncios funcionam. Quando essas ferramentas estiverem
+          ativas, você poderá aceitar ou recusar os cookies não essenciais.
+        </li>
+      </ul>
+
+      <h2>Para que os dados são usados</h2>
+      <ul>
+        <li>Responder ao seu contato e entender a sua situação.</li>
+        <li>Prestar os serviços jurídicos, se houver contratação.</li>
+        <li>Melhorar o site e medir o desempenho dos anúncios, de forma agregada.</li>
+      </ul>
+      <p>Os dados não são vendidos nem compartilhados para fins de marketing de terceiros.</p>
+
+      <h2>Sigilo profissional</h2>
+      <p>
+        Todas as informações recebidas são tratadas com o sigilo exigido pelo Estatuto da Advocacia e pelo Código de
+        Ética e Disciplina da OAB. Ainda assim, pedimos que você não envie documentos ou informações sigilosas antes do
+        primeiro retorno.
+      </p>
+
+      <h2>Por quanto tempo os dados são guardados</h2>
+      <p>
+        Pelo tempo necessário para responder ao contato e, havendo contratação, pelo prazo exigido por lei para a
+        guarda de documentos relacionados ao serviço prestado.
+      </p>
+
+      <h2>Seus direitos</h2>
+      <p>
+        Você pode pedir, a qualquer momento, a confirmação, o acesso, a correção ou a exclusão dos seus dados, além de
+        outras solicitações previstas no art. 18 da LGPD. Basta escrever para
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+
+      <h2>Serviços de terceiros</h2>
+      <p>
+        As conversas pelo WhatsApp seguem também a política de privacidade do WhatsApp (Meta). As ferramentas de medição
+        do Google seguem a política de privacidade do Google.
+      </p>
+    </div>
+  </section>
+</Layout>
