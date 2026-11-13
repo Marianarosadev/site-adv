@@ -4,6 +4,8 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import ContactCard from '../components/ContactCard.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
+// Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
+import fotoReuniao from '../assets/empresas-reuniao.jpg';
 import { site, whatsappEmpresa, telLink, firstMessageEmpresa, servicesEmpresa } from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
@@ -30,6 +32,9 @@ const stepsEmpresa = [
   publico="empresa"
 >
   <section class="lp-hero lp-hero--empresa">
+    <div class="lp-hero__bg" aria-hidden="true">
+      <Picture src={fotoReuniao} alt="" widths={[640, 1200, 1600]} sizes="100vw" formats={['avif', 'webp']} loading="eager" />
+    </div>
     <div class="container lp-hero__inner">
       <p class="eyebrow eyebrow--pill">Para empresas · Goiânia e online</p>
       <h1 class="display display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
@@ -78,7 +83,6 @@ const stepsEmpresa = [
     <div class="container">
       <div class="section-head">
         <h2 class="display display--md">Como funciona <span class="soft">o atendimento.</span></h2>
-        <p>{site.reply}</p>
       </div>
       <ol class="steps">
         {stepsEmpresa.map((s, i) => (

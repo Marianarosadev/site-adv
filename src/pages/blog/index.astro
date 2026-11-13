@@ -1,0 +1,97 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { site } from '../../data/site';
+import { getPosts, categories, categorySlug, postUrl } from '../../data/blog';
+
+const posts = await getPosts();
+const [featured, ...rest] = posts;
+// Só mostra no filtro as categorias que têm artigo publicado.
+const used = categories.filter((c) => posts.some((p) => p.data.category === c));
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `Artigos | ${site.fullName}`,
+    url: new URL('/blog/', Astro.site).href,
+    blogPost: posts.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.data.title,
+      url: new URL(postUrl(p), Astro.site).href,
+      datePublished: p.data.date.toISOString(),
+    })),
+  },
+];
+---
+<Layout
+  title="Artigos sobre Direito do Trabalho | Dra. Giovanna Cabral, OAB/GO 66.313"
+  description="Artigos com orientações claras sobre rescisão, horas extras, vínculo de emprego e outros temas do Direito do Trabalho, para trabalhadores e empresas."
+  schema={schema}
+>
+  <section class="blog-head">
+    <div class="container">
+      <p class="eyebrow eyebrow--pill">Artigos</p>
+      <h1 class="display display--lp">Direito do Trabalho <span class="soft">explicado com clareza.</span></h1>
+      <p class="blog-head__intro">
+        Textos informativos sobre os temas que mais geram dúvidas no dia a dia do trabalho, escritos por mim, {site.fullName}.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      {posts.length === 0 ? (
+        <p class="muted">Nenhum artigo publicado ainda.</p>
+      ) : (
+        <>
+          <nav class="blog-filter" aria-label="Filtrar por tema" data-blog-filter>
+            <button type="button" class="blog-filter__btn" aria-pressed="true" data-filter="todos">Todos</button>
+            {used.map((c) => (
+              <button type="button" class="blog-filter__btn" aria-pressed="false" data-filter={categorySlug(c)}>{c}</button>
+            ))}
+          </nav>
+          <ul class="posts" data-posts>
+            <PostCard post={featured} featured />
+            {rest.map((post) => <PostCard post={post} />)}
+          </ul>
+          <p class="muted blog-empty" data-blog-empty hidden>Nenhum artigo neste tema ainda.</p>
+        </>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Filtro por tema no próprio navegador; o tema escolhido vai para o endereço (?tema=) para poder ser compartilhado.
+  const filter = document.querySelector<HTMLElement>('[data-blog-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-posts] > li');
+  const empty = document.querySelector<HTMLElement>('[data-blog-empty]');
+
+  function apply(slug: string) {
+    let shown = 0;
+    filter?.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.filter === slug)),
+    );
+    cards.forEach((card) => {
+      const visible = slug === 'todos' || card.dataset.category === slug;
+      card.hidden = !visible;
+      if (visible) shown++;
+    });
+    // O destaque só fica grande na lista completa.
+    document.querySelector('[data-posts]')?.classList.toggle('posts--filtered', slug !== 'todos');
+    if (empty) empty.hidden = shown > 0;
+  }
+
+  const initial = new URLSearchParams(location.search).get('tema');
+  if (initial && filter?.querySelector(`[data-filter="${CSS.escape(initial)}"]`)) apply(initial);
+
+  filter?.addEventListener('click', (event) => {
+    const slug = (event.target as HTMLElement).closest<HTMLElement>('[data-filter]')?.dataset.filter;
+    if (!slug) return;
+    apply(slug);
+    const url = new URL(location.href);
+    if (slug === 'todos') url.searchParams.delete('tema'); else url.searchParams.set('tema', slug);
+    history.replaceState(null, '', url);
+  });
+</script>

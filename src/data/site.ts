@@ -12,7 +12,6 @@ export const site = {
   city: 'Goiânia/GO',
   // Trocar por "Especialista em Direito e Processo do Trabalho" se a cliente confirmar o certificado (decisão A5).
   title: 'Pós-graduada em Direito e Processo do Trabalho',
-  reply: 'Eu mesma leio e respondo, em geral no mesmo dia.',
   cna: 'https://cna.oab.org.br/',
   // Código do contêiner do Google Tag Manager (GTM-XXXXXXX). Vazio = nenhuma tag é carregada.
   gtmId: '',

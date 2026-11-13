@@ -1,0 +1,24 @@
+---
+import { postUrl, readingTime, formatDate, categorySlug, type Post } from '../data/blog';
+
+interface Props {
+  post: Post;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+const { title, description, date, category, audience } = post.data;
+---
+<li
+  class:list={['post-card', { 'post-card--featured': featured, 'post-card--empresa': audience === 'empresa' }]}
+  data-category={categorySlug(category)}
+>
+  <a href={postUrl(post)} class="post-card__link">
+    <span class="post-card__cat">{category}</span>
+    <h3 class="post-card__title">{title}</h3>
+    <p class="post-card__desc">{description}</p>
+    <span class="post-card__meta">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(post)}
+    </span>
+  </a>
+</li>

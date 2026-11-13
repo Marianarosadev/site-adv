@@ -6,6 +6,8 @@ import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
 import ContactCard from '../components/ContactCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../data/blog';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
@@ -14,6 +16,7 @@ import {
 } from '../data/site';
 
 const pad = (n: number) => String(n).padStart(2, '0');
+const latestPosts = (await getPosts()).slice(0, 3);
 
 // Foto do topo: mesmas opções no <Picture> e no preload, para o navegador baixar o arquivo certo o quanto antes.
 const heroWidths = [640, 1000, 1086];
@@ -319,6 +322,21 @@ const schema = [
     </div>
   </section>
 
+  <!-- 6b. Artigos recentes -->
+  {latestPosts.length > 0 && (
+    <section class="section" aria-labelledby="artigos-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="display" id="artigos-titulo">Artigos <span class="soft">recentes.</span></h2>
+          <a class="link-arrow" href="/blog/">Ver todos os artigos</a>
+        </div>
+        <ul class="posts posts--filtered reveal">
+          {latestPosts.map((post) => <PostCard post={post} />)}
+        </ul>
+      </div>
+    </section>
+  )}
+
   <!-- 7. Perguntas frequentes -->
   <section class="section" id="duvidas">
     <div class="container faq">
@@ -348,7 +366,7 @@ const schema = [
             precisa ter todos os documentos em mãos.
           </p>
           <ul class="next">
-            <li><b>Ao enviar a mensagem</b><span>{site.reply}</span></li>
+            <li><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
             <li><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
             <li><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
             <li><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
