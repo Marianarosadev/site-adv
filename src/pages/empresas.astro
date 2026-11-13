@@ -1,0 +1,108 @@
+---
+import { Picture } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import ContactCard from '../components/ContactCard.astro';
+import fotoPerfil from '../assets/giovanna-perfil.jpg';
+import { site, whatsappEmpresa, telLink, firstMessageEmpresa, servicesEmpresa } from '../data/site';
+
+// Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
+const wa = whatsappEmpresa();
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const moments = [
+  { title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e é preciso preparar a defesa no prazo.' },
+  { title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
+  { title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
+];
+
+const stepsEmpresa = [
+  { title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
+  { title: 'Analiso os documentos', text: 'Leio a reclamação e indico o que reunir para a defesa.' },
+  { title: 'Explico os caminhos', text: 'Defesa, acordo ou outra estratégia: você decide com informação clara.' },
+  { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
+];
+---
+<Layout
+  title="Advocacia Trabalhista para Empresas em Goiânia e Online | Dra. Giovanna Cabral, OAB/GO 66.313"
+  description="Defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
+  whatsapp={wa}
+  publico="empresa"
+>
+  <section class="lp-hero lp-hero--empresa">
+    <div class="container lp-hero__inner">
+      <p class="eyebrow eyebrow--pill">Para empresas · Goiânia e online</p>
+      <h1 class="display display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
+      <p class="lp-hero__intro">
+        Defesa da empresa na Justiça do Trabalho, do recebimento da notificação até o fim do processo, com
+        orientação clara em cada decisão.
+      </p>
+      <div class="hero__actions">
+        <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
+        <Button href={telLink} icon="phone" local="empresas-topo" publico="empresa">Ligar</Button>
+      </div>
+      <div class="cred">
+        <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
+        <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display display--md">Quando <span class="soft">me procurar.</span></h2>
+      </div>
+      <ul class="checks">
+        {moments.map((m) => (
+          <li class="check"><h3>{m.title}</h3><p>{m.text}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display display--md">Como posso <span class="soft">ajudar a empresa.</span></h2>
+      </div>
+      <ul class="diffs">
+        {servicesEmpresa.map((s) => (
+          <li class="diff"><h3>{s.title}</h3><p>{s.text}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display display--md">Como funciona <span class="soft">o atendimento.</span></h2>
+        <p>{site.reply}</p>
+      </div>
+      <ol class="steps">
+        {stepsEmpresa.map((s, i) => (
+          <li class="step">
+            <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="step__text">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <div class="contact-wrap" id="contato">
+    <section class="contact" aria-labelledby="contato-titulo">
+      <div class="container contact__grid">
+        <div>
+          <h2 class="display" id="contato-titulo">Vamos conversar <span class="soft">sobre o caso da empresa.</span></h2>
+          <p class="contact__intro">
+            Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.
+          </p>
+        </div>
+        <ContactCard whatsapp={wa} checklist={firstMessageEmpresa} publico="empresa" />
+      </div>
+    </section>
+  </div>
+</Layout>

@@ -1,19 +1,32 @@
 ---
 import '../styles/global.css';
+import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
-import { site, whatsappLink, areas } from '../data/site';
+import CookieBanner from '../components/CookieBanner.astro';
+import { site, whatsappLink, telLink, areas } from '../data/site';
 
 interface Props {
   title: string;
   description: string;
   schema?: object[];
+  // landing: página de destino de anúncio, sem menu de seções e com rodapé enxuto.
+  variant?: 'default' | 'landing';
+  // Mensagem e público dos botões fixos (cabeçalho, rodapé e flutuante).
+  whatsapp?: string;
+  tema?: string;
+  publico?: 'trabalhador' | 'empresa' | 'geral';
 }
 
-const { title, description, schema = [] } = Astro.props;
+const {
+  title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
+} = Astro.props;
+const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og-image.jpg', Astro.site);
 const home = Astro.url.pathname === '/' ? '' : '/';
+const gtm = site.gtmId;
 ---
 <!doctype html>
 <html lang="pt-BR">
@@ -25,12 +38,42 @@ const home = Astro.url.pathname === '/' ? '' : '/';
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#f7eeeb" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={newsreaderFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interFont} as="font" type="font/woff2" crossorigin />
+
+    <!-- Modo de Consentimento v2: tudo negado até a pessoa aceitar no banner. Precisa vir antes de qualquer tag. -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('consent', 'default', {
+        ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied',
+        wait_for_update: 500,
+      });
+      window.applyConsent = function (choice) {
+        var v = choice === 'granted' ? 'granted' : 'denied';
+        gtag('consent', 'update', { ad_storage: v, ad_user_data: v, ad_personalization: v, analytics_storage: v });
+      };
+      try {
+        var saved = localStorage.getItem('consentimento-cookies');
+        if (saved) window.applyConsent(saved);
+      } catch (e) {}
+    </script>
+    {gtm && (
+      <script is:inline define:vars={{ gtm }}>
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+          j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', gtm);
+      </script>
+    )}
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content={site.fullName} />
-    <meta property="og:title" content="Dra. Giovanna Cabral, Advogada Trabalhista em Goiânia" />
-    <meta property="og:description" content="Orientação clara sobre os seus direitos trabalhistas. Atendimento 100% online." />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
@@ -45,27 +88,38 @@ const home = Astro.url.pathname === '/' ? '' : '/';
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
+    {gtm && (
+      <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtm}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    )}
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-    <header class="header" data-header>
+    <header class:list={['header', { 'header--landing': landing }]} data-header>
       <div class="container header__inner">
-        <a class="brand" href={`${home}#topo`} aria-label={`${site.fullName}, página inicial`}>
+        <a class="brand" href={landing ? '/' : `${home}#topo`} aria-label={`${site.fullName}, página inicial`}>
           <span class="brand__mark" aria-hidden="true"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
           <span>
             <span class="brand__name">Giovanna Cabral</span>
-            <span class="brand__role">Advocacia Trabalhista</span>
+            <span class="brand__role">{landing ? `Advogada · ${site.oab}` : 'Advocacia Trabalhista'}</span>
           </span>
         </a>
-        <nav class="nav" aria-label="Seções">
-          <a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a>
-          <a href={`${home}#sobre`}>Sobre</a>
-          <a href={`${home}#como-funciona`}>Como funciona</a>
-          <a href={`${home}#duvidas`}>Dúvidas</a>
-          <a href={`${home}#contato`}>Contato</a>
-        </nav>
-        <Button href={whatsappLink()} icon="whatsapp">
-          <span class="btn__label-long">Falar no WhatsApp</span><span class="btn__label-short">WhatsApp</span>
-        </Button>
+        {!landing && (
+          <nav class="nav" aria-label="Seções">
+            <a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a>
+            <a href={`${home}#sobre`}>Sobre</a>
+            <a href={`${home}#como-funciona`}>Como funciona</a>
+            <a href={`${home}#duvidas`}>Dúvidas</a>
+            <a href="/empresas/">Para empresas</a>
+            <a href={`${home}#contato`}>Contato</a>
+          </nav>
+        )}
+        <div class="header__actions">
+          <a class="header__call" href={telLink} aria-label={`Ligar para ${site.phoneDisplay}`} data-local="cabecalho" data-tema={tema} data-publico={publico}>
+            <Icon name="phone" />
+          </a>
+          <Button href={whatsapp} icon="whatsapp" local="cabecalho" tema={tema} publico={publico}>
+            <span class="btn__label-long">Falar no WhatsApp</span><span class="btn__label-short">WhatsApp</span>
+          </Button>
+        </div>
       </div>
     </header>
 
@@ -73,38 +127,41 @@ const home = Astro.url.pathname === '/' ? '' : '/';
       <slot />
     </main>
 
-    <footer class="footer">
-      <div class="container footer__top">
-        <div>
-          <p class="footer__call">Fale direto com a advogada, sem intermediários.</p>
-          <a class="footer__phone" href={whatsappLink()} target="_blank" rel="noopener">{site.phoneShort}</a>
-          <p class="footer__call">WhatsApp · {site.hours}</p>
+    <footer class:list={['footer', { 'footer--landing': landing }]}>
+      {!landing && (
+        <div class="container footer__top">
+          <div>
+            <p class="footer__call">Fale direto com a advogada.</p>
+            <a class="footer__phone" href={whatsapp} target="_blank" rel="noopener" data-local="rodape" data-tema={tema} data-publico={publico}>{site.phoneShort}</a>
+            <p class="footer__call">WhatsApp · {site.hours.toLowerCase()}</p>
+          </div>
+          <div class="footer__cols">
+            <div>
+              <h2>Atendimento</h2>
+              <p>Online<br />{site.city} e todo o Brasil</p>
+              <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+            </div>
+            <div>
+              <h2>Áreas</h2>
+              <ul>
+                {areas.slice(0, 5).map((area) => (
+                  <li><a href={area.href ?? `/#area-${area.slug}`}>{area.title}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2>Site</h2>
+              <ul>
+                <li><a href={`${home}#sobre`}>Sobre</a></li>
+                <li><a href={`${home}#como-funciona`}>Como funciona</a></li>
+                <li><a href={`${home}#duvidas`}>Dúvidas</a></li>
+                <li><a href="/empresas/">Para empresas</a></li>
+                <li><a href="/politica-de-privacidade/">Política de privacidade</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="footer__cols">
-          <div>
-            <h2>Atendimento</h2>
-            <p>Online<br />{site.city} e todo o Brasil</p>
-            <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
-          </div>
-          <div>
-            <h2>Áreas</h2>
-            <ul>
-              {areas.slice(0, 5).map((area) => (
-                <li><a href={`${home}#como-posso-ajudar`}>{area.title}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2>Site</h2>
-            <ul>
-              <li><a href={`${home}#sobre`}>Sobre</a></li>
-              <li><a href={`${home}#como-funciona`}>Como funciona</a></li>
-              <li><a href={`${home}#duvidas`}>Dúvidas</a></li>
-              <li><a href="/politica-de-privacidade/">Política de privacidade</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      )}
       <div class="container footer__legal">
         <p>
           {site.fullName}, Advogada, {site.oab}. Conteúdo de caráter exclusivamente informativo, que não constitui
@@ -113,15 +170,29 @@ const home = Astro.url.pathname === '/' ? '' : '/';
         </p>
         <div class="footer__bottom">
           <span>© {new Date().getFullYear()} Giovanna Cabral</span>
+          {landing && <a href="/">Página inicial</a>}
           <a href="/politica-de-privacidade/">Política de privacidade</a>
+          <button type="button" class="footer__link-btn" data-cookie-prefs>Preferências de cookies</button>
         </div>
       </div>
-      <div class="footer__watermark" aria-hidden="true">Giovanna Cabral</div>
+      {!landing && <div class="footer__watermark" aria-hidden="true">Giovanna Cabral</div>}
     </footer>
 
-    <a class="wa-float" href={whatsappLink()} target="_blank" rel="noopener" aria-label="Conversar com a Dra. Giovanna pelo WhatsApp" data-wa-float>
+    <a
+      class:list={['wa-float', { 'is-visible': landing }]}
+      href={whatsapp}
+      target="_blank"
+      rel="noopener"
+      aria-label="Conversar com a Dra. Giovanna pelo WhatsApp"
+      data-wa-float
+      data-local="flutuante"
+      data-tema={tema}
+      data-publico={publico}
+    >
       <Icon name="whatsapp" />
     </a>
+
+    <CookieBanner />
 
     <script>
       const header = document.querySelector('[data-header]');
@@ -132,8 +203,8 @@ const home = Astro.url.pathname === '/' ? '' : '/';
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
 
-      // O botão flutuante aparece depois que o topo sai da tela (ou sempre, em páginas sem topo).
-      if (hero && float) {
+      // O botão flutuante aparece depois que o topo sai da tela (ou sempre, em páginas sem topo e de anúncio).
+      if (hero && float && !float.classList.contains('is-visible')) {
         new IntersectionObserver(([entry]) => float.classList.toggle('is-visible', !entry.isIntersecting), {
           rootMargin: '-120px 0px 0px 0px',
         }).observe(hero);
@@ -151,6 +222,43 @@ const home = Astro.url.pathname === '/' ? '' : '/';
         }
       }, { rootMargin: '0px 0px -8% 0px' });
       reveals.forEach((el) => revealObserver.observe(el));
+    </script>
+
+    <script>
+      // Origem "Google": na chegada por anúncio (gclid/gbraid/wbraid ou utm_source=google), a sessão é marcada
+      // e todas as mensagens de WhatsApp passam a começar com "Vim pelo Google e…".
+      const KEY = 'origem-visita';
+      const params = new URLSearchParams(location.search);
+      const fromAds = ['gclid', 'gbraid', 'wbraid'].some((p) => params.has(p)) || params.get('utm_source') === 'google';
+      try {
+        if (fromAds) sessionStorage.setItem(KEY, 'google');
+      } catch {}
+      let origin: string | null = fromAds ? 'google' : null;
+      try { origin ??= sessionStorage.getItem(KEY); } catch {}
+
+      if (origin === 'google') {
+        document.querySelectorAll<HTMLAnchorElement>('a[href*="wa.me/"]').forEach((a) => {
+          const url = new URL(a.href);
+          const text = url.searchParams.get('text');
+          if (!text) return;
+          url.searchParams.set('text', text.replace('Vim pelo site e', 'Vim pelo Google e'));
+          a.href = url.toString();
+        });
+      }
+
+      // Medição: cada clique em WhatsApp ou telefone vira um evento no dataLayer, lido pelo GTM.
+      document.addEventListener('click', (event) => {
+        const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="wa.me/"], a[href^="tel:"]');
+        if (!link) return;
+        const w = window as unknown as { dataLayer: object[] };
+        w.dataLayer = w.dataLayer || [];
+        w.dataLayer.push({
+          event: link.href.startsWith('tel:') ? 'phone_click' : 'whatsapp_click',
+          local: link.dataset.local ?? 'outro',
+          tema: link.dataset.tema ?? 'geral',
+          publico: link.dataset.publico ?? 'geral',
+        });
+      });
     </script>
   </body>
 </html>

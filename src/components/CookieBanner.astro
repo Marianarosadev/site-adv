@@ -1,0 +1,33 @@
+---
+// Banner próprio do Modo de Consentimento. O padrão "negado" é definido no <head> do Layout.
+---
+<div class="cookies" data-cookies role="dialog" aria-labelledby="cookies-titulo" hidden>
+  <p id="cookies-titulo">
+    Uso cookies para medir as visitas e o desempenho dos anúncios. Você escolhe se aceita.
+    <a href="/politica-de-privacidade/">Política de privacidade</a>
+  </p>
+  <div class="cookies__actions">
+    <button type="button" class="cookies__btn" data-consent="denied">Recusar</button>
+    <button type="button" class="cookies__btn" data-consent="granted">Aceitar</button>
+  </div>
+</div>
+
+<script>
+  const KEY = 'consentimento-cookies';
+  const banner = document.querySelector<HTMLElement>('[data-cookies]');
+  let saved: string | null = null;
+  try { saved = localStorage.getItem(KEY); } catch {}
+  if (banner && !saved) banner.hidden = false;
+
+  banner?.addEventListener('click', (event) => {
+    const choice = (event.target as HTMLElement).closest<HTMLElement>('[data-consent]')?.dataset.consent;
+    if (!choice) return;
+    (window as any).applyConsent?.(choice);
+    try { localStorage.setItem(KEY, choice); } catch {}
+    banner.hidden = true;
+  });
+
+  document.querySelectorAll('[data-cookie-prefs]').forEach((el) =>
+    el.addEventListener('click', () => { if (banner) banner.hidden = false; }),
+  );
+</script>

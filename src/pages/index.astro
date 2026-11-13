@@ -5,10 +5,12 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
+import ContactCard from '../components/ContactCard.astro';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
-  site, whatsappLink, areas, stats, timeline, education, steps, differentials, faq,
+  site, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
+  servicesEmpresa,
 } from '../data/site';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -22,9 +24,9 @@ const heroPlaceholder = `data:image/webp;base64,${(
   await sharp('src/assets/giovanna-escritorio.jpg').resize(32).webp({ quality: 50 }).toBuffer()
 ).toString('base64')}`;
 const shortcuts = [
-  { label: 'Rescisão', hint: 'Recebi tudo?', id: 'area-01', icon: 'receipt-text' },
-  { label: 'Horas extras', hint: 'Jornada sem pagamento', id: 'area-02', icon: 'clock' },
-  { label: 'Justa causa', hint: 'Posso contestar?', id: 'area-04', icon: 'gavel' },
+  { label: 'Rescisão', hint: 'Recebi tudo?', id: 'area-rescisao', icon: 'receipt-text' },
+  { label: 'Horas extras', hint: 'Jornada sem pagamento', id: 'area-horas-extras', icon: 'clock' },
+  { label: 'Carteira não assinada', hint: 'Sem registro ou PJ', id: 'area-carteira-nao-assinada', icon: 'id-card' },
 ] as const;
 
 const schema = [
@@ -32,7 +34,7 @@ const schema = [
     '@context': 'https://schema.org',
     '@type': ['LegalService', 'Attorney'],
     name: `${site.fullName}, Advogada Trabalhista`,
-    description: 'Advogada trabalhista em Goiânia, com atendimento online para trabalhadores em todo o Brasil.',
+    description: 'Advogada trabalhista em Goiânia, com atendimento online para trabalhadores e empresas em todo o Brasil.',
     url: Astro.site?.href,
     telephone: site.phoneE164,
     email: site.email,
@@ -45,6 +47,12 @@ const schema = [
       { '@type': 'Country', name: 'Brasil' },
     ],
     availableLanguage: 'pt-BR',
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '00:00',
+      closes: '23:59',
+    },
   },
   {
     '@context': 'https://schema.org',
@@ -58,8 +66,8 @@ const schema = [
 ];
 ---
 <Layout
-  title="Advogada Trabalhista em Goiânia | Dra. Giovanna Cabral, OAB/GO 66.313"
-  description="Advogada trabalhista em Goiânia, com atendimento online. Orientação sobre rescisão, horas extras, justa causa, carteira não assinada e outros direitos do trabalhador. Fale pelo WhatsApp."
+  title="Advogada Trabalhista em Goiânia e Online | Dra. Giovanna Cabral, OAB/GO 66.313"
+  description="Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil. Orientação sobre rescisão, horas extras, rescisão indireta e carteira não assinada. Também atendo empresas."
   schema={schema}
 >
   <link
@@ -97,15 +105,16 @@ const schema = [
         </h1>
         <p class="hero__intro">
           Sou a <strong>Dra. Giovanna Cabral, {site.oab}</strong>. Oriento e represento trabalhadores em questões como
-          rescisão, horas extras, justa causa e carteira não assinada, com linguagem clara e atendimento 100% online.
+          rescisão, horas extras, rescisão indireta e carteira não assinada, com linguagem clara e atendimento 100%
+          online. Também atendo empresas.
         </p>
         <div class="hero__actions">
-          <Button href={whatsappLink()} icon="whatsapp">Falar no WhatsApp</Button>
-          <a class="btn btn--ghost" href="#como-posso-ajudar">Ver como posso ajudar</a>
+          <Button href={whatsappLink()} icon="whatsapp" local="topo" publico="geral">Falar no WhatsApp</Button>
+          <a class="btn btn--ghost" href="/empresas/">Atendimento para empresas</a>
         </div>
         <div class="cred">
           <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} />
-          <span>Pós-graduada em Direito e Processo do Trabalho · Na advocacia trabalhista desde 2020</span>
+          <span>{site.title} · {site.oab}</span>
         </div>
       </div>
 
@@ -134,8 +143,8 @@ const schema = [
           Sobre o atendimento
         </div>
         <p class="statement__text">
-          Já atuei dos dois lados do processo trabalhista.{' '}
-          <span class="soft">Por isso conheço os argumentos das empresas e preparo cada caso do trabalhador com atenção a cada detalhe.</span>
+          Cada caso é analisado com atenção aos detalhes.{' '}
+          <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
         </p>
       </div>
       <dl class="stats reveal">
@@ -157,17 +166,28 @@ const schema = [
         <p>Direito do Trabalho em Goiânia e online. Encontre a situação mais parecida com a sua e fale comigo.</p>
       </div>
       <ul class="areas">
-        {areas.map((area, i) => (
-          <li class="area reveal" id={`area-${pad(i + 1)}`}>
+        {areas.map((area) => (
+          <li class="area reveal" id={`area-${area.slug}`}>
             <div class="area__head">
               <AreaIcon name={area.icon} />
-              <h3 class="area__title">{area.title}</h3>
+              <h3 class="area__title">{area.href ? <a href={area.href}>{area.title}</a> : area.title}</h3>
             </div>
             <p class="area__situation">“{area.situation}”</p>
             <p class="area__text">{area.text}</p>
-            <a class="link-arrow link-arrow--whatsapp" href={whatsappLink(area.message)} target="_blank" rel="noopener">
-              <Icon name="whatsapp" /> Conversar sobre isso
-            </a>
+            <div class="area__links">
+              <a
+                class="link-arrow link-arrow--whatsapp"
+                href={whatsappLink(area.message)}
+                target="_blank"
+                rel="noopener"
+                data-local={`card-${area.slug}`}
+                data-tema={area.slug}
+                data-publico="trabalhador"
+              >
+                <Icon name="whatsapp" /> Conversar sobre isso
+              </a>
+              {area.href && <a class="link-arrow" href={area.href}>Entenda</a>}
+            </div>
           </li>
         ))}
         <li class="area area--cta reveal">
@@ -175,12 +195,31 @@ const schema = [
             <h3 class="area__title">Não encontrou a sua situação?</h3>
             <p class="area__text">Me conte o que aconteceu. Eu explico se e como o seu caso pode ser analisado.</p>
           </div>
-          <Button href={whatsappLink()} icon="whatsapp">Tire sua dúvida pelo WhatsApp</Button>
+          <Button href={whatsappLink()} icon="whatsapp" local="card-outro" publico="trabalhador">Tire sua dúvida pelo WhatsApp</Button>
         </li>
       </ul>
-      <p class="areas-foot small reveal">
-        <span><strong>Também atendo empresas:</strong> defesa em reclamações trabalhistas, audiências, acordos e pareceres.</span>
-      </p>
+    </div>
+  </section>
+
+  <!-- 3b. Para empresas -->
+  <section class="section section--tight" id="para-empresas" aria-labelledby="empresas-titulo">
+    <div class="container">
+      <div class="band-empresas reveal">
+        <div class="band-empresas__head">
+          <p class="eyebrow">Para empresas</p>
+          <h2 class="band-empresas__title" id="empresas-titulo">Atendimento para empresas</h2>
+          <p>Defesa da empresa na Justiça do Trabalho, do recebimento da notificação até o fim do processo.</p>
+        </div>
+        <ul class="band-empresas__list">
+          {servicesEmpresa.map((s) => <li>{s.title}</li>)}
+        </ul>
+        <div class="band-empresas__actions">
+          <a class="btn btn--azul" href="/empresas/">Ver atendimento para empresas</a>
+          <a class="link-arrow link-arrow--whatsapp" href={whatsappEmpresa()} target="_blank" rel="noopener" data-local="faixa-empresas" data-publico="empresa">
+            <Icon name="whatsapp" /> WhatsApp para empresas
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -203,9 +242,9 @@ const schema = [
         <div class="reveal">
           <p class="about__role">{site.fullName} · Advogada trabalhista · {site.oab}</p>
           <dl class="about__meta">
-            <div><dt>Atuação</dt><dd>Desde 2020</dd></div>
             <div><dt>Inscrição</dt><dd>{site.oab}</dd></div>
-            <div><dt>Atendimento</dt><dd>Online</dd></div>
+            <div><dt>Área</dt><dd>Direito do Trabalho</dd></div>
+            <div><dt>Atendimento</dt><dd>Online · todo o Brasil</dd></div>
           </dl>
           <div class="about__bio">
             <p>
@@ -218,8 +257,11 @@ const schema = [
               a antecipar os argumentos do outro lado e a explicar cada etapa de forma simples para quem está vivendo o problema.
             </p>
             <p>
-              Também dou aulas e preparo candidatos para o Exame da OAB, porque gosto de ensinar e de manter o
-              conhecimento técnico sempre em dia.
+              Também dou aulas de Direito e Processo do Trabalho, porque gosto de ensinar e de manter o conhecimento
+              técnico sempre em dia.
+            </p>
+            <p>
+              <a class="link-arrow link-arrow--wrap" href={site.cna} target="_blank" rel="noopener">Confira minha inscrição no Cadastro Nacional dos Advogados</a>
             </p>
           </div>
 
@@ -235,7 +277,7 @@ const schema = [
             ))}
           </ul>
 
-          <Button href={whatsappLink()} icon="whatsapp">Converse comigo pelo WhatsApp</Button>
+          <Button href={whatsappLink()} icon="whatsapp" local="sobre">Converse comigo pelo WhatsApp</Button>
         </div>
       </div>
     </div>
@@ -258,7 +300,7 @@ const schema = [
         ))}
       </ol>
       <div class="steps-cta reveal">
-        <Button href={whatsappLink()} icon="whatsapp">Começar pelo WhatsApp</Button>
+        <Button href={whatsappLink()} icon="whatsapp" local="como-funciona">Começar pelo WhatsApp</Button>
       </div>
     </div>
   </section>
@@ -282,13 +324,13 @@ const schema = [
     <div class="container faq">
       <div class="faq__aside reveal">
         <h2 class="display">Dúvidas <span class="soft">respondidas.</span></h2>
-        <p>Ainda com dúvida? Fale comigo pelo <a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp</a>.</p>
+        <p>Ainda com dúvida? Fale comigo pelo <a href={whatsappLink()} target="_blank" rel="noopener" data-local="duvidas">WhatsApp</a>.</p>
       </div>
       <div class="faq__list reveal">
-        {faq.map(({ q, a }) => (
+        {faq.map(({ q, a, link }) => (
           <details>
             <summary>{q}</summary>
-            <p>{a}</p>
+            <p>{a}{link && <> <a href={link.href}>{link.label}</a>.</>}</p>
           </details>
         ))}
       </div>
@@ -306,90 +348,15 @@ const schema = [
             precisa ter todos os documentos em mãos.
           </p>
           <ul class="next">
-            <li><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
+            <li><b>Ao enviar a mensagem</b><span>{site.reply}</span></li>
             <li><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
             <li><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
             <li><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
           </ul>
-          <dl class="contact__info">
-            <div><dt>WhatsApp</dt><dd><a href={whatsappLink()} target="_blank" rel="noopener">{site.phoneDisplay}</a></dd></div>
-            <div><dt>Telefone</dt><dd><a href={`tel:${site.phoneE164}`}>Ligar agora</a></dd></div>
-            <div><dt>E-mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
-            <div><dt>Horário</dt><dd>{site.hours}</dd></div>
-            <div><dt>Atendimento</dt><dd>Online · {site.city} e todo o Brasil</dd></div>
-          </dl>
         </div>
 
-        <form class="form-card reveal" data-wa-form novalidate>
-          <h3>Envie sua mensagem</h3>
-          <p>O formulário monta a mensagem e abre o WhatsApp para você enviar.</p>
-          <div class="field-row">
-            <div class="field">
-              <label for="f-nome">Nome</label>
-              <input id="f-nome" name="nome" autocomplete="name" required />
-            </div>
-            <div class="field">
-              <label for="f-tel">WhatsApp</label>
-              <input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required />
-            </div>
-          </div>
-          <div class="field">
-            <label for="f-assunto">Assunto</label>
-            <select id="f-assunto" name="assunto" required>
-              <option value="">Escolha o mais próximo</option>
-              {areas.map((a) => <option>{a.title}</option>)}
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-msg">Conte brevemente o que aconteceu <span>(opcional)</span></label>
-            <textarea id="f-msg" name="mensagem" rows="3"></textarea>
-          </div>
-          <label class="consent">
-            <input type="checkbox" name="consentimento" required />
-            <span>
-              Entendo que este contato não cria vínculo de contratação e concordo com o uso dos meus dados para retorno,
-              conforme a <a href="/politica-de-privacidade/">Política de Privacidade</a>.
-            </span>
-          </label>
-          <button class="btn btn--whatsapp btn--block" type="submit">
-            <Icon name="whatsapp" />
-            <span>Enviar pelo WhatsApp</span>
-          </button>
-          <p class="form-note" data-form-error role="alert" hidden>Preencha nome, WhatsApp, assunto e marque a caixa de concordância.</p>
-          <p class="form-note">Não envie documentos ou informações sigilosas antes do primeiro retorno.</p>
-        </form>
+        <ContactCard whatsapp={whatsappLink()} checklist={firstMessage} publico="geral" />
       </div>
     </section>
   </div>
 </Layout>
-
-<script>
-  import { site } from '../data/site';
-
-  const form = document.querySelector<HTMLFormElement>('[data-wa-form]');
-  const error = document.querySelector<HTMLElement>('[data-form-error]');
-
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!form.checkValidity()) {
-      if (error) error.hidden = false;
-      form.querySelector<HTMLElement>(':invalid')?.focus();
-      return;
-    }
-    if (error) error.hidden = true;
-
-    const data = new FormData(form);
-    const lines = [
-      `Olá, Dra. Giovanna! Vim pelo site.`,
-      `Nome: ${data.get('nome')}`,
-      `WhatsApp: ${data.get('telefone')}`,
-      `Assunto: ${data.get('assunto')}`,
-    ];
-    const message = String(data.get('mensagem') ?? '').trim();
-    if (message) lines.push(`Mensagem: ${message}`);
-
-    const url = `https://wa.me/${site.phoneE164.replace('+', '')}?text=${encodeURIComponent(lines.join('\n'))}`;
-    window.open(url, '_blank', 'noopener');
-  });
-</script>

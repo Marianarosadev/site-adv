@@ -1,23 +1,33 @@
 ---
 import Icon from './Icon.astro';
 
+// local, tema e publico viram atributos data-* lidos pelo script de medição (whatsapp_click / phone_click).
 interface Props {
   href: string;
-  icon?: 'whatsapp' | 'arrow';
+  icon?: 'whatsapp' | 'arrow' | 'phone';
   class?: string;
   external?: boolean;
+  local?: string;
+  tema?: string;
+  publico?: 'trabalhador' | 'empresa' | 'geral';
 }
 
-const { href, icon = 'arrow', class: className = '', external = href.startsWith('http') } = Astro.props;
+const {
+  href, icon = 'arrow', class: className = '', external = href.startsWith('http'), local, tema, publico,
+} = Astro.props;
+const variant = { whatsapp: 'btn--whatsapp', phone: 'btn--call', arrow: 'btn--primary' }[icon];
 ---
 <a
-  class:list={['btn', icon === 'whatsapp' ? 'btn--whatsapp' : 'btn--primary', className]}
+  class:list={['btn', variant, className]}
   href={href}
+  data-local={local}
+  data-tema={tema}
+  data-publico={publico}
   {...(external ? { target: '_blank', rel: 'noopener' } : {})}
 >
-  {icon === 'whatsapp' ? (
-    <><Icon name="whatsapp" /><span><slot /></span></>
-  ) : (
+  {icon === 'arrow' ? (
     <><span><slot /></span><span class="btn__icon"><Icon name={icon} /></span></>
+  ) : (
+    <><Icon name={icon} /><span><slot /></span></>
   )}
 </a>
