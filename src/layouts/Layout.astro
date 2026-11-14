@@ -5,7 +5,7 @@ import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-lat
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
 import CookieBanner from '../components/CookieBanner.astro';
-import { site, whatsappLink, telLink, areas } from '../data/site';
+import { site, whatsappLink, telLink, areas, areaUrl } from '../data/site';
 
 interface Props {
   title: string;
@@ -112,14 +112,40 @@ const gtm = site.gtmId;
           </nav>
         )}
         <div class="header__actions">
-          <a class="header__call" href={telLink} aria-label={`Ligar para ${site.phoneDisplay}`} data-local="cabecalho" data-tema={tema} data-publico={publico}>
-            <Icon name="phone" />
-          </a>
           <Button href={whatsapp} icon="whatsapp" local="cabecalho" tema={tema} publico={publico}>
             <span class="btn__label-long">Falar no WhatsApp</span><span class="btn__label-short">WhatsApp</span>
           </Button>
+          {!landing && (
+            <button type="button" class="menu-btn" aria-expanded="false" aria-controls="menu-celular" aria-label="Abrir menu" data-menu-btn>
+              <span></span><span></span><span></span>
+            </button>
+          )}
         </div>
       </div>
+
+      {!landing && (
+        <nav class="mnav" id="menu-celular" aria-label="Menu" data-menu hidden>
+          <div class="container mnav__inner">
+            <ul class="mnav__main">
+              <li><a href="/">Início</a></li>
+              <li><a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a></li>
+              <li><a href={`${home}#sobre`}>Sobre</a></li>
+              <li><a href={`${home}#duvidas`}>Dúvidas</a></li>
+              <li><a href="/blog/">Artigos</a></li>
+              <li><a href="/empresas/">Para empresas</a></li>
+              <li><a href={`${home}#contato`}>Contato</a></li>
+            </ul>
+            <p class="mnav__label">Temas</p>
+            <ul class="mnav__topics">
+              {areas.map((a) => <li><a href={areaUrl(a.slug)}>{a.title}</a></li>)}
+            </ul>
+            <div class="mnav__actions">
+              <Button href={whatsapp} icon="whatsapp" local="menu" tema={tema} publico={publico}>WhatsApp</Button>
+              <Button href={telLink} icon="phone" local="menu" tema={tema} publico={publico}>Ligar</Button>
+            </div>
+          </div>
+        </nav>
+      )}
     </header>
 
     <main id="conteudo">
@@ -144,7 +170,7 @@ const gtm = site.gtmId;
               <h2>Áreas</h2>
               <ul>
                 {areas.slice(0, 5).map((area) => (
-                  <li><a href={area.href ?? `/#area-${area.slug}`}>{area.title}</a></li>
+                  <li><a href={areaUrl(area.slug)}>{area.title}</a></li>
                 ))}
               </ul>
             </div>
@@ -198,6 +224,24 @@ const gtm = site.gtmId;
       const header = document.querySelector('[data-header]');
       const float = document.querySelector('[data-wa-float]');
       const hero = document.querySelector('[data-hero]');
+
+      // Menu do celular: abre e fecha pelo botão, fecha com Esc e ao escolher um link.
+      const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+      const menu = document.querySelector<HTMLElement>('[data-menu]');
+      const setMenu = (open: boolean) => {
+        if (!menuBtn || !menu) return;
+        menu.hidden = !open;
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+        document.documentElement.classList.toggle('menu-open', open);
+      };
+      menuBtn?.addEventListener('click', () => setMenu(menu?.hidden ?? false));
+      menu?.addEventListener('click', (event) => {
+        if ((event.target as HTMLElement).closest('a')) setMenu(false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && menu && !menu.hidden) { setMenu(false); menuBtn?.focus(); }
+      });
 
       const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
       onScroll();

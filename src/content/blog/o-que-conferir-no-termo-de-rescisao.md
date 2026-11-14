@@ -3,6 +3,7 @@ title: 'Fui demitido: o que conferir no termo de rescisão'
 description: 'Um roteiro simples para conferir as verbas do termo de rescisão (TRCT), os prazos de pagamento e os documentos que a empresa deve entregar.'
 date: 2026-11-10
 category: 'Rescisão'
+topics: ['rescisao', 'fgts-e-seguro-desemprego']
 ---
 
 Receber o termo de rescisão do contrato de trabalho (o TRCT) costuma vir junto com muitas dúvidas. O documento tem códigos, valores e descontos que nem sempre são fáceis de entender. Este roteiro ajuda a conferir os pontos principais.

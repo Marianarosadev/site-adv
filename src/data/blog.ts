@@ -15,6 +15,10 @@ export async function getPosts() {
 
 export const postUrl = (post: Post) => `/blog/${post.id}/`;
 
+export async function getPostsByTopic(slug: string) {
+  return (await getPosts()).filter((p) => p.data.topics.includes(slug));
+}
+
 export function readingTime(post: Post) {
   const words = (post.body ?? '').split(/\s+/).filter(Boolean).length;
   return `${Math.max(1, Math.round(words / 200))} min de leitura`;

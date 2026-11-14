@@ -46,10 +46,14 @@ export const firstMessageEmpresa = [
 
 export type AreaIconName =
   | 'receipt-text' | 'clock' | 'door-open' | 'gavel' | 'id-card'
-  | 'shield-alert' | 'hard-hat' | 'piggy-bank' | 'triangle-alert' | 'baby';
+  | 'shield-alert' | 'hard-hat' | 'piggy-bank' | 'triangle-alert' | 'baby'
+  | 'graduation-cap' | 'landmark' | 'monitor-smartphone' | 'map-pin';
+
+// Cada área tem uma página própria em /trabalhista/<slug>/.
+export const areaUrl = (slug: string) => `/trabalhista/${slug}/`;
 
 export const areas: {
-  slug: string; title: string; icon: AreaIconName; situation: string; text: string; message: string; href?: string;
+  slug: string; title: string; icon: AreaIconName; situation: string; text: string; message: string;
 }[] = [
   {
     slug: 'rescisao',
@@ -57,7 +61,6 @@ export const areas: {
     icon: 'receipt-text',
     situation: 'Fui demitido e acho que não recebi tudo.',
     text: 'Conferência de saldo de salário, aviso prévio, férias, 13º, multa do FGTS e prazos de pagamento.',
-    href: '/trabalhista/rescisao/',
     message: 'tenho dúvidas sobre a minha rescisão.',
   },
   {
@@ -85,7 +88,7 @@ export const areas: {
     message: 'trabalhei sem carteira assinada ou como PJ.',
   },
   {
-    slug: 'acidente',
+    slug: 'acidente-de-trabalho',
     title: 'Acidente e doença do trabalho',
     icon: 'hard-hat',
     situation: 'Me acidentei ou adoeci por causa do trabalho.',
@@ -93,7 +96,7 @@ export const areas: {
     message: 'sofri um acidente ou adoeci pelo trabalho.',
   },
   {
-    slug: 'insalubridade',
+    slug: 'insalubridade-e-periculosidade',
     title: 'Insalubridade e periculosidade',
     icon: 'triangle-alert',
     situation: 'Trabalho exposto a risco ou a agentes nocivos.',
@@ -101,7 +104,7 @@ export const areas: {
     message: 'tenho dúvidas sobre adicional de insalubridade ou periculosidade.',
   },
   {
-    slug: 'gestante',
+    slug: 'direitos-da-gestante',
     title: 'Direitos da gestante',
     icon: 'baby',
     situation: 'Fui demitida grávida.',
@@ -117,7 +120,7 @@ export const areas: {
     message: 'fui demitido por justa causa.',
   },
   {
-    slug: 'assedio',
+    slug: 'assedio-moral',
     title: 'Assédio moral',
     icon: 'shield-alert',
     situation: 'Sou humilhado ou pressionado no trabalho.',
@@ -125,7 +128,7 @@ export const areas: {
     message: 'preciso de orientação sobre assédio no trabalho.',
   },
   {
-    slug: 'fgts',
+    slug: 'fgts-e-seguro-desemprego',
     title: 'FGTS e seguro-desemprego',
     icon: 'piggy-bank',
     situation: 'Meu FGTS não foi depositado.',
@@ -134,11 +137,12 @@ export const areas: {
   },
 ];
 
-export const stats = [
-  { value: 'Pós-graduada', label: 'Em Direito do Trabalho' },
-  { value: 'Todas', label: 'As fases e instâncias do processo' },
-  { value: '100%', label: 'Online, de onde você estiver' },
-  { value: 'Brasil', label: 'Atendimento em todo o país' },
+// Destaques da apresentação: mesmo formato em todos (ícone, título curto e uma linha de apoio).
+export const stats: { icon: AreaIconName; title: string; text: string }[] = [
+  { icon: 'graduation-cap', title: 'Pós-graduada', text: 'Em Direito e Processo do Trabalho.' },
+  { icon: 'landmark', title: 'Todas as instâncias', text: 'Das audiências à sustentação oral nos tribunais.' },
+  { icon: 'monitor-smartphone', title: '100% online', text: 'WhatsApp, videochamada e assinatura digital.' },
+  { icon: 'map-pin', title: 'Todo o Brasil', text: 'Atendimento a partir de Goiânia para qualquer estado.' },
 ];
 
 export const timeline = [

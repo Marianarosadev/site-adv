@@ -13,6 +13,8 @@ const blog = defineCollection({
     updated: z.coerce.date().optional(),
     category: z.enum(categories),
     audience: z.enum(['trabalhador', 'empresa']).default('trabalhador'),
+    // Casos de /trabalhista/<slug>/ em que o artigo aparece como leitura relacionada.
+    topics: z.array(z.string()).default([]),
     // Rascunhos não aparecem no site.
     draft: z.boolean().default(false),
   }),

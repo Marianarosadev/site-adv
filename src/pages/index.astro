@@ -6,12 +6,11 @@ import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
 import ContactCard from '../components/ContactCard.astro';
-import PostCard from '../components/PostCard.astro';
-import { getPosts } from '../data/blog';
+import { getPosts, postUrl, readingTime, formatDate } from '../data/blog';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
-  site, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
+  site, areaUrl, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
   servicesEmpresa,
 } from '../data/site';
 
@@ -98,13 +97,13 @@ const schema = [
         fetchpriority="high"
       />
     </div>
-    <div class="hero__watermark" aria-hidden="true">DIREITOS</div>
+    <div class="hero__watermark" aria-hidden="true">TRABALHO</div>
 
     <div class="container hero__inner">
       <div class="hero__content">
         <p class="eyebrow eyebrow--pill">Goiânia · Atendimento online para todo o Brasil</p>
         <h1 class="display display--hero">
-          Advogada trabalhista <span class="soft">ao lado de quem trabalha.</span>
+          Advogada trabalhista <span class="soft">com clareza em cada etapa.</span>
         </h1>
         <p class="hero__intro">
           Sou a <strong>Dra. Giovanna Cabral, {site.oab}</strong>. Oriento e represento trabalhadores em questões como
@@ -123,16 +122,23 @@ const schema = [
 
       <nav class="chips" aria-label="Temas mais procurados">
         <span class="chips__label" aria-hidden="true">Mais procurados</span>
-        {shortcuts.map((s) => (
-          <a class="chip" href={`#${s.id}`}>
-            <AreaIcon name={s.icon} class="chip__icon" />
-            <span class="chip__text">
-              <strong>{s.label}</strong>
-              <small>{s.hint}</small>
-            </span>
-            <Icon name="arrow" />
-          </a>
-        ))}
+        <!-- No celular os atalhos passam em loop: as cópias (escondidas de leitores de tela) fecham a emenda. -->
+        <div class="chips__track">
+          {[0, 1, 2, 3].map((copy) => shortcuts.map((s) => (
+            <a
+              class:list={['chip', { 'chip--clone': copy > 0 }]}
+              href={`#${s.id}`}
+              {...(copy > 0 ? { 'aria-hidden': 'true', tabindex: '-1' } : {})}
+            >
+              <AreaIcon name={s.icon} class="chip__icon" />
+              <span class="chip__text">
+                <strong>{s.label}</strong>
+                <small>{s.hint}</small>
+              </span>
+              <Icon name="arrow" />
+            </a>
+          )))}
+        </div>
       </nav>
     </div>
   </section>
@@ -150,14 +156,15 @@ const schema = [
           <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
         </p>
       </div>
-      <dl class="stats reveal">
+      <ul class="highlights reveal">
         {stats.map((s) => (
-          <div class="stat">
-            <dt class="stat__label">{s.label}</dt>
-            <dd class="stat__value">{s.value}</dd>
-          </div>
+          <li class="highlight">
+            <AreaIcon name={s.icon} class="highlight__icon" />
+            <h3 class="highlight__title">{s.title}</h3>
+            <p class="highlight__text">{s.text}</p>
+          </li>
         ))}
-      </dl>
+      </ul>
     </div>
   </section>
 
@@ -166,30 +173,35 @@ const schema = [
     <div class="container">
       <div class="section-head reveal">
         <h2 class="display">Como posso ajudar <span class="soft">no seu caso.</span></h2>
-        <p>Direito do Trabalho em Goiânia e online. Encontre a situação mais parecida com a sua e fale comigo.</p>
       </div>
       <ul class="areas">
         {areas.map((area) => (
           <li class="area reveal" id={`area-${area.slug}`}>
             <div class="area__head">
               <AreaIcon name={area.icon} />
-              <h3 class="area__title">{area.href ? <a href={area.href}>{area.title}</a> : area.title}</h3>
+              <h3 class="area__title"><a href={areaUrl(area.slug)}>{area.title}</a></h3>
             </div>
             <p class="area__situation">“{area.situation}”</p>
             <p class="area__text">{area.text}</p>
-            <div class="area__links">
+            <!-- Ação principal: a página do tema. Ao lado, atalho direto para o WhatsApp. -->
+            <div class="area__actions">
+              <a class="area__more" href={areaUrl(area.slug)}>
+                <span>Entenda seus direitos</span>
+                <Icon name="arrow" />
+              </a>
               <a
-                class="link-arrow link-arrow--whatsapp"
+                class="area__wa"
                 href={whatsappLink(area.message)}
                 target="_blank"
                 rel="noopener"
+                aria-label={`Conversar sobre ${area.title.toLowerCase()} no WhatsApp`}
+                title="Conversar no WhatsApp"
                 data-local={`card-${area.slug}`}
                 data-tema={area.slug}
                 data-publico="trabalhador"
               >
-                <Icon name="whatsapp" /> Conversar sobre isso
+                <Icon name="whatsapp" />
               </a>
-              {area.href && <a class="link-arrow" href={area.href}>Entenda</a>}
             </div>
           </li>
         ))}
@@ -322,19 +334,46 @@ const schema = [
     </div>
   </section>
 
-  <!-- 6b. Artigos recentes -->
+  <!-- 6b. Artigos: vitrine do blog -->
   {latestPosts.length > 0 && (
-    <section class="section" aria-labelledby="artigos-titulo">
-      <div class="container">
-        <div class="section-head reveal">
-          <h2 class="display" id="artigos-titulo">Artigos <span class="soft">recentes.</span></h2>
-          <a class="link-arrow" href="/blog/">Ver todos os artigos</a>
+    <div class="blog-band-wrap">
+      <section class="blog-band" aria-labelledby="artigos-titulo">
+        <div class="container blog-band__grid">
+          <div class="blog-band__intro reveal">
+            <p class="eyebrow">Artigos</p>
+            <h2 class="display" id="artigos-titulo">Entenda os seus direitos <span class="soft">antes de decidir.</span></h2>
+            <p>
+              Textos curtos e em linguagem simples sobre rescisão, horas extras, vínculo de emprego e outros temas do
+              dia a dia do trabalho.
+            </p>
+            <a class="btn btn--light" href="/blog/">
+              <span>Ver todos os artigos</span><span class="btn__icon"><Icon name="arrow" /></span>
+            </a>
+          </div>
+
+          <div class="blog-band__posts reveal">
+            <a class="blog-band__featured" href={postUrl(latestPosts[0])}>
+              <span class="blog-band__cat">{latestPosts[0].data.category}</span>
+              <h3>{latestPosts[0].data.title}</h3>
+              <p>{latestPosts[0].data.description}</p>
+              <span class="blog-band__meta">{formatDate(latestPosts[0].data.date)} · {readingTime(latestPosts[0])}</span>
+              <span class="blog-band__read">Ler artigo <Icon name="arrow" /></span>
+            </a>
+            <ul class="blog-band__list">
+              {latestPosts.slice(1).map((post) => (
+                <li>
+                  <a href={postUrl(post)}>
+                    <span class="blog-band__cat">{post.data.category}</span>
+                    <span class="blog-band__title">{post.data.title}</span>
+                    <span class="blog-band__meta">{readingTime(post)}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <ul class="posts posts--filtered reveal">
-          {latestPosts.map((post) => <PostCard post={post} />)}
-        </ul>
-      </div>
-    </section>
+      </section>
+    </div>
   )}
 
   <!-- 7. Perguntas frequentes -->

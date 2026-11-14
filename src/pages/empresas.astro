@@ -6,7 +6,7 @@ import ContactCard from '../components/ContactCard.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 // Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
 import fotoReuniao from '../assets/empresas-reuniao.jpg';
-import { site, whatsappEmpresa, telLink, firstMessageEmpresa, servicesEmpresa } from '../data/site';
+import { site, whatsappEmpresa, firstMessageEmpresa, servicesEmpresa } from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
 const wa = whatsappEmpresa();
@@ -44,7 +44,6 @@ const stepsEmpresa = [
       </p>
       <div class="hero__actions">
         <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
-        <Button href={telLink} icon="phone" local="empresas-topo" publico="empresa">Ligar</Button>
       </div>
       <div class="cred">
         <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />

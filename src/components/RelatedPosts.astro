@@ -1,0 +1,56 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import bookOpen from 'lucide-static/icons/book-open-text.svg?raw';
+import fotoPerfil from '../assets/giovanna-perfil.jpg';
+import { site } from '../data/site';
+import { postUrl, readingTime, formatDate, type Post } from '../data/blog';
+
+// "Veja também": artigos do blog ligados a um caso (campo topics do artigo). Não aparece se não houver nenhum.
+// Visual de matéria (capa tipográfica, chamada, autoria e "Ler artigo") para não parecer mais um card do site.
+interface Props {
+  posts: Post[];
+  topic: string;
+}
+
+const { posts, topic } = Astro.props;
+const book = bookOpen
+  .replace(/<!--[\s\S]*?-->/, '')
+  .replace('stroke-width="2"', 'stroke-width="1.25" aria-hidden="true" focusable="false"');
+---
+{posts.length > 0 && (
+  <section class="section section--tight" aria-labelledby="veja-tambem">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="display display--md" id="veja-tambem">
+          Veja também <span class="soft">{posts.length === 1 ? `o artigo sobre ${topic}.` : `artigos sobre ${topic}.`}</span>
+        </h2>
+      </div>
+      <ul class="read-list">
+        {posts.map((post) => (
+          <li>
+            <a class="read-card" href={postUrl(post)}>
+              <div class="read-card__cover" aria-hidden="true">
+                <span class="read-card__tag">Artigo</span>
+                <span class="read-card__book" set:html={book} />
+                <span class="read-card__cat">{post.data.category}</span>
+              </div>
+              <div class="read-card__body">
+                <p class="read-card__kicker">Do blog · {readingTime(post)}</p>
+                <h3 class="read-card__title">{post.data.title}</h3>
+                <p class="read-card__excerpt">{post.data.description}</p>
+                <div class="read-card__foot">
+                  <span class="read-card__author">
+                    <Picture src={fotoPerfil} alt="" widths={[64]} sizes="32px" formats={['avif', 'webp']} />
+                    <span>Por <strong>{site.fullName}</strong><br /><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></span>
+                  </span>
+                  <span class="read-card__cta">Ler artigo <Icon name="arrow" /></span>
+                </div>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

@@ -3,13 +3,18 @@ import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import ContactCard from '../../components/ContactCard.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
+// Foto de Gabrielle Henderson na Unsplash (licença de uso livre).
+import fotoRescisao from '../../assets/casos/rescisao.jpg';
+import { getPostsByTopic } from '../../data/blog';
 import { site, whatsappLink, telLink, firstMessage, steps } from '../../data/site';
 import { situations, checks, documents, rescisaoFaq } from '../../data/rescisao';
 
 const wa = whatsappLink('tenho dúvidas sobre a minha rescisão.');
 const tema = 'rescisao';
 const pad = (n: number) => String(n).padStart(2, '0');
+const related = await getPostsByTopic('rescisao');
 
 const schema = [
   {
@@ -64,7 +69,19 @@ const schema = [
   <!-- 2. Isso aconteceu com você? -->
   <section class="section section--tight">
     <div class="container lp-split">
-      <h2 class="display display--md">Isso aconteceu <span class="soft">com você?</span></h2>
+      <div>
+        <h2 class="display display--md">Isso aconteceu <span class="soft">com você?</span></h2>
+        <figure class="case-figure">
+          <Picture
+            src={fotoRescisao}
+            alt="Pessoa assinando documentos sobre uma mesa"
+            widths={[480, 800]}
+            sizes="(min-width: 900px) 40vw, 100vw"
+            formats={['avif', 'webp']}
+          />
+          <figcaption>Imagem ilustrativa · Foto: Gabrielle Henderson / Unsplash</figcaption>
+        </figure>
+      </div>
       <div>
         <ul class="ticks">
           {situations.map((s) => <li>{s}</li>)}
@@ -167,6 +184,8 @@ const schema = [
       </div>
     </div>
   </section>
+
+  <RelatedPosts posts={related} topic="rescisão" />
 
   <!-- 8. Dúvidas -->
   <section class="section section--tight" id="duvidas">

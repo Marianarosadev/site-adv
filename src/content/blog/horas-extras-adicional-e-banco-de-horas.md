@@ -3,6 +3,7 @@ title: 'Horas extras: como funcionam o adicional e o banco de horas'
 description: 'Entenda quando a jornada passa a contar como hora extra, qual é o adicional mínimo e o que a lei exige para o banco de horas.'
 date: 2026-11-03
 category: 'Jornada e salário'
+topics: ['horas-extras']
 ---
 
 A jornada padrão prevista na Constituição é de até **8 horas por dia e 44 horas por semana**. O que passa desse limite, ou do limite menor previsto no seu contrato, é hora extra.
