@@ -1,0 +1,10 @@
+// Publicação na Cloudflare (Workers com arquivos estáticos).
+// O site é 100% estático: o build do Astro gera a pasta dist/ e ela é servida como está.
+// Ter este arquivo impede o "wrangler deploy" de reconfigurar o projeto com o adaptador do Astro.
+{
+  "name": "site-adv",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}

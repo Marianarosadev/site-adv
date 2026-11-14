@@ -6,3 +6,6 @@ dist/
 briefing-cliente.*
 briefing-*.md
 plano-*.md
+
+# Arquivos locais do Wrangler (Cloudflare)
+.wrangler/
