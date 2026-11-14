@@ -14,7 +14,7 @@ export const site = {
   title: 'Pós-graduada em Direito e Processo do Trabalho',
   cna: 'https://cna.oab.org.br/',
   // Código do contêiner do Google Tag Manager (GTM-XXXXXXX). Vazio = nenhuma tag é carregada.
-  gtmId: '',
+  gtmId: 'GTM-TL9C4W2F',
 };
 
 // O script de origem troca "Vim pelo site e" por "Vim pelo Google e" quando a visita chega por um anúncio.
