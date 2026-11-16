@@ -63,17 +63,26 @@ const schema = [
           <p class="muted">Nenhum artigo publicado ainda.</p>
         ) : (
           <>
-            <nav class="blog-tabs" aria-label="Filtrar por tema" data-blog-filter>
-              <button type="button" class="blog-tabs__btn" aria-pressed="true" data-filter="todos">Todos</button>
-              {used.map((c) => (
-                <button type="button" class="blog-tabs__btn" aria-pressed="false" data-filter={c.slug}>{c.name}</button>
-              ))}
-            </nav>
+            <!-- Filtro por tema: pílulas com a cor de cada tema e a quantidade de artigos -->
+            <div class="blog-filter">
+              <span class="blog-filter__label" id="blog-filter-label">Filtrar por tema</span>
+              <nav class="blog-filter__chips" aria-labelledby="blog-filter-label" data-blog-filter>
+                <button type="button" class="blog-chip" aria-pressed="true" data-filter="todos">
+                  Todos <span class="blog-chip__count">{posts.length}</span>
+                </button>
+                {used.map((c) => (
+                  <button type="button" class="blog-chip" aria-pressed="false" data-filter={c.slug} data-cat={c.slug} data-name={c.name}>
+                    <span class="blog-chip__dot" aria-hidden="true"></span>
+                    {c.name} <span class="blog-chip__count">{c.count}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
 
             <!-- Destaque: o artigo mais recente (some quando um tema é filtrado) -->
             <article class="blog-featured" data-featured>
               <a href={postUrl(featured)} class="blog-featured__link">
-                <PostCover category={featured.data.category} cover={featured.data.cover} sizes="(min-width: 1000px) 400px, (min-width: 760px) 40vw, 100vw" class="blog-featured__cover" />
+                <PostCover category={featured.data.category} cover={featured.data.cover} sizes="(min-width: 760px) 680px, 100vw" class="blog-featured__cover" />
                 <div class="blog-featured__body">
                   <p class="blog-featured__label">Mais recente</p>
                   <h2 class="blog-featured__title">{featured.data.title}</h2>
@@ -183,7 +192,7 @@ const schema = [
       if (visible || (all && item.classList.contains('is-featured'))) shown++;
     });
     if (listTitle) {
-      const label = filter?.querySelector<HTMLElement>(`[data-filter="${CSS.escape(slug)}"]`)?.textContent;
+      const label = filter?.querySelector<HTMLElement>(`[data-filter="${CSS.escape(slug)}"]`)?.dataset.name;
       listTitle.textContent = all ? 'Todos os artigos' : `Artigos sobre ${label}`;
     }
     if (empty) empty.hidden = shown > 0;

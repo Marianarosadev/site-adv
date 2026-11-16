@@ -151,24 +151,43 @@ const schema = [
 
   <!-- 2. Apresentação e números -->
   <section class="section section--intro" aria-label="Apresentação">
-    <div class="container">
-      <div class="statement reveal">
-        <span class="statement__ornament" aria-hidden="true"><span></span></span>
-        <p class="statement__text">
-          Cada caso é analisado com atenção aos detalhes.{' '}
-          <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
-        </p>
+    <!-- Vídeo vertical da advogada em reunião (sem som, em loop) que fica parado na tela
+         enquanto a frase e os destaques passam por ele durante a rolagem -->
+    <div class="container scrolly">
+      <div class="scrolly__media" aria-hidden="true">
+        <div class="scrolly__frame">
+          <video
+            class="scrolly__video"
+            muted
+            loop
+            playsinline
+            preload="none"
+            poster="/video/escritorio-poster.jpg"
+            data-bg-video
+          >
+            <source data-src="/video/escritorio.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
-      <ul class="highlights reveal">
-        {stats.map((s) => (
-          <li class="highlight">
-            <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
-            <AreaIcon name={s.icon} class="highlight__icon" />
-            <h3 class="highlight__title">{s.title}</h3>
-            <p class="highlight__text">{s.text}</p>
-          </li>
-        ))}
-      </ul>
+      <div class="scrolly__content">
+        <div class="statement reveal">
+          <span class="statement__ornament" aria-hidden="true"><span></span></span>
+          <p class="statement__text">
+            Cada caso é analisado com atenção aos detalhes.{' '}
+            <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
+          </p>
+        </div>
+        <ul class="highlights reveal">
+          {stats.map((s) => (
+            <li class="highlight">
+              <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
+              <AreaIcon name={s.icon} class="highlight__icon" />
+              <h3 class="highlight__title">{s.title}</h3>
+              <p class="highlight__text">{s.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -425,6 +444,25 @@ const schema = [
 </Layout>
 
 <script>
+  // Vídeo de fundo: só carrega e toca quando aparece na tela; pausa fora dela.
+  // Quem prefere menos movimento vê apenas a imagem parada.
+  const bgVideos = document.querySelectorAll<HTMLVideoElement>('[data-bg-video]');
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        const video = target as HTMLVideoElement;
+        if (isIntersecting) {
+          const source = video.querySelector<HTMLSourceElement>('source[data-src]');
+          if (source) { source.src = source.dataset.src!; source.removeAttribute('data-src'); video.load(); }
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+    bgVideos.forEach((v) => io.observe(v));
+  }
+
   // Carrossel de artigos: setas, arrastar com o mouse e deslizar no celular (rolagem nativa com encaixe).
   const track = document.querySelector<HTMLElement>('[data-carousel]');
   const prev = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
