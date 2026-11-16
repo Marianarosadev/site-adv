@@ -144,18 +144,24 @@ export const stats: { icon: AreaIconName; title: string; text: string }[] = [
   { icon: 'map-pin', title: 'Todo o Brasil', text: 'Atendimento a partir de Goiânia para qualquer estado.' },
 ];
 
-export const timeline = [
-  { year: '2020', text: 'Estágio em Direito do Trabalho' },
-  { year: '2022', text: 'Início na advocacia' },
-  { year: '2023', text: 'Advogada trabalhista plena, com formação de estagiários e advogados júnior' },
-  { year: 'Hoje', text: 'Advocacia trabalhista independente, com atendimento online' },
+export type LineIconName =
+  | 'graduation-cap' | 'award' | 'scroll-text' | 'book-open-text' | 'scale' | 'users' | 'monitor-smartphone'
+  | 'badge-check' | 'map-pin';
+
+export const timeline: { year: string; text: string; icon: LineIconName; current?: boolean }[] = [
+  { year: '2020', text: 'Estágio em Direito do Trabalho', icon: 'book-open-text' },
+  { year: '2022', text: 'Início na advocacia', icon: 'scale' },
+  { year: '2023', text: 'Advogada trabalhista plena, com formação de estagiários e advogados júnior', icon: 'users' },
+  { year: 'Hoje', text: 'Advocacia trabalhista independente, com atendimento online', icon: 'monitor-smartphone', current: true },
 ];
 
-export const education = [
-  'Bacharel em Direito, PUC Goiás',
-  'Pós-graduação em Direito do Trabalho e Processo do Trabalho',
-  'Pós-graduação em Direito Penal e Processo Penal',
-  'Pós-graduação em Ciências Jurídicas e Criminais',
+// Formação: o nível (graduação ou pós) aparece como rótulo pequeno; a pós em Direito do Trabalho
+// é a área de atuação e ganha um leve destaque.
+export const education: { level: string; title: string; place?: string; icon: LineIconName; main?: boolean }[] = [
+  { level: 'Graduação', title: 'Bacharel em Direito', place: 'PUC Goiás', icon: 'graduation-cap' },
+  { level: 'Pós-graduação', title: 'Direito do Trabalho e Processo do Trabalho', icon: 'award', main: true },
+  { level: 'Pós-graduação', title: 'Direito Penal e Processo Penal', icon: 'scroll-text' },
+  { level: 'Pós-graduação', title: 'Ciências Jurídicas e Criminais', icon: 'scroll-text' },
 ];
 
 export const steps = [

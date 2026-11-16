@@ -5,6 +5,7 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
+import LineIcon from '../components/LineIcon.astro';
 import ContactCard from '../components/ContactCard.astro';
 import { getPosts, postUrl, readingTime } from '../data/blog';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
@@ -151,8 +152,8 @@ const schema = [
 
   <!-- 2. Apresentação e números -->
   <section class="section section--intro" aria-label="Apresentação">
-    <!-- Vídeo vertical da advogada em reunião (sem som, em loop) que fica parado na tela
-         enquanto a frase e os destaques passam por ele durante a rolagem -->
+    <!-- Vídeo da advogada em reunião (sem som, em loop) parado na tela enquanto a frase
+         passa por ele durante a rolagem -->
     <div class="container scrolly">
       <div class="scrolly__media" aria-hidden="true">
         <div class="scrolly__frame">
@@ -170,26 +171,32 @@ const schema = [
         </div>
       </div>
       <div class="scrolly__content">
-        <div class="statement reveal">
+        <div class="statement scrolly__step" data-step>
           <span class="statement__ornament" aria-hidden="true"><span></span></span>
           <p class="statement__text">
             Cada caso é analisado com atenção aos detalhes.{' '}
             <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
           </p>
-          <!-- no celular o ornamento se repete no fim, fechando a frase -->
+          <!-- o ornamento se repete no fim, fechando a frase -->
           <span class="statement__ornament statement__ornament--end" aria-hidden="true"><span></span></span>
         </div>
-        <ul class="highlights reveal">
-          {stats.map((s) => (
-            <li class="highlight">
-              <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
-              <AreaIcon name={s.icon} class="highlight__icon" />
-              <h3 class="highlight__title">{s.title}</h3>
-              <p class="highlight__text">{s.text}</p>
-            </li>
-          ))}
-        </ul>
       </div>
+    </div>
+  </section>
+
+  <!-- 2b. Destaques: quatro cartões logo abaixo do vídeo -->
+  <section class="section section--highlights" aria-label="Diferenciais">
+    <div class="container">
+      <ul class="highlights reveal">
+        {stats.map((s) => (
+          <li class="highlight">
+            <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
+            <AreaIcon name={s.icon} class="highlight__icon" />
+            <h3 class="highlight__title">{s.title}</h3>
+            <p class="highlight__text">{s.text}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -285,10 +292,11 @@ const schema = [
         </div>
         <div class="reveal">
           <p class="about__role">{site.fullName} · Advogada trabalhista · {site.oab}</p>
+          <!-- Credenciais: faixa com três colunas separadas por filetes, ícone em anel, rótulo e valor -->
           <dl class="about__meta">
-            <div><dt>Inscrição</dt><dd>{site.oab}</dd></div>
-            <div><dt>Área</dt><dd>Direito do Trabalho</dd></div>
-            <div><dt>Atendimento</dt><dd>Online · todo o Brasil</dd></div>
+            <div><LineIcon name="badge-check" class="about__meta-icon" /><dt>Inscrição</dt><dd>{site.oab}</dd></div>
+            <div><LineIcon name="scale" class="about__meta-icon" /><dt>Área</dt><dd>Direito do Trabalho</dd></div>
+            <div><LineIcon name="map-pin" class="about__meta-icon" /><dt>Atendimento</dt><dd>Online · todo o Brasil</dd></div>
           </dl>
           <div class="about__bio">
             <p>
@@ -311,17 +319,33 @@ const schema = [
             </p>
           </div>
 
-          <h3 class="subhead">Formação</h3>
-          <ul class="rows rows--plain">
-            {education.map((item) => <li>{item}</li>)}
-          </ul>
-
-          <h3 class="subhead">Trajetória</h3>
-          <ul class="rows">
-            {timeline.map((t) => (
-              <li><span class="row__key">{t.year}</span><span>{t.text}</span></li>
+          <!-- Formação: pequenos "diplomas" em grade, com ícone, nível e curso -->
+          <h3 class="about-label"><span>Formação</span></h3>
+          <ul class="edu">
+            {education.map((e) => (
+              <li class:list={['edu__item', { 'edu__item--main': e.main }]}>
+                <span class="edu__mark" aria-hidden="true"><LineIcon name={e.icon} /></span>
+                <LineIcon name={e.icon} class="edu__icon" />
+                <div>
+                  <p class="edu__level">{e.level}{e.main && <span class="edu__tag">Área de atuação</span>}</p>
+                  <p class="edu__title">{e.title}</p>
+                  {e.place && <p class="edu__place">{e.place}</p>}
+                </div>
+              </li>
             ))}
           </ul>
+
+          <!-- Trajetória: linha do tempo vertical, com um ícone em anel em cada marco; o atual fica preenchido -->
+          <h3 class="about-label"><span>Trajetória</span></h3>
+          <ol class="tl">
+            {timeline.map((t) => (
+              <li class:list={['tl__item', { 'tl__item--now': t.current }]}>
+                <LineIcon name={t.icon} class="tl__node" />
+                <p class="tl__year">{t.year}</p>
+                <p class="tl__text">{t.text}</p>
+              </li>
+            ))}
+          </ol>
 
           <Button href={whatsappLink()} icon="whatsapp" local="sobre">Converse comigo pelo WhatsApp</Button>
         </div>
@@ -463,6 +487,34 @@ const schema = [
       });
     }, { rootMargin: '200px 0px' });
     bgVideos.forEach((v) => io.observe(v));
+  }
+
+  // Passos da seção do vídeo: fica ativo só o bloco mais próximo do centro da tela (os demais somem),
+  // e apenas enquanto a seção está à vista.
+  const steps = [...document.querySelectorAll<HTMLElement>('[data-step]')];
+  const stage = document.querySelector<HTMLElement>('.scrolly');
+  if (steps.length && stage) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const mid = innerHeight / 2;
+      const box = stage.getBoundingClientRect();
+      // só começa quando o topo da seção já subiu bem (o vídeo aparece primeiro, o texto logo depois)
+      const inView = box.top < innerHeight * 0.2 && box.bottom > mid;
+      let best: HTMLElement | null = null;
+      let bestDist = Infinity;
+      if (inView) {
+        steps.forEach((s) => {
+          const r = s.getBoundingClientRect();
+          const d = Math.abs(r.top + r.height / 2 - mid);
+          if (d < bestDist) { bestDist = d; best = s; }
+        });
+      }
+      steps.forEach((s) => s.classList.toggle('is-active', s === best));
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
   }
 
   // Carrossel de artigos: setas, arrastar com o mouse e deslizar no celular (rolagem nativa com encaixe).

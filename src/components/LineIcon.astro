@@ -1,0 +1,36 @@
+---
+// Ícones de linha fina (Lucide) usados soltos, sem fundo: credenciais, formação e trajetória na seção "Sobre".
+import graduationCap from 'lucide-static/icons/graduation-cap.svg?raw';
+import award from 'lucide-static/icons/award.svg?raw';
+import scrollText from 'lucide-static/icons/scroll-text.svg?raw';
+import bookOpenText from 'lucide-static/icons/book-open-text.svg?raw';
+import scale from 'lucide-static/icons/scale.svg?raw';
+import users from 'lucide-static/icons/users.svg?raw';
+import monitorSmartphone from 'lucide-static/icons/monitor-smartphone.svg?raw';
+import badgeCheck from 'lucide-static/icons/badge-check.svg?raw';
+import mapPin from 'lucide-static/icons/map-pin.svg?raw';
+import type { LineIconName } from '../data/site';
+
+const icons: Record<LineIconName, string> = {
+  'graduation-cap': graduationCap,
+  award,
+  'scroll-text': scrollText,
+  'book-open-text': bookOpenText,
+  scale,
+  users,
+  'monitor-smartphone': monitorSmartphone,
+  'badge-check': badgeCheck,
+  'map-pin': mapPin,
+};
+
+interface Props {
+  name: LineIconName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const svg = icons[name]
+  .replace(/<!--[\s\S]*?-->/, '')
+  .replace('stroke-width="2"', 'stroke-width="1.5" aria-hidden="true" focusable="false"');
+---
+<span class:list={['line-icon', className]} set:html={svg} />
