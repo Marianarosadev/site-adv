@@ -63,9 +63,11 @@ const gtm = site.gtmId;
         if (saved) window.applyConsent(saved);
       } catch (e) {}
     </script>
+    <!-- O GTM só carrega no domínio oficial: homologação, prévias e localhost não entram nos relatórios do GA4 -->
     {gtm && (
-      <script is:inline define:vars={{ gtm }}>
-        (function (w, d, s, l, i) {
+      <script is:inline define:vars={{ gtm, prodHost: new URL(Astro.site).hostname }}>
+        var host = location.hostname.replace(/^www\./, '');
+        if (host === prodHost) (function (w, d, s, l, i) {
           w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
           var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
           j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
