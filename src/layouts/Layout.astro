@@ -109,10 +109,9 @@ const gtm = site.gtmId;
         </a>
         {!landing && (
           <nav class="nav" aria-label="Seções">
-            <a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a>
+            <a href={`${home}#como-posso-ajudar`}>Para trabalhadores</a>
+            <a class="nav__empresas" href="/empresas/" aria-current={empresasPage ? 'page' : undefined}><Icon name="shield" /> Para empresas</a>
             <a href={`${home}#sobre`}>Sobre</a>
-            <a href={`${home}#duvidas`}>Dúvidas</a>
-            <a class="nav__empresas" href="/empresas/" aria-current={empresasPage ? 'page' : undefined}><Icon name="shield" /> Advocacia preventiva para empresas</a>
             <a class="nav__blog" href="/blog/" aria-current={blogPage ? 'page' : undefined}><Icon name="book" /> Blog</a>
           </nav>
         )}

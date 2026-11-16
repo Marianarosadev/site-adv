@@ -11,7 +11,7 @@ import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
   site, areaUrl, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
-  servicesEmpresa,
+  frentesEmpresa,
 } from '../data/site';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -106,21 +106,22 @@ const schema = [
           Advogada trabalhista <span class="soft">com clareza em cada etapa.</span>
         </h1>
         <p class="hero__intro">
-          Sou a <strong>Dra. Giovanna Cabral, {site.oab}</strong>. Oriento e represento trabalhadores em questões como
-          rescisão, horas extras, rescisão indireta e carteira não assinada, com linguagem clara e atendimento 100%
-          online.
+          Sou a <strong>Dra. Giovanna Cabral</strong>, {site.oab}. Atendimento 100% online, com linguagem clara do
+          primeiro contato ao fim do processo.
         </p>
-        <p class="hero__intro hero__intro--extra">
-          Para empresas, atuo também na <strong>advocacia preventiva</strong>: orientação sobre contratos, rotinas e
-          desligamentos, para prevenir conflitos trabalhistas antes que cheguem à Justiça.
-        </p>
-        <div class="hero__actions">
-          <Button href={whatsappLink()} icon="whatsapp" local="topo" publico="geral">Falar no WhatsApp</Button>
-          <a class="btn btn--ghost" href="/empresas/">Atendimento para empresas</a>
-        </div>
-        <div class="cred">
-          <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} />
-          <span>{site.title} · {site.oab}</span>
+
+        <!-- Dois caminhos, um para cada público: cada um com uma frase e uma única ação -->
+        <div class="paths">
+          <div class="path path--trab">
+            <p class="path__label"><Icon name="user" /> Para trabalhadores</p>
+            <p class="path__text">Rescisão, horas extras, carteira não assinada e outros direitos.</p>
+            <Button href={whatsappLink()} icon="whatsapp" local="topo-trabalhador" publico="trabalhador">Falar no WhatsApp</Button>
+          </div>
+          <div class="path path--emp">
+            <p class="path__label"><Icon name="shield" /> Para empresas</p>
+            <p class="path__text"><strong>Advocacia preventiva</strong>: contratos, rotinas e desligamentos.</p>
+            <a class="btn btn--azul-ghost" href="/empresas/"><span>Conhecer o atendimento</span><Icon name="arrow" /></a>
+          </div>
         </div>
       </div>
 
@@ -151,10 +152,7 @@ const schema = [
   <section class="section section--intro" aria-label="Apresentação">
     <div class="container">
       <div class="statement reveal">
-        <div class="statement__label">
-          <Picture src={fotoPerfil} alt="" widths={[80]} sizes="40px" formats={['avif', 'webp']} />
-          Sobre o atendimento
-        </div>
+        <span class="statement__ornament" aria-hidden="true"><span></span></span>
         <p class="statement__text">
           Cada caso é analisado com atenção aos detalhes.{' '}
           <span class="soft">E cada etapa é explicada de forma simples, para você decidir com segurança.</span>
@@ -224,19 +222,24 @@ const schema = [
   <section class="section section--tight" id="para-empresas" aria-labelledby="empresas-titulo">
     <div class="container">
       <div class="band-empresas reveal">
+        <span class="band-empresas__mark" aria-hidden="true"><Icon name="briefcase" /></span>
         <div class="band-empresas__head">
-          <p class="eyebrow">Para empresas</p>
           <h2 class="band-empresas__title" id="empresas-titulo">Atendimento para empresas</h2>
-          <p>Defesa da empresa na Justiça do Trabalho, do recebimento da notificação até o fim do processo.</p>
+          <p>Acompanhamento contínuo para prevenir conflitos e, quando o processo chega, a defesa da empresa em todas as fases.</p>
         </div>
-        <ul class="band-empresas__list">
-          {servicesEmpresa.map((s) => <li>{s.title}</li>)}
-        </ul>
+        <div class="band-empresas__fronts">
+          {frentesEmpresa.map((f) => (
+            <div class="front">
+              <h3 class="front__title"><span class="front__icon"><Icon name={f.icon} /></span>{f.title}</h3>
+              <ul class="band-empresas__list band-empresas__list--check">
+                {f.items.map((item) => <li><Icon name="check" />{item}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
         <div class="band-empresas__actions">
-          <a class="btn btn--azul" href="/empresas/">Ver atendimento para empresas</a>
-          <a class="link-arrow link-arrow--whatsapp" href={whatsappEmpresa()} target="_blank" rel="noopener" data-local="faixa-empresas" data-publico="empresa">
-            <Icon name="whatsapp" /> WhatsApp para empresas
-          </a>
+          <Button href={whatsappEmpresa()} icon="whatsapp" local="faixa-empresas" publico="empresa">WhatsApp para empresas</Button>
+          <a class="band-empresas__more" href="/empresas/">Conhecer o atendimento <Icon name="arrow" /></a>
         </div>
       </div>
     </div>
@@ -246,7 +249,7 @@ const schema = [
   <section class="section" id="sobre">
     <div class="container">
       <div class="section-head reveal">
-        <h2 class="display">Prazer, <span class="soft">Giovanna Cabral.</span></h2>
+        <h2 class="display">Prazer, <span class="soft">Dra. Giovanna Cabral.</span></h2>
       </div>
       <div class="about">
         <div class="about__photo reveal">
@@ -267,20 +270,22 @@ const schema = [
           </dl>
           <div class="about__bio">
             <p>
-              Comecei na advocacia trabalhista em 2020, ainda como estagiária, e desde 2022 atuo como advogada. Me formei
-              em Direito pela PUC Goiás no tempo regular e fiz pós-graduação em Direito do Trabalho e Processo do Trabalho.
+              Sou advogada trabalhista, formada em Direito e pós-graduada em Direito e Processo do Trabalho. Desde o
+              início da carreira, atuo no Direito do Trabalho.
             </p>
             <p>
-              Como advogada plena, conduzi processos trabalhistas em todas as fases e instâncias, das audiências à
-              sustentação oral nos tribunais. Atuei tanto para trabalhadores quanto para empresas. Essa vivência me ensinou
-              a antecipar os argumentos do outro lado e a explicar cada etapa de forma simples para quem está vivendo o problema.
+              Já conduzi processos em todas as fases e instâncias, das audiências à sustentação oral nos tribunais,
+              atuando para trabalhadores e para empresas. Essa experiência me ajuda a antecipar os argumentos da outra
+              parte e a preparar cada caso com cuidado.
             </p>
             <p>
-              Também dou aulas de Direito e Processo do Trabalho, porque gosto de ensinar e de manter o conhecimento
-              técnico sempre em dia.
+              No atendimento, priorizo a clareza: explico cada etapa em linguagem simples, para que você entenda o que
+              está acontecendo e decida com segurança. E você fala diretamente comigo, do primeiro contato ao fim do
+              processo.
             </p>
             <p>
-              <a class="link-arrow link-arrow--wrap" href={site.cna} target="_blank" rel="noopener">Confira minha inscrição no Cadastro Nacional dos Advogados</a>
+              Também já dei aulas de Direito e Processo do Trabalho, experiência que reforçou meu cuidado em explicar
+              cada tema com clareza.
             </p>
           </div>
 

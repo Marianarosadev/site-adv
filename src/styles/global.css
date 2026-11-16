@@ -164,7 +164,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .header .btn { min-height: 42px; font-size: 14px; }
 .header .btn__icon { width: 30px; height: 30px; }
 .header .btn__label-long { display: none; }
-@media (min-width: 1200px) {
+@media (min-width: 1000px) {
   .nav { display: flex; gap: 22px; }
 }
 @media (min-width: 560px) {
@@ -206,7 +206,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .eyebrow--pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--vinho); }
 .hero__intro { margin: 20px 0 0; max-width: 46ch; color: var(--texto-suave); }
 .hero__intro strong { color: var(--texto); font-weight: 600; }
-.hero__intro--extra { margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--azul); font-size: 15px; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .hero__actions .btn { flex: 1 1 220px; }
 .hero__actions .btn--ghost { flex: 1 1 180px; background: color-mix(in srgb, var(--superficie) 60%, transparent); }
@@ -284,10 +283,21 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .statement__label img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: 40% 20%; }
 .statement__text { font-family: var(--serif); font-size: clamp(24px, 3.4vw, 36px); line-height: 1.25; letter-spacing: -0.01em; text-wrap: pretty; }
 .statement__text .soft { color: var(--rose-titulo); }
-@media (min-width: 900px) { .statement { grid-template-columns: 200px 1fr; gap: 56px; } }
+/* Frase de destaque em largura total, centralizada, com elementos suaves:
+   um ornamento fino (linha, losango, linha) acima e aspas grandes, quase transparentes, ao fundo */
+.statement { position: relative; isolation: isolate; justify-items: center; text-align: center; gap: 28px; }
+.statement__text { max-width: 48ch; font-size: clamp(26px, 3.6vw, 44px); line-height: 1.22; text-wrap: balance; }
+.statement::before {
+  content: '\201C'; position: absolute; z-index: -1; top: -0.42em; left: 50%; transform: translateX(-50%);
+  font-family: var(--serif); font-size: clamp(160px, 22vw, 280px); line-height: 1; color: var(--rose-titulo); opacity: .12;
+  pointer-events: none;
+}
+.statement__ornament { display: flex; align-items: center; gap: 12px; color: var(--rose-titulo); }
+.statement__ornament::before, .statement__ornament::after { content: ''; width: 56px; height: 1px; background: currentColor; opacity: .6; }
+.statement__ornament span { width: 7px; height: 7px; background: currentColor; transform: rotate(45deg); }
 
 /* Destaques: quatro cartões iguais (ícone, título curto, uma linha de apoio) */
-.highlights { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.highlights { list-style: none; margin: 64px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .highlight {
   display: flex; flex-direction: column; gap: 6px; padding: 20px 18px;
   background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--radius);
@@ -297,13 +307,13 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .highlight__text { font-size: 14px; color: var(--texto-suave); margin: 0; }
 /* Celular: uma coluna compacta, com o ícone ao lado do texto */
 @media (max-width: 639px) {
-  .highlights { grid-template-columns: 1fr; gap: 8px; margin-top: 40px; }
+  .highlights { grid-template-columns: 1fr; gap: 10px; margin-top: 48px; }
   .highlight { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; row-gap: 2px; align-items: center; padding: 14px 16px; }
   .highlight .highlight__icon { grid-row: span 2; margin: 0; }
   .highlight__title { font-size: 20px; }
 }
 @media (min-width: 900px) {
-  .highlights { grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 88px; }
+  .highlights { grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 112px; }
   .highlight { padding: 28px 24px; }
 }
 
@@ -481,7 +491,10 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 
 /* Seções consecutivas não somam espaçamento */
 .section + .section { padding-top: 0; }
-.section--intro { padding-top: 40px; }
+/* Mais distância do topo e entre a frase e os destaques */
+/* As aspas grandes sobem acima da frase, então o respiro conta a partir delas */
+.section--intro { padding-top: 136px; }
+@media (min-width: 900px) { .section--intro { padding-top: 224px; } }
 
 /* Ajustes pós-teste */
 .link-arrow { white-space: nowrap; }
@@ -584,16 +597,23 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   display: grid; gap: 24px; padding: 28px 22px;
   background: var(--azul-suave); border: 1px solid var(--azul-linha); border-radius: var(--radius);
 }
-.band-empresas .eyebrow { color: var(--azul); margin-bottom: 8px; }
+.band-empresas .eyebrow { color: var(--azul); margin-bottom: 14px; }
 .band-empresas__title { font-family: var(--serif); font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; color: var(--azul); margin-bottom: 10px; }
 .band-empresas__head p:last-child { color: var(--texto-suave); font-size: 15px; max-width: 46ch; }
 .band-empresas__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--azul-linha); }
 .band-empresas__list li { padding: 10px 0 10px 22px; border-bottom: 1px solid var(--azul-linha); font-size: 15px; position: relative; }
 .band-empresas__list li::before { content: ''; position: absolute; left: 4px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: var(--azul); }
 .band-empresas__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+/* Duas frentes (prevenção e defesa) lado a lado, no mesmo peso: sóbrio, sem disputar com os cards do trabalhador */
+.band-empresas__fronts { display: grid; gap: 24px; }
+.front__title { font-family: var(--serif); font-size: 22px; line-height: 1.2; color: var(--texto); }
+/* Título da frente centralizado na altura do ícone, com respiro antes da lista */
+.front__title { margin-bottom: 16px; }
+.band-empresas__actions .btn { min-height: 46px; }
+@media (min-width: 760px) { .band-empresas__fronts { grid-template-columns: 1fr 1fr; gap: 40px; } }
 @media (min-width: 900px) {
-  .band-empresas { grid-template-columns: 1fr 1fr; column-gap: 56px; padding: 44px 48px; }
-  .band-empresas__actions { grid-column: 1 / -1; }
+  .band-empresas { padding: 44px 48px; row-gap: 32px; }
+  .band-empresas__head p:last-child { max-width: 60ch; }
 }
 
 /* Cartão de contato (substitui o formulário) */
@@ -892,7 +912,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .menu-open body { overflow: hidden; }
 
 /* O menu existe só onde a navegação do topo some */
-@media (min-width: 1200px) {
+@media (min-width: 1000px) {
   .menu-btn, .mnav { display: none !important; }
 }
 /* Celular muito estreito: o WhatsApp do cabeçalho vira só o ícone para caber o botão de menu
@@ -1148,14 +1168,88 @@ a:hover .cover__img img { transform: scale(1.04); }
 
 /* Destaque do link de empresas: contorno azul (a cor das empresas no site) com escudo, de "prevenção".
    Fica diferente do "Blog", que é um botão vinho cheio. */
-.nav a.nav__empresas {
-  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; margin: -6px 0;
-  border: 1px solid var(--azul-linha); border-radius: 999px; background: var(--azul-suave);
-  color: var(--azul); font-weight: 600; transition: background-color .2s, border-color .2s, color .2s;
-}
-.nav a.nav__empresas:hover { background: var(--azul); border-color: var(--azul); color: #fff; }
-.nav a.nav__empresas[aria-current="page"] { background: var(--azul); border-color: var(--azul); color: #fff; }
+.nav a.nav__empresas { display: inline-flex; align-items: center; gap: 6px; color: var(--azul); font-weight: 600; }
+.nav a.nav__empresas:hover, .nav a.nav__empresas[aria-current="page"] { color: var(--azul-hover); text-decoration: underline; text-underline-offset: 6px; }
 .nav__empresas svg, .mnav__empresas svg { width: 15px; height: 15px; flex: none; }
 .mnav__main a.mnav__empresas { display: flex; align-items: center; gap: 10px; color: var(--azul); }
 .mnav__main a.mnav__empresas svg { width: 20px; height: 20px; }
 .header .btn { white-space: nowrap; flex: none; }
+
+/* ---------- Topo: dois caminhos (trabalhadores e empresas) ---------- */
+.paths { display: grid; gap: 12px; margin-top: 28px; max-width: 640px; }
+@media (min-width: 560px) { .paths { grid-template-columns: 1fr 1fr; } }
+.path {
+  display: flex; flex-direction: column; gap: 10px; padding: 18px;
+  border-radius: 6px; border: 1px solid var(--linha);
+  background: color-mix(in srgb, var(--superficie) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.path--emp { background: color-mix(in srgb, var(--azul-suave) 92%, transparent); border-color: var(--azul-linha); }
+.path__label {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--vinho);
+}
+.path--emp .path__label { color: var(--azul); }
+.path__label svg { width: 16px; height: 16px; flex: none; }
+.path__text { margin: 0; flex: 1; font-size: 15px; line-height: 1.45; color: var(--texto); }
+.path__text strong { font-weight: 600; }
+.path .btn { width: 100%; min-height: 46px; }
+.btn--azul-ghost {
+  justify-content: space-between; gap: 10px; padding: 6px 16px;
+  background: transparent; border-color: var(--azul); color: var(--azul); font-weight: 600;
+}
+.btn--azul-ghost:hover { background: var(--azul); color: #fff; }
+.btn--azul-ghost svg { width: 16px; height: 16px; transition: transform .2s; }
+.btn--azul-ghost:hover svg { transform: translateX(3px); }
+/* No computador os atalhos flutuantes saem: os temas já estão no caminho do trabalhador.
+   No celular eles continuam como carrossel, sobre a foto. */
+@media (min-width: 900px) { .hero .chips { display: none; } }
+
+/* Ícones da faixa de empresas: pequenos, na cor azul, só onde ajudam a ler */
+.band-empresas { position: relative; overflow: hidden; isolation: isolate; }
+.band-empresas__eyebrow { display: inline-flex; align-items: center; gap: 6px; }
+.band-empresas__eyebrow svg { width: 14px; height: 14px; }
+.front__title { display: flex; align-items: center; gap: 10px; }
+.front__icon { display: grid; place-items: center; flex: none; color: var(--azul); }
+.front__icon svg { width: 24px; height: 24px; }
+.band-empresas__list--check li { display: flex; align-items: center; gap: 10px; padding-left: 0; }
+.band-empresas__list--check li::before { content: none; }
+.band-empresas__list--check li svg { width: 15px; height: 15px; flex: none; color: var(--azul); }
+/* Marca d'água: maleta grande, quase transparente, no canto da faixa */
+.band-empresas__mark {
+  position: absolute; z-index: -1; right: -40px; bottom: -50px; width: 300px; height: 300px;
+  color: var(--azul); opacity: .05; pointer-events: none;
+}
+.band-empresas__mark svg { width: 100%; height: 100%; stroke-width: 1; }
+@media (max-width: 759px) { .band-empresas__mark { width: 200px; height: 200px; right: -50px; top: -30px; bottom: auto; } }
+/* Respiro entre o cabeçalho da faixa (título e frase) e as duas frentes */
+.band-empresas__fronts { margin-top: 16px; }
+@media (min-width: 900px) { .band-empresas__fronts { margin-top: 24px; } }
+
+/* Faixa de empresas no celular: mais respiro entre cada bloco, para ler um de cada vez */
+@media (max-width: 759px) {
+  .band-empresas { padding: 32px 20px; gap: 32px; }
+  .band-empresas__title { margin-bottom: 14px; }
+  .band-empresas__fronts { gap: 0; margin-top: 8px; }
+  .front { padding: 28px 0; }
+  .front:first-child { padding-top: 0; }
+  .band-empresas__list li { padding-top: 12px; padding-bottom: 12px; line-height: 1.45; }
+  .band-empresas__list--check li { align-items: flex-start; }
+  .band-empresas__list--check li svg { margin-top: 3px; }
+  .band-empresas__actions { flex-direction: column; align-items: stretch; gap: 18px; }
+  .band-empresas__more { align-self: center; }
+}
+
+/* Ação principal da faixa: WhatsApp para empresas. "Conhecer o atendimento" fica como link discreto */
+.band-empresas__actions .btn--whatsapp { min-height: 48px; padding: 6px 24px; }
+.band-empresas__more {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 15px; font-weight: 500; color: var(--azul); text-decoration: none;
+}
+.band-empresas__more:hover { text-decoration: underline; text-underline-offset: 4px; }
+.band-empresas__more svg { width: 15px; height: 15px; transition: transform .2s; }
+.band-empresas__more:hover svg { transform: translateX(3px); }
+
+/* Hierarquia nas frentes: título em azul e um pouco maior; itens em tom mais suave */
+.front__title { color: var(--azul); font-size: 24px; }
+.band-empresas__list--check li { color: var(--texto-suave); }

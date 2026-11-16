@@ -3,9 +3,13 @@ import { siWhatsapp } from 'simple-icons';
 import phone from 'lucide-static/icons/phone.svg?raw';
 import book from 'lucide-static/icons/book-open-text.svg?raw';
 import shield from 'lucide-static/icons/shield-check.svg?raw';
+import user from 'lucide-static/icons/user-round.svg?raw';
+import scale from 'lucide-static/icons/scale.svg?raw';
+import briefcase from 'lucide-static/icons/briefcase-business.svg?raw';
+import check from 'lucide-static/icons/check.svg?raw';
 
 interface Props {
-  name: 'whatsapp' | 'arrow' | 'phone' | 'book' | 'shield';
+  name: 'whatsapp' | 'arrow' | 'phone' | 'book' | 'shield' | 'user' | 'scale' | 'briefcase' | 'check';
 }
 
 const { name } = Astro.props;
@@ -22,3 +26,7 @@ const lucide = (svg: string) => svg
 {name === 'phone' && <Fragment set:html={lucide(phone)} />}
 {name === 'book' && <Fragment set:html={lucide(book)} />}
 {name === 'shield' && <Fragment set:html={lucide(shield)} />}
+{name === 'user' && <Fragment set:html={lucide(user)} />}
+{name === 'scale' && <Fragment set:html={lucide(scale)} />}
+{name === 'briefcase' && <Fragment set:html={lucide(briefcase)} />}
+{name === 'check' && <Fragment set:html={lucide(check)} />}

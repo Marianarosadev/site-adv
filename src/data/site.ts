@@ -12,7 +12,6 @@ export const site = {
   city: 'Goiânia/GO',
   // Trocar por "Especialista em Direito e Processo do Trabalho" se a cliente confirmar o certificado (decisão A5).
   title: 'Pós-graduada em Direito e Processo do Trabalho',
-  cna: 'https://cna.oab.org.br/',
   // Código do contêiner do Google Tag Manager (GTM-XXXXXXX). Vazio = nenhuma tag é carregada.
   gtmId: 'GTM-TL9C4W2F',
 };
@@ -226,9 +225,31 @@ export const faq: { q: string; a: string; link?: { href: string; label: string }
 ];
 
 // Serviços para empresas: confirmar a lista com a cliente.
+// Duas frentes: acompanhamento preventivo contínuo e defesa quando o processo chega.
+export const frentesEmpresa: { icon: 'shield' | 'scale'; title: string; items: string[] }[] = [
+  {
+    icon: 'shield',
+    title: 'Prevenção e acompanhamento',
+    items: [
+      'Orientação sobre rotinas, jornada e documentos',
+      'Contratos, admissões e desligamentos',
+      'Análise de riscos antes de decisões importantes',
+    ],
+  },
+  {
+    icon: 'scale',
+    title: 'Defesa em processos',
+    items: [
+      'Contestação e acompanhamento em todas as fases',
+      'Preparação do preposto e atuação em audiências',
+      'Análise e negociação de acordos',
+    ],
+  },
+];
+
 export const servicesEmpresa = [
+  { title: 'Acompanhamento preventivo', text: 'Orientação contínua sobre rotinas, jornada e documentos, para prevenir conflitos antes que virem processos.' },
+  { title: 'Contratos e desligamentos', text: 'Contratos, admissões, advertências e desligamentos conduzidos com segurança jurídica.' },
   { title: 'Defesa em reclamações trabalhistas', text: 'Análise da reclamação, contestação e acompanhamento do processo em todas as fases.' },
-  { title: 'Audiências', text: 'Preparação da empresa e do preposto e atuação na audiência, presencial ou por vídeo.' },
-  { title: 'Acordos', text: 'Análise de propostas e negociação de acordos, judiciais ou antes do processo.' },
-  { title: 'Pareceres e orientação', text: 'Orientação sobre rotinas trabalhistas, desligamentos e documentos, para decidir com segurança.' },
+  { title: 'Audiências e acordos', text: 'Preparação do preposto, atuação em audiências e análise ou negociação de acordos.' },
 ];
