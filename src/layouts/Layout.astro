@@ -17,15 +17,20 @@ interface Props {
   whatsapp?: string;
   tema?: string;
   publico?: 'trabalhador' | 'empresa' | 'geral';
+  // Imagem de compartilhamento (WhatsApp, redes). Sem ela, usa a imagem padrão do site.
+  ogImage?: string;
 }
 
 const {
   title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
+  ogImage: ogImagePath = '/og-image.jpg',
 } = Astro.props;
 const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og-image.jpg', Astro.site);
+const ogImage = new URL(ogImagePath, Astro.site);
 const home = Astro.url.pathname === '/' ? '' : '/';
+const blogPage = Astro.url.pathname.startsWith('/blog');
+const empresasPage = Astro.url.pathname.startsWith('/empresas');
 const gtm = site.gtmId;
 ---
 <!doctype html>
@@ -107,8 +112,8 @@ const gtm = site.gtmId;
             <a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a>
             <a href={`${home}#sobre`}>Sobre</a>
             <a href={`${home}#duvidas`}>Dúvidas</a>
-            <a href="/blog/">Artigos</a>
-            <a href="/empresas/">Para empresas</a>
+            <a class="nav__empresas" href="/empresas/" aria-current={empresasPage ? 'page' : undefined}><Icon name="shield" /> Advocacia preventiva para empresas</a>
+            <a class="nav__blog" href="/blog/" aria-current={blogPage ? 'page' : undefined}><Icon name="book" /> Blog</a>
           </nav>
         )}
         <div class="header__actions">
@@ -131,8 +136,8 @@ const gtm = site.gtmId;
               <li><a href={`${home}#como-posso-ajudar`}>Como posso ajudar</a></li>
               <li><a href={`${home}#sobre`}>Sobre</a></li>
               <li><a href={`${home}#duvidas`}>Dúvidas</a></li>
-              <li><a href="/blog/">Artigos</a></li>
-              <li><a href="/empresas/">Para empresas</a></li>
+              <li><a class="mnav__blog" href="/blog/"><Icon name="book" /> Artigos <span class="mnav__blog-tag">Blog</span></a></li>
+              <li><a class="mnav__empresas" href="/empresas/"><Icon name="shield" /> Advocacia preventiva para empresas</a></li>
               <li><a href={`${home}#contato`}>Contato</a></li>
             </ul>
             <p class="mnav__label">Temas</p>

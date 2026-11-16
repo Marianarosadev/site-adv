@@ -1,13 +1,15 @@
 ---
 import { siWhatsapp } from 'simple-icons';
 import phone from 'lucide-static/icons/phone.svg?raw';
+import book from 'lucide-static/icons/book-open-text.svg?raw';
+import shield from 'lucide-static/icons/shield-check.svg?raw';
 
 interface Props {
-  name: 'whatsapp' | 'arrow' | 'phone';
+  name: 'whatsapp' | 'arrow' | 'phone' | 'book' | 'shield';
 }
 
 const { name } = Astro.props;
-const phoneSvg = phone
+const lucide = (svg: string) => svg
   .replace(/<!--[\s\S]*?-->/, '')
   .replace('stroke-width="2"', 'stroke-width="1.75" aria-hidden="true" focusable="false"');
 ---
@@ -17,4 +19,6 @@ const phoneSvg = phone
 {name === 'arrow' && (
   <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
 )}
-{name === 'phone' && <Fragment set:html={phoneSvg} />}
+{name === 'phone' && <Fragment set:html={lucide(phone)} />}
+{name === 'book' && <Fragment set:html={lucide(book)} />}
+{name === 'shield' && <Fragment set:html={lucide(shield)} />}

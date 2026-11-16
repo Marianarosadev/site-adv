@@ -4,6 +4,10 @@ description: 'O contrato como PJ não impede o reconhecimento do vínculo de emp
 date: 2026-10-20
 category: 'Vínculo de emprego'
 topics: ['carteira-nao-assinada']
+cover:
+  src: '../../assets/blog/trabalho-como-pj-tenho-vinculo-de-emprego.jpg'
+  alt: 'Notebook, papéis e calculadora sobre uma mesa de trabalho'
+  credit: 'Kelly Sikkema'
 ---
 
 Contratar alguém como pessoa jurídica (PJ) ou sem registro não decide, sozinho, se existe ou não um emprego. Na Justiça do Trabalho vale o que acontece na prática, o chamado **princípio da primazia da realidade**.

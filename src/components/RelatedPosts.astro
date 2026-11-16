@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import Icon from './Icon.astro';
-import bookOpen from 'lucide-static/icons/book-open-text.svg?raw';
+import PostCover from './PostCover.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import { site } from '../data/site';
 import { postUrl, readingTime, formatDate, type Post } from '../data/blog';
@@ -14,9 +14,6 @@ interface Props {
 }
 
 const { posts, topic } = Astro.props;
-const book = bookOpen
-  .replace(/<!--[\s\S]*?-->/, '')
-  .replace('stroke-width="2"', 'stroke-width="1.25" aria-hidden="true" focusable="false"');
 ---
 {posts.length > 0 && (
   <section class="section section--tight" aria-labelledby="veja-tambem">
@@ -30,11 +27,7 @@ const book = bookOpen
         {posts.map((post) => (
           <li>
             <a class="read-card" href={postUrl(post)}>
-              <div class="read-card__cover" aria-hidden="true">
-                <span class="read-card__tag">Artigo</span>
-                <span class="read-card__book" set:html={book} />
-                <span class="read-card__cat">{post.data.category}</span>
-              </div>
+              <PostCover category={post.data.category} cover={post.data.cover} sizes="(min-width: 760px) 240px, 100vw" class="read-card__cover" />
               <div class="read-card__body">
                 <p class="read-card__kicker">Do blog · {readingTime(post)}</p>
                 <h3 class="read-card__title">{post.data.title}</h3>

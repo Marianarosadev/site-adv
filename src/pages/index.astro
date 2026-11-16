@@ -108,7 +108,11 @@ const schema = [
         <p class="hero__intro">
           Sou a <strong>Dra. Giovanna Cabral, {site.oab}</strong>. Oriento e represento trabalhadores em questões como
           rescisão, horas extras, rescisão indireta e carteira não assinada, com linguagem clara e atendimento 100%
-          online. Também atendo empresas.
+          online.
+        </p>
+        <p class="hero__intro hero__intro--extra">
+          Para empresas, atuo também na <strong>advocacia preventiva</strong>: orientação sobre contratos, rotinas e
+          desligamentos, para prevenir conflitos trabalhistas antes que cheguem à Justiça.
         </p>
         <div class="hero__actions">
           <Button href={whatsappLink()} icon="whatsapp" local="topo" publico="geral">Falar no WhatsApp</Button>
@@ -353,6 +357,16 @@ const schema = [
 
           <div class="blog-band__posts reveal">
             <a class="blog-band__featured" href={postUrl(latestPosts[0])}>
+              {latestPosts[0].data.cover && (
+                <Picture
+                  src={latestPosts[0].data.cover.src}
+                  alt=""
+                  widths={[480, 800, 1000]}
+                  sizes="(min-width: 900px) 600px, 100vw"
+                  formats={['avif', 'webp']}
+                  class="blog-band__img"
+                />
+              )}
               <span class="blog-band__cat">{latestPosts[0].data.category}</span>
               <h3>{latestPosts[0].data.title}</h3>
               <p>{latestPosts[0].data.description}</p>

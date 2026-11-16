@@ -1,13 +1,18 @@
 ---
+import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
-import PostCard from '../../components/PostCard.astro';
-import { site } from '../../data/site';
-import { getPosts, categories, categorySlug, postUrl } from '../../data/blog';
+import Icon from '../../components/Icon.astro';
+import PostCover from '../../components/PostCover.astro';
+import fotoPerfil from '../../assets/giovanna-perfil.jpg';
+import { site, whatsappLink } from '../../data/site';
+import { getPosts, categories, categorySlug, postUrl, readingTime, formatDate } from '../../data/blog';
 
 const posts = await getPosts();
-const [featured, ...rest] = posts;
-// Só mostra no filtro as categorias que têm artigo publicado.
-const used = categories.filter((c) => posts.some((p) => p.data.category === c));
+const [featured] = posts;
+// Só mostra no filtro e na lateral os temas que têm artigo publicado.
+const used = categories
+  .map((c) => ({ name: c, slug: categorySlug(c), count: posts.filter((p) => p.data.category === c).length }))
+  .filter((c) => c.count > 0);
 
 const schema = [
   {
@@ -15,6 +20,7 @@ const schema = [
     '@type': 'Blog',
     name: `Artigos | ${site.fullName}`,
     url: new URL('/blog/', Astro.site).href,
+    author: { '@type': 'Person', name: site.fullName, identifier: site.oab },
     blogPost: posts.map((p) => ({
       '@type': 'BlogPosting',
       headline: p.data.title,
@@ -25,39 +31,132 @@ const schema = [
 ];
 ---
 <Layout
-  title="Artigos sobre Direito do Trabalho | Dra. Giovanna Cabral, OAB/GO 66.313"
-  description="Artigos com orientações claras sobre rescisão, horas extras, vínculo de emprego e outros temas do Direito do Trabalho, para trabalhadores e empresas."
+  title="Blog: Artigos sobre Direito do Trabalho | Dra. Giovanna Cabral, OAB/GO 66.313"
+  description="Blog com artigos e orientações claras sobre rescisão, horas extras, vínculo de emprego e outros temas do Direito do Trabalho, para trabalhadores e empresas."
   schema={schema}
 >
-  <section class="blog-head">
-    <div class="container">
-      <p class="eyebrow eyebrow--pill">Artigos</p>
-      <h1 class="display display--lp">Direito do Trabalho <span class="soft">explicado com clareza.</span></h1>
-      <p class="blog-head__intro">
-        Textos informativos sobre os temas que mais geram dúvidas no dia a dia do trabalho, escritos por mim, {site.fullName}.
-      </p>
-    </div>
-  </section>
+  <!-- Cabeçalho do blog: faixa escura, com cara de publicação, diferente das outras páginas -->
+  <div class="blog-mast-wrap">
+    <header class="blog-mast">
+      <div class="container">
+        <div class="blog-mast__top">
+          <span class="blog-mast__kicker"><Fragment set:html="&#9679;" /> Blog</span>
+          <span>{posts.length} {posts.length === 1 ? 'artigo publicado' : 'artigos publicados'}</span>
+        </div>
+        <h1 class="blog-mast__title">Artigos <span>sobre os seus direitos no trabalho.</span></h1>
+        <p class="blog-mast__intro">
+          Textos curtos, em linguagem simples, sobre as dúvidas que mais aparecem no dia a dia de quem trabalha e de
+          quem emprega.
+        </p>
+        <div class="blog-mast__byline">
+          <Picture src={fotoPerfil} alt="" widths={[80]} sizes="40px" formats={['avif', 'webp']} loading="eager" />
+          <span>Escritos por <strong>{site.fullName}</strong> · {site.oab}</span>
+        </div>
+      </div>
+    </header>
+  </div>
 
-  <section class="section section--tight">
-    <div class="container">
-      {posts.length === 0 ? (
-        <p class="muted">Nenhum artigo publicado ainda.</p>
-      ) : (
-        <>
-          <nav class="blog-filter" aria-label="Filtrar por tema" data-blog-filter>
-            <button type="button" class="blog-filter__btn" aria-pressed="true" data-filter="todos">Todos</button>
-            {used.map((c) => (
-              <button type="button" class="blog-filter__btn" aria-pressed="false" data-filter={categorySlug(c)}>{c}</button>
-            ))}
-          </nav>
-          <ul class="posts" data-posts>
-            <PostCard post={featured} featured />
-            {rest.map((post) => <PostCard post={post} />)}
-          </ul>
-          <p class="muted blog-empty" data-blog-empty hidden>Nenhum artigo neste tema ainda.</p>
-        </>
-      )}
+  <section class="blog-body">
+    <div class="container blog-layout">
+      <div class="blog-main">
+        {posts.length === 0 ? (
+          <p class="muted">Nenhum artigo publicado ainda.</p>
+        ) : (
+          <>
+            <nav class="blog-tabs" aria-label="Filtrar por tema" data-blog-filter>
+              <button type="button" class="blog-tabs__btn" aria-pressed="true" data-filter="todos">Todos</button>
+              {used.map((c) => (
+                <button type="button" class="blog-tabs__btn" aria-pressed="false" data-filter={c.slug}>{c.name}</button>
+              ))}
+            </nav>
+
+            <!-- Destaque: o artigo mais recente (some quando um tema é filtrado) -->
+            <article class="blog-featured" data-featured>
+              <a href={postUrl(featured)} class="blog-featured__link">
+                <PostCover category={featured.data.category} cover={featured.data.cover} sizes="(min-width: 1000px) 400px, (min-width: 760px) 40vw, 100vw" class="blog-featured__cover" />
+                <div class="blog-featured__body">
+                  <p class="blog-featured__label">Mais recente</p>
+                  <h2 class="blog-featured__title">{featured.data.title}</h2>
+                  <p class="blog-featured__excerpt">{featured.data.description}</p>
+                  <p class="blog-meta">
+                    <time datetime={featured.data.date.toISOString()}>{formatDate(featured.data.date)}</time>
+                    <span aria-hidden="true">·</span> {readingTime(featured)}
+                  </p>
+                  <span class="blog-read">Ler artigo <Icon name="arrow" /></span>
+                </div>
+              </a>
+            </article>
+
+            <h2 class="blog-section-title" data-list-title>Todos os artigos</h2>
+            <ol class="blog-feed" data-posts>
+              {posts.map((post, i) => (
+                <li
+                  class:list={['blog-item', { 'is-featured': i === 0 }]}
+                  data-category={categorySlug(post.data.category)}
+                >
+                  <a href={postUrl(post)} class="blog-item__link">
+                    <PostCover category={post.data.category} cover={post.data.cover} sizes="(min-width: 640px) 180px, 96px" class="blog-item__cover" />
+                    <div class="blog-item__body">
+                      <p class="blog-item__cat" data-cat={categorySlug(post.data.category)}>{post.data.category}</p>
+                      <h3 class="blog-item__title">{post.data.title}</h3>
+                      <p class="blog-item__excerpt">{post.data.description}</p>
+                      <p class="blog-meta">
+                        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+                        <span aria-hidden="true">·</span> {readingTime(post)}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <p class="muted blog-empty" data-blog-empty hidden>Nenhum artigo neste tema ainda.</p>
+          </>
+        )}
+      </div>
+
+      <!-- Lateral: quem escreve, temas e contato -->
+      <aside class="blog-aside" aria-label="Sobre o blog">
+        <div class="blog-box blog-author">
+          <Picture src={fotoPerfil} alt="Dra. Giovanna Cabral" widths={[160]} sizes="80px" formats={['avif', 'webp']} />
+          <p class="blog-box__label">Quem escreve</p>
+          <h2 class="blog-author__name">{site.fullName}</h2>
+          <p class="blog-author__role">Advogada trabalhista · {site.oab}</p>
+          <p class="blog-author__bio">{site.title}. Escrevo para explicar, sem "juridiquês", o que a lei diz sobre o trabalho.</p>
+          <a class="link-arrow" href="/#sobre">Conheça minha trajetória</a>
+        </div>
+
+        {used.length > 0 && (
+          <div class="blog-box">
+            <p class="blog-box__label">Temas</p>
+            <ul class="blog-topics">
+              {used.map((c) => (
+                <li>
+                  <button type="button" data-filter-link={c.slug}>
+                    <span class="blog-topics__dot" data-cat={c.slug}></span>
+                    {c.name}
+                    <span class="blog-topics__count">{c.count}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div class="blog-box blog-cta">
+          <p class="blog-box__label">Tem uma dúvida específica?</p>
+          <p>Cada caso tem particularidades. Me conte o que aconteceu.</p>
+          <a
+            class="btn btn--whatsapp btn--block"
+            href={whatsappLink('li os artigos do blog e gostaria de uma orientação.')}
+            target="_blank"
+            rel="noopener"
+            data-local="blog-lateral"
+            data-tema="blog"
+          >
+            <Icon name="whatsapp" /><span>Falar no WhatsApp</span>
+          </a>
+        </div>
+      </aside>
     </div>
   </section>
 </Layout>
@@ -65,33 +164,47 @@ const schema = [
 <script>
   // Filtro por tema no próprio navegador; o tema escolhido vai para o endereço (?tema=) para poder ser compartilhado.
   const filter = document.querySelector<HTMLElement>('[data-blog-filter]');
-  const cards = document.querySelectorAll<HTMLElement>('[data-posts] > li');
+  const items = document.querySelectorAll<HTMLElement>('[data-posts] > li');
+  const featured = document.querySelector<HTMLElement>('[data-featured]');
+  const listTitle = document.querySelector<HTMLElement>('[data-list-title]');
   const empty = document.querySelector<HTMLElement>('[data-blog-empty]');
 
-  function apply(slug: string) {
+  function apply(slug: string, scroll = false) {
+    const all = slug === 'todos';
     let shown = 0;
     filter?.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.filter === slug)),
     );
-    cards.forEach((card) => {
-      const visible = slug === 'todos' || card.dataset.category === slug;
-      card.hidden = !visible;
-      if (visible) shown++;
+    // Na lista completa o mais recente fica no destaque; filtrando, ele volta para a lista.
+    if (featured) featured.hidden = !all;
+    items.forEach((item) => {
+      const visible = all ? !item.classList.contains('is-featured') : item.dataset.category === slug;
+      item.hidden = !visible;
+      if (visible || (all && item.classList.contains('is-featured'))) shown++;
     });
-    // O destaque só fica grande na lista completa.
-    document.querySelector('[data-posts]')?.classList.toggle('posts--filtered', slug !== 'todos');
+    if (listTitle) {
+      const label = filter?.querySelector<HTMLElement>(`[data-filter="${CSS.escape(slug)}"]`)?.textContent;
+      listTitle.textContent = all ? 'Todos os artigos' : `Artigos sobre ${label}`;
+    }
     if (empty) empty.hidden = shown > 0;
+    if (scroll) filter?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  const initial = new URLSearchParams(location.search).get('tema');
-  if (initial && filter?.querySelector(`[data-filter="${CSS.escape(initial)}"]`)) apply(initial);
-
-  filter?.addEventListener('click', (event) => {
-    const slug = (event.target as HTMLElement).closest<HTMLElement>('[data-filter]')?.dataset.filter;
-    if (!slug) return;
-    apply(slug);
+  function select(slug: string, scroll = false) {
+    apply(slug, scroll);
     const url = new URL(location.href);
     if (slug === 'todos') url.searchParams.delete('tema'); else url.searchParams.set('tema', slug);
     history.replaceState(null, '', url);
+  }
+
+  const initial = new URLSearchParams(location.search).get('tema');
+  apply(initial && filter?.querySelector(`[data-filter="${CSS.escape(initial)}"]`) ? initial : 'todos');
+
+  filter?.addEventListener('click', (event) => {
+    const slug = (event.target as HTMLElement).closest<HTMLElement>('[data-filter]')?.dataset.filter;
+    if (slug) select(slug);
   });
+  document.querySelectorAll<HTMLElement>('[data-filter-link]').forEach((btn) =>
+    btn.addEventListener('click', () => select(btn.dataset.filterLink!, true)),
+  );
 </script>

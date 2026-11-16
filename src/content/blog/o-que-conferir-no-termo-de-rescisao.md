@@ -4,6 +4,10 @@ description: 'Um roteiro simples para conferir as verbas do termo de rescisão (
 date: 2026-11-10
 category: 'Rescisão'
 topics: ['rescisao', 'fgts-e-seguro-desemprego']
+cover:
+  src: '../../assets/blog/o-que-conferir-no-termo-de-rescisao.jpg'
+  alt: 'Pessoa conferindo valores com uma calculadora sobre a mesa'
+  credit: 'Towfiqu barbhuiya'
 ---
 
 Receber o termo de rescisão do contrato de trabalho (o TRCT) costuma vir junto com muitas dúvidas. O documento tem códigos, valores e descontos que nem sempre são fáceis de entender. Este roteiro ajuda a conferir os pontos principais.

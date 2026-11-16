@@ -4,6 +4,10 @@ description: 'Quando a falta grave é da empresa, o trabalhador pode pedir o fim
 date: 2026-10-27
 category: 'Rescisão'
 topics: ['rescisao-indireta', 'assedio-moral', 'fgts-e-seguro-desemprego']
+cover:
+  src: '../../assets/blog/rescisao-indireta-quando-o-trabalhador-pode-encerrar-o-contrato.jpg'
+  alt: 'Mulher sentada em um escritório segurando papéis'
+  credit: 'Vitaly Gariev'
 ---
 
 Muita gente conhece a justa causa aplicada pela empresa. Poucos sabem que a lei também prevê o caminho inverso: quando quem comete a falta grave é o empregador, o trabalhador pode encerrar o contrato por **rescisão indireta** (CLT, art. 483).

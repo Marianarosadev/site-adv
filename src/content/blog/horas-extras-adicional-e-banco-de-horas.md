@@ -4,6 +4,10 @@ description: 'Entenda quando a jornada passa a contar como hora extra, qual é o
 date: 2026-11-03
 category: 'Jornada e salário'
 topics: ['horas-extras']
+cover:
+  src: '../../assets/blog/horas-extras-adicional-e-banco-de-horas.jpg'
+  alt: 'Relógios de parede marcando horários diferentes'
+  credit: 'Luis Cortes'
 ---
 
 A jornada padrão prevista na Constituição é de até **8 horas por dia e 44 horas por semana**. O que passa desse limite, ou do limite menor previsto no seu contrato, é hora extra.

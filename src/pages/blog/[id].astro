@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
@@ -15,8 +15,12 @@ export async function getStaticPaths() {
 
 const { post, posts } = Astro.props as { post: Post; posts: Post[] };
 const { Content } = await render(post);
-const { title, description, date, updated, category, audience } = post.data;
+const { title, description, date, updated, category, audience, cover } = post.data;
 const empresa = audience === 'empresa';
+// Prévia do link no WhatsApp e nas redes: a foto do artigo, no formato 1200x630.
+const ogImage = cover
+  ? (await getImage({ src: cover.src, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src
+  : undefined;
 const publico = empresa ? 'empresa' : 'trabalhador';
 const wa = empresa
   ? whatsappEmpresa(`Li o artigo "${title}" e gostaria de conversar.`)
@@ -39,7 +43,7 @@ const schema = [
     dateModified: (updated ?? date).toISOString(),
     url,
     mainEntityOfPage: url,
-    image: new URL('/og-image.jpg', Astro.site).href,
+    image: new URL(ogImage ?? '/og-image.jpg', Astro.site).href,
     author: { '@type': 'Person', name: site.fullName, jobTitle: 'Advogada trabalhista', identifier: site.oab },
     publisher: { '@type': 'Person', name: site.fullName },
     inLanguage: 'pt-BR',
@@ -62,6 +66,7 @@ const schema = [
   whatsapp={wa}
   tema={`blog-${post.id}`}
   publico={publico}
+  ogImage={ogImage}
 >
   <article class="article">
     <header class="container article__head">
@@ -81,6 +86,21 @@ const schema = [
         </span>
       </div>
     </header>
+
+    {cover && (
+      <figure class="container article__cover">
+        <Picture
+          src={cover.src}
+          alt={cover.alt}
+          widths={[480, 800, 1200, 1600]}
+          sizes="(min-width: 1184px) 1120px, calc(100vw - 32px)"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>Imagem ilustrativa · Foto: {cover.credit} / Unsplash</figcaption>
+      </figure>
+    )}
 
     <div class="container">
       <div class="article__body prose">

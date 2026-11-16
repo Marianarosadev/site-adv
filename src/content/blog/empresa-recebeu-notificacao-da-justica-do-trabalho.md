@@ -4,6 +4,10 @@ description: 'O que fazer nos primeiros dias depois de receber a citação de um
 date: 2026-10-13
 category: 'Para empresas'
 audience: 'empresa'
+cover:
+  src: '../../assets/blog/empresa-recebeu-notificacao-da-justica-do-trabalho.jpg'
+  alt: 'Pessoa abrindo uma carta sobre uma mesa de madeira'
+  credit: 'Kelly Sikkema'
 ---
 
 Receber a notificação de uma reclamação trabalhista exige organização desde o primeiro dia. As decisões tomadas antes da audiência têm peso no resultado do processo.
