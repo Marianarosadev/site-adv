@@ -1,5 +1,7 @@
 ---
 import Button from './Button.astro';
+import Icon from './Icon.astro';
+import LineIcon from './LineIcon.astro';
 import { site, telLink } from '../data/site';
 
 interface Props {
@@ -12,21 +14,27 @@ interface Props {
 
 const { whatsapp, checklist, tema, publico = 'geral', title = 'Fale comigo' } = Astro.props;
 ---
+<!-- Cartão de contato: rótulo pequeno, título, WhatsApp em destaque e "Ligar" em contorno; dados com ícones
+     em anel; o que contar na primeira mensagem num quadro suave com marcas de check. -->
 <div class="contact-card reveal">
+  <span class="contact-card__mark" aria-hidden="true"><LineIcon name="message-circle-more" /></span>
+  <p class="contact-card__eyebrow">Atendimento direto</p>
   <h3>{title}</h3>
   <div class="contact-card__actions">
     <Button href={whatsapp} icon="whatsapp" local="contato" tema={tema} publico={publico}>WhatsApp</Button>
     <Button href={telLink} icon="phone" local="contato" tema={tema} publico={publico}>Ligar</Button>
   </div>
   <dl class="contact-card__info">
-    <div><dt>WhatsApp e telefone</dt><dd>{site.phoneDisplay}</dd></div>
-    <div><dt>Horário</dt><dd>{site.hours}</dd></div>
-    <div><dt>E-mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
-    <div><dt>Atendimento</dt><dd>Online · {site.city} e todo o Brasil</dd></div>
+    <div><LineIcon name="phone" class="contact-card__icon" /><dt>WhatsApp e telefone</dt><dd>{site.phoneDisplay}</dd></div>
+    <div><LineIcon name="clock" class="contact-card__icon" /><dt>Horário</dt><dd>{site.hours}</dd></div>
+    <div class="contact-card__info-wide"><LineIcon name="map-pin" class="contact-card__icon" /><dt>Atendimento</dt><dd>Online · {site.city} e todo o Brasil</dd></div>
+    <div class="contact-card__info-wide"><LineIcon name="mail" class="contact-card__icon" /><dt>E-mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
   </dl>
-  <p class="contact-card__label">Para agilizar, conte na primeira mensagem:</p>
-  <ul class="contact-card__list">
-    {checklist.map((item) => <li>{item}</li>)}
-  </ul>
-  <p class="form-note">Não envie documentos ou informações sigilosas antes do primeiro retorno.</p>
+  <div class="contact-card__brief">
+    <p class="contact-card__label">Para agilizar, conte na primeira mensagem:</p>
+    <ul class="contact-card__list">
+      {checklist.map((item) => <li><Icon name="check" />{item}</li>)}
+    </ul>
+  </div>
+  <p class="form-note contact-card__note"><LineIcon name="lock" />Não envie documentos ou informações sigilosas antes do primeiro retorno.</p>
 </div>

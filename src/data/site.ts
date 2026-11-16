@@ -146,7 +146,8 @@ export const stats: { icon: AreaIconName; title: string; text: string }[] = [
 
 export type LineIconName =
   | 'graduation-cap' | 'award' | 'scroll-text' | 'book-open-text' | 'scale' | 'users' | 'monitor-smartphone'
-  | 'badge-check' | 'map-pin';
+  | 'badge-check' | 'map-pin' | 'phone' | 'clock' | 'mail' | 'lock'
+  | 'message-circle-more' | 'clipboard-list' | 'file-signature' | 'bell-ring';
 
 export const timeline: { year: string; text: string; icon: LineIconName; current?: boolean }[] = [
   { year: '2020', text: 'Estágio em Direito do Trabalho', icon: 'book-open-text' },

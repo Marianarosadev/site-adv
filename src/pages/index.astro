@@ -353,6 +353,13 @@ const schema = [
     </div>
   </section>
 
+  <!-- Faixa com o monograma ao fundo: de "Como funciona" até os diferenciais -->
+  <div class="monogram-zone">
+    <!-- Monograma da advogada como marca d'água: fica parado na tela enquanto as seções rolam -->
+    <div class="monogram-bg" aria-hidden="true">
+      <span class="brand__mark monogram-bg__mark"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
+    </div>
+
   <!-- 5. Como funciona -->
   <section class="section" id="como-funciona">
     <div class="container">
@@ -386,6 +393,8 @@ const schema = [
       </ul>
     </div>
   </section>
+
+  </div>
 
   <!-- 6b. Artigos: painel suave com identidade de blog (selo, marca d'água de livro e cartões com foto desfocada) -->
   {latestPosts.length > 0 && (
@@ -428,7 +437,11 @@ const schema = [
     </div>
   )}
 
-  <!-- 7. Perguntas frequentes -->
+  <!-- 7. Perguntas frequentes, também com o monograma fixo ao fundo -->
+  <div class="monogram-zone">
+    <div class="monogram-bg" aria-hidden="true">
+      <span class="brand__mark monogram-bg__mark"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
+    </div>
   <section class="section" id="duvidas">
     <div class="container faq">
       <div class="faq__aside reveal">
@@ -444,6 +457,7 @@ const schema = [
       </div>
     </div>
   </section>
+  </div>
 
   <!-- 8. Contato -->
   <div class="contact-wrap" id="contato">
@@ -455,12 +469,13 @@ const schema = [
             Me conte o que aconteceu pelo WhatsApp. O primeiro passo é entender a sua situação, e para isso você não
             precisa ter todos os documentos em mãos.
           </p>
-          <ul class="next">
-            <li><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
-            <li><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
-            <li><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
-            <li><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
-          </ul>
+          <!-- O que acontece depois da mensagem: linha do tempo curta, com ícone em anel em cada etapa -->
+          <ol class="next">
+            <li><LineIcon name="message-circle-more" class="next__node" /><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
+            <li><LineIcon name="clipboard-list" class="next__node" /><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
+            <li><LineIcon name="file-signature" class="next__node" /><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
+            <li><LineIcon name="bell-ring" class="next__node" /><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
+          </ol>
         </div>
 
         <ContactCard whatsapp={whatsappLink()} checklist={firstMessage} publico="geral" />
