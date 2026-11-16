@@ -10,14 +10,14 @@
   --texto-suave: #6b5458;
   --rose-titulo: #a8676f;
   --rose-destaque: #9a4f5a;
-  --vinho: #5e2230;
-  --vinho-hover: #4a1a26;
+  --vinho: #7a4250; /* destaque em tom mais suave, mantendo contraste ≥ 4,5:1 */
+  --vinho-hover: #683643;
   --linha: #e3cfca;
   --marca-dagua: #ebd9d4;
-  --rodape: #3a1820;
-  --rodape-texto: #f2e4e0;
-  --rodape-suave: #c9a1a6;
-  --rodape-linha: #56303a;
+  --rodape: #634148; /* vinho suave, um pouco mais fundo que o fundo claro para o texto ler bem */
+  --rodape-texto: #fbf3f1;
+  --rodape-suave: #efdcdf;
+  --rodape-linha: #85646c;
   --whatsapp: #25d366;
   --whatsapp-hover: #1ebe5a;
   --whatsapp-texto: #0b3d1f;
@@ -34,14 +34,14 @@
 
   --gutter: 16px;
   --max: 1120px;
-  --section: 72px;
+  --section: 104px; /* espaço entre seções: generoso, para cada bloco ficar bem separado */
   --radius: 4px;
 
   color-scheme: light;
 }
 
 @media (min-width: 768px) {
-  :root { --gutter: 32px; --section: 128px; }
+  :root { --gutter: 32px; --section: 176px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -366,18 +366,36 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .about__photo { position: sticky; top: 100px; }
 }
 
-/* Como funciona */
-.steps { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--linha); counter-reset: step; }
-.step { padding: 24px 0; border-bottom: 1px solid var(--linha); display: grid; grid-template-columns: 56px 1fr; gap: 8px 16px; }
-.step__num { font-family: var(--serif); font-size: 32px; line-height: 1; color: var(--rose-titulo); grid-row: span 2; }
-.step__title { font-weight: 600; font-size: 16px; }
-.step__text { font-size: 15px; color: var(--texto-suave); }
-.steps-cta { margin-top: 40px; }
+/* Como funciona: linha do tempo com marcadores numerados ligados por um fio fino.
+   No celular a linha corre na vertical, à esquerda; no computador, na horizontal, ligando as 4 etapas. */
+.steps { --node: 46px; --steps-gap: 28px; list-style: none; margin: 0; padding: 0; display: grid; gap: var(--steps-gap); position: relative; }
+.steps::before {
+  content: ''; position: absolute; left: calc(var(--node) / 2); top: calc(var(--node) / 2); bottom: calc(var(--node) / 2); width: 1px;
+  background: linear-gradient(to bottom, var(--rose-titulo), var(--linha));
+}
+.step { position: relative; display: grid; grid-template-columns: var(--node) 1fr; gap: 6px 18px; align-content: start; }
+.step__num {
+  grid-row: span 2; position: relative; z-index: 1;
+  display: grid; place-items: center; width: var(--node); height: var(--node); border-radius: 50%;
+  background: var(--superficie); border: 1px solid var(--rose-titulo); box-shadow: 0 0 0 6px var(--fundo);
+  font-family: var(--serif); font-size: 17px; line-height: 1; color: var(--vinho);
+  transition: background-color .25s, color .25s, border-color .25s;
+}
+.step:hover .step__num { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+.step__title { font-weight: 600; font-size: 16px; line-height: 1.35; padding-top: 12px; }
+.step__text { font-size: 15px; color: var(--texto-suave); max-width: 34ch; }
+.steps-cta { margin-top: 48px; }
 @media (min-width: 900px) {
-  .steps { grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--linha); }
-  .step { grid-template-columns: 1fr; padding: 28px 28px 32px; border-bottom: 0; border-left: 1px solid var(--linha); gap: 12px; }
-  .step:first-child { border-left: 0; padding-left: 0; }
-  .step__num { font-size: 44px; margin-bottom: 16px; grid-row: auto; }
+  .steps { --steps-gap: 36px; grid-template-columns: repeat(4, 1fr); }
+  /* Fio horizontal do centro do 1º marcador ao centro do 4º */
+  .steps::before {
+    top: calc(var(--node) / 2); bottom: auto; height: 1px; width: auto;
+    right: calc((100% - 3 * var(--steps-gap)) / 4 - var(--node) / 2);
+    background: linear-gradient(to right, var(--rose-titulo), var(--linha));
+  }
+  .step { grid-template-columns: 1fr; gap: 10px; }
+  .step__num { grid-row: auto; margin-bottom: 14px; }
+  .step__title { padding-top: 0; }
 }
 
 /* Diferenciais */
@@ -435,27 +453,35 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 }
 
 /* Rodapé */
-.footer { background: var(--rodape); color: var(--rodape-texto); margin: 8px; border-radius: 6px; overflow: hidden; position: relative; }
+/* Rodapé: contatos à esquerda, colunas à direita; aviso legal e links numa faixa abaixo.
+   O nome fica como marca d'água ao fundo, atrás do conteúdo, sem ocupar espaço. */
+.footer {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--rodape); color: var(--rodape-texto); margin: 8px; border-radius: 6px;
+}
+.footer > .container { position: relative; z-index: 1; }
 .footer a { text-decoration: none; }
-.footer a:hover { color: #fff; text-decoration: underline; }
-.footer__top { display: grid; gap: 40px; padding-top: 64px; padding-bottom: 40px; }
+.footer a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.footer__top { display: grid; gap: 48px; padding-top: 64px; padding-bottom: 48px; }
 .footer__call { font-size: 14px; color: var(--rodape-suave); }
-.footer__phone { display: block; white-space: nowrap; font-family: var(--serif); font-size: clamp(36px, 5.4vw, 68px); line-height: 1.05; letter-spacing: -0.02em; margin: 12px 0 18px; }
-.footer__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; font-size: 14px; }
-.footer__cols h2 { font: 600 12px var(--sans); color: var(--rodape-suave); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
-.footer__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.footer__cols p { color: var(--rodape-suave); }
-.footer__legal { border-top: 1px solid var(--rodape-linha); padding-top: 24px; padding-bottom: 24px; font-size: 12px; color: var(--rodape-suave); }
-.footer__legal p { max-width: 70ch; }
-.footer__bottom { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px; }
+.footer__phone { display: block; white-space: nowrap; font-family: var(--serif); font-size: clamp(36px, 5vw, 60px); line-height: 1.05; letter-spacing: -0.02em; margin: 10px 0 14px; }
+.footer__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 24px; font-size: 14px; line-height: 1.45; }
+.footer__cols h2 { font: 600 12px var(--sans); color: var(--rodape-suave); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+.footer__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.footer__cols p { color: var(--rodape-texto); }
+.footer__legal { display: grid; gap: 16px; padding-top: 8px; padding-bottom: 56px; font-size: 12.5px; line-height: 1.6; color: var(--rodape-suave); }
+.footer__legal p { max-width: 72ch; margin: 0; }
+.footer__bottom { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--rodape-texto); }
 .footer__watermark {
-  font-family: var(--serif); font-size: clamp(52px, 13vw, 180px); line-height: .8;
-  letter-spacing: -0.03em; color: #4a2530; white-space: nowrap; text-align: center;
-  margin-top: 8px; transform: translateY(12%); user-select: none;
+  position: absolute; z-index: 0; left: 50%; bottom: -0.2em; transform: translateX(-50%);
+  font-family: var(--serif); font-size: clamp(64px, 13vw, 190px); line-height: 1; letter-spacing: -0.03em;
+  color: #fff; opacity: .05; white-space: nowrap; pointer-events: none; user-select: none;
 }
 @media (min-width: 900px) {
-  .footer__top { grid-template-columns: 1.1fr 1fr; gap: 64px; padding-top: 88px; }
-  .footer__cols { grid-template-columns: repeat(3, 1fr); }
+  .footer__top { grid-template-columns: 0.9fr 1.6fr; gap: 64px; padding-top: 88px; padding-bottom: 64px; }
+  .footer__cols { grid-template-columns: 1.1fr 1fr 0.9fr; }
+  .footer__legal { grid-template-columns: 1fr auto; align-items: end; column-gap: 48px; padding-bottom: 72px; }
+  .footer__bottom { justify-content: flex-end; }
 }
 
 /* WhatsApp flutuante */
@@ -499,7 +525,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 /* Ajustes pós-teste */
 .link-arrow { white-space: nowrap; }
 .link-arrow svg, .btn svg { width: 16px; height: 16px; flex: none; }
-.step { align-content: start; }
 
 .area--cta {
   background: var(--vinho); border-color: var(--vinho); color: var(--superficie);
@@ -634,7 +659,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 /* Rodapé: botão com cara de link */
 .footer__link-btn { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; }
 .footer__link-btn:hover { color: #fff; text-decoration: underline; }
-.footer--landing .footer__legal { padding-top: 32px; padding-bottom: 96px; border-top: 0; }
+.footer--landing .footer__legal { padding-top: 32px; padding-bottom: 96px; }
 
 /* Banner de cookies: não cobre o botão flutuante do WhatsApp */
 .cookies {
@@ -1253,3 +1278,5 @@ a:hover .cover__img img { transform: scale(1.04); }
 /* Hierarquia nas frentes: título em azul e um pouco maior; itens em tom mais suave */
 .front__title { color: var(--azul); font-size: 24px; }
 .band-empresas__list--check li { color: var(--texto-suave); }
+/* Rodapé no celular: "Atendimento" em largura total; "Áreas" e "Site" lado a lado embaixo */
+@media (max-width: 899px) { .footer__cols > div:first-child { grid-column: 1 / -1; } }
