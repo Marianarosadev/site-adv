@@ -3,19 +3,20 @@ import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import ContactCard from '../components/ContactCard.astro';
+import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 // Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
 import fotoReuniao from '../assets/empresas-reuniao.jpg';
-import { site, whatsappEmpresa, firstMessageEmpresa, servicesEmpresa } from '../data/site';
+import { site, whatsappEmpresa, firstMessageEmpresa, servicesEmpresa, type LineIconName } from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
 const wa = whatsappEmpresa();
 const pad = (n: number) => String(n).padStart(2, '0');
 
-const moments = [
-  { title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e é preciso preparar a defesa no prazo.' },
-  { title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
-  { title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
+const moments: { title: string; text: string; icon: LineIconName }[] = [
+  { icon: 'scroll-text', title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e é preciso preparar a defesa no prazo.' },
+  { icon: 'calendar-clock', title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
+  { icon: 'handshake', title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
 ];
 
 const stepsEmpresa = [
@@ -59,7 +60,7 @@ const stepsEmpresa = [
       </div>
       <ul class="checks">
         {moments.map((m) => (
-          <li class="check"><h3>{m.title}</h3><p>{m.text}</p></li>
+          <li class="check"><span class="check__mark" aria-hidden="true"><LineIcon name={m.icon} /></span><LineIcon name={m.icon} class="check__icon" /><h3>{m.title}</h3><p>{m.text}</p></li>
         ))}
       </ul>
     </div>

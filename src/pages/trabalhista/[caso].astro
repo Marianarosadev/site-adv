@@ -3,6 +3,7 @@ import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import ContactCard from '../../components/ContactCard.astro';
+import LineIcon from '../../components/LineIcon.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
 import { site, whatsappLink, telLink, firstMessage, steps, areas, areaUrl } from '../../data/site';
@@ -117,7 +118,7 @@ const schema = [
       </div>
       <ul class="checks">
         {caso.rights.map((r) => (
-          <li class="check"><h3>{r.title}</h3><p>{r.text}</p></li>
+          <li class="check"><LineIcon name="badge-check" class="check__icon" /><h3>{r.title}</h3><p>{r.text}</p></li>
         ))}
       </ul>
     </div>

@@ -817,8 +817,39 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .ticks--plain li { font-size: 16px; }
 
 .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.check { padding: 22px; background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--radius); }
-.check h3 { font-family: var(--serif); font-size: 22px; line-height: 1.2; margin-bottom: 6px; }
+/* Cartões de situações e direitos, no padrão dos destaques: ícone em anel, título em serifa com traço rosé,
+   brilho suave no canto, marca d'água do ícone e leve elevação ao passar o mouse */
+.check {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: 26px 24px 24px; border: 1px solid var(--linha); border-radius: 12px;
+  background:
+    radial-gradient(110% 80% at 100% 0%, color-mix(in srgb, var(--rose-titulo) 11%, transparent), transparent 60%),
+    var(--superficie);
+  transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s, border-color .3s;
+}
+.check:hover {
+  transform: translateY(-3px); border-color: color-mix(in srgb, var(--rose-titulo) 50%, var(--linha));
+  box-shadow: 0 22px 44px -32px rgb(58 30 38 / .45);
+}
+.check__icon {
+  width: 46px; height: 46px; margin-bottom: 18px; border-radius: 50%; color: var(--vinho);
+  border: 1px solid color-mix(in srgb, var(--rose-titulo) 45%, transparent);
+  transition: background-color .3s, color .3s, border-color .3s;
+}
+.check__icon svg { width: 20px; height: 20px; }
+.check:hover .check__icon { background: var(--vinho); border-color: var(--vinho); color: #fff; }
+.check__mark {
+  position: absolute; z-index: -1; right: -16px; bottom: -20px; width: 110px; height: 110px;
+  color: var(--vinho); opacity: .05; pointer-events: none;
+}
+.check__mark .line-icon, .check__mark svg { width: 100%; height: 100%; }
+.check__mark svg { stroke-width: 1; }
+.check h3 { font-family: var(--serif); font-size: 22px; line-height: 1.2; margin-bottom: 12px; text-wrap: balance; }
+.check h3::after {
+  content: ''; display: block; width: 28px; height: 2px; margin-top: 12px;
+  background: var(--rose-titulo); opacity: .6; transition: width .3s;
+}
+.check:hover h3::after { width: 44px; }
 .check p { font-size: 15px; color: var(--texto-suave); }
 @media (min-width: 640px) { .checks { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .checks { grid-template-columns: repeat(3, 1fr); } }
