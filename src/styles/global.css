@@ -297,6 +297,10 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .statement__ornament { display: flex; align-items: center; gap: 12px; color: var(--rose-titulo); }
 .statement__ornament::before, .statement__ornament::after { content: ''; width: 56px; height: 1px; background: currentColor; opacity: .6; }
 .statement__ornament span { width: 7px; height: 7px; background: currentColor; transform: rotate(45deg); }
+.statement__ornament--end { display: none; }
+@media (max-width: 899px) { .scrolly .statement__ornament--end { display: flex; } }
+/* o parágrafo deixou de ser o último filho: zera a margem para os dois ornamentos ficarem à mesma distância */
+.statement__text { margin: 0; }
 
 /* Destaques: quatro cartões iguais (ícone, título curto, uma linha de apoio) */
 .highlights { list-style: none; margin: 64px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -518,18 +522,24 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .scrolly__media {
     position: sticky; top: 0; height: 100svh; margin: 0 calc(-1 * var(--gutter));
   }
-  /* bordas superior e inferior se dissolvem na cor da página */
+  /* bordas superior e inferior se dissolvem na cor da página; uma névoa clara no meio da tela
+     suaviza o vídeo por onde a frase passa, para ela ser lida sem precisar de cartão */
   .scrolly__frame::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(180deg, var(--fundo) 0%, transparent 18%, transparent 62%, var(--fundo) 100%);
+    background:
+      radial-gradient(140% 38% at 50% 48%, rgb(247 238 235 / .84), rgb(247 238 235 / .5) 58%, transparent 82%),
+      linear-gradient(180deg, var(--fundo) 0%, transparent 18%, transparent 62%, var(--fundo) 100%);
   }
   .scrolly__content { position: relative; margin-top: -100svh; padding: 62svh 0 36svh; }
-  .scrolly .statement {
-    padding: 36px 22px 32px; border-radius: 20px;
-    background: color-mix(in srgb, var(--fundo) 84%, transparent);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  /* frase solta sobre o vídeo, como no computador; a névoa do fundo faz a maior parte do trabalho
+     e um halo bem leve só separa as letras das partes mais escuras */
+  .scrolly .statement { padding: 0 6px; }
+  .scrolly .statement__text {
+    text-shadow: 0 0 10px rgb(247 238 235 / .55);
   }
-  .scrolly .statement::before { top: -0.3em; }
+  .scrolly .statement__text .soft { color: var(--rose-destaque); }
+  /* sem as aspas grandes; o ornamento aparece no início e no fim da frase */
+  .scrolly .statement::before { content: none; }
   .scrolly .highlights { margin-top: 40svh; }
 }
 
@@ -576,45 +586,37 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .scrolly .statement { justify-items: start; text-align: left; min-height: 50vh; align-content: start; }
   .scrolly .statement::before { left: -0.08em; transform: none; opacity: .14; }
   .scrolly .statement__text { font-size: clamp(28px, 2.8vw, 40px); text-wrap: pretty; }
-  /* Cartões empilhados numa coluna: ícone à esquerda, título e apoio à direita */
-  .scrolly .highlights { grid-template-columns: 1fr; gap: 14px; margin: 0; max-width: 520px; }
+  /* Destaques sem cartão: uma lista aberta, solta sobre a área clara como a frase acima,
+     com o ícone em anel à esquerda e título e apoio à direita. Um fio tracejado "costura"
+     os ícones de cima a baixo, com um pequeno losango (o mesmo do ornamento) entre os itens. */
+  .scrolly .highlights { grid-template-columns: 1fr; gap: 44px; margin: 0; max-width: 500px; }
   .scrolly .highlights .highlight {
-    display: grid; grid-template-columns: 50px 1fr; column-gap: 22px; row-gap: 0; align-items: start;
-    padding: 24px 26px;
+    display: grid; grid-template-columns: 50px 1fr; column-gap: 24px; row-gap: 0; align-items: start;
+    padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none;
   }
-  .scrolly .highlight .highlight__icon { grid-row: span 2; margin: 2px 0 0; }
+  .scrolly .highlight:hover { transform: none; box-shadow: none; }
+  .scrolly .highlight::before, .scrolly .highlight__mark { display: none; }
+  .scrolly .highlight .highlight__icon { grid-row: span 2; margin: 2px 0 0; position: relative; background: transparent; }
+  .scrolly .highlight__title { font-size: clamp(24px, 2.2vw, 28px); }
   .scrolly .highlight__title::after { margin-top: 10px; }
-  .scrolly .highlight__text { margin-top: 10px; }
-  .scrolly .highlight__mark { width: 96px; height: 96px; right: -12px; bottom: -20px; }
-
-  /* Linha "costurada" amarrando os cartões: um fio tracejado sai de baixo de cada ícone,
-     atravessa o espaço entre os cartões e entra no ícone seguinte; no meio do caminho,
-     um pequeno losango faz o nó (o mesmo losango do ornamento da frase acima). */
-  .scrolly .highlights { gap: 22px; }
-  .scrolly .highlights .highlight { overflow: visible; }
-  .scrolly .highlight:hover { transform: none; }
-  .scrolly .highlight::before { border-radius: inherit; }
-  /* com o cartão sem corte, a marca d'água é recortada pela própria caixa, no canto do cartão */
-  .scrolly .highlight__mark {
-    right: 0; bottom: 0; width: 80px; height: 74px; overflow: hidden; border-bottom-right-radius: inherit;
-  }
-  .scrolly .highlight__mark .area__icon { position: absolute; left: 0; top: 0; width: 96px; height: 96px; }
-  .scrolly .highlight .highlight__icon { position: relative; background: var(--superficie); }
+  .scrolly .highlight__text { margin-top: 10px; font-size: 15px; }
+  /* fio que desce do ícone até o meio do espaço entre os itens */
   .scrolly .highlight:not(:last-child)::after {
-    content: ''; position: absolute; left: 51px; top: 76px; bottom: -12px; width: 1px; transform: translateX(-50%);
+    content: ''; position: absolute; left: 25px; top: 60px; bottom: -22px; width: 1px; transform: translateX(-50%);
     background: repeating-linear-gradient(180deg, var(--rose-titulo) 0 5px, transparent 5px 9px); opacity: .6;
   }
+  /* fio que chega ao ícone seguinte, com o losango no ponto de encontro */
   .scrolly .highlight:not(:first-child) .highlight__icon::before,
   .scrolly .highlight:not(:first-child) .highlight__icon::after {
     content: ''; position: absolute; left: 50%; pointer-events: none;
   }
   .scrolly .highlight:not(:first-child) .highlight__icon::before {
-    top: -39px; height: 39px; width: 1px; transform: translateX(-50%);
+    top: -25px; height: 18px; width: 1px; transform: translateX(-50%);
     background: repeating-linear-gradient(0deg, var(--rose-titulo) 0 5px, transparent 5px 9px); opacity: .6;
   }
   .scrolly .highlight:not(:first-child) .highlight__icon::after {
-    top: -39px; width: 7px; height: 7px; background: var(--rose-titulo);
-    transform: translate(-50%, -50%) rotate(45deg); box-shadow: 0 0 0 4px var(--fundo);
+    top: -25px; width: 7px; height: 7px; background: var(--rose-titulo);
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 }
 
