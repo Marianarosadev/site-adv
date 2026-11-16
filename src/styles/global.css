@@ -257,7 +257,9 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .hero__bg::after {
     background:
       linear-gradient(to right, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 75%, transparent) 22%, transparent 52%),
-      linear-gradient(to top, var(--fundo) 0%, transparent 14%);
+      /* base mais longa e gradual, para a foto se desfazer devagar e emendar com o vídeo abaixo */
+      linear-gradient(to top, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 80%, transparent) 10%,
+        color-mix(in srgb, var(--fundo) 40%, transparent) 22%, transparent 36%);
   }
   .hero__watermark { bottom: 0; transform: translate(-50%, 18%); }
   .hero__inner { padding-top: 64px; padding-bottom: 112px; }
@@ -536,19 +538,28 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
    deixando a área dos textos limpa; topo e base se fundem na cor da página. */
 .section--intro { overflow: clip; }
 @media (min-width: 900px) {
-  .section--intro { padding-top: 0; }
+  /* A seção sobe por baixo do fim do topo: a foto do topo se desfaz enquanto o vídeo aparece,
+     num cruzamento suave em vez de uma faixa vazia entre os dois */
+  .section--intro { padding-top: 0; margin-top: -160px; }
   .scrolly__media {
     position: sticky; top: 0; height: 100vh;
     width: 100vw; margin-inline: calc(50% - 50vw);
-    background: var(--fundo); overflow: hidden;
+    overflow: hidden; pointer-events: none;
+    /* topo e base viram transparência (não uma cor por cima), revelando o que está atrás:
+       o topo da página na entrada e a seção seguinte na saída */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / .3) 10%, rgb(0 0 0 / .75) 22%, #000 32%,
+      #000 66%, rgb(0 0 0 / .75) 78%, rgb(0 0 0 / .3) 90%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / .3) 10%, rgb(0 0 0 / .75) 22%, #000 32%,
+      #000 66%, rgb(0 0 0 / .75) 78%, rgb(0 0 0 / .3) 90%, transparent 100%);
   }
-  /* Véu claro: dissolve topo e base na página e acrescenta um brilho branco suave à direita */
+  /* Brilho branco suave à direita, onde ficam os textos */
   .scrolly__media::after {
     content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-    background:
-      linear-gradient(180deg, var(--fundo) 0%, transparent 18%, transparent 82%, var(--fundo) 100%),
-      radial-gradient(60% 70% at 72% 50%, rgb(255 255 255 / .55), transparent 70%);
+    background: radial-gradient(60% 70% at 72% 50%, rgb(255 255 255 / .55), transparent 70%);
   }
+  /* a área sobreposta ao topo não pode bloquear os botões dele */
+  .scrolly__content { pointer-events: none; }
+  .scrolly__content > * { pointer-events: auto; }
   /* O vídeo ocupa a altura toda da cena, ampliado e sem moldura: as duas laterais se dissolvem
      devagar no fundo claro (sem corte seco à esquerda), sem nada do vídeo atrás dos textos */
   .scrolly__frame {
