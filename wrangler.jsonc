@@ -6,5 +6,15 @@
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist"
+  },
+  // Homologação: Worker separado "site-adv-homologacao", publicado a partir da branch dev
+  // com "npx wrangler deploy --env homologacao". O build roda com SITE_ENV=homologacao (variável
+  // configurada no painel) para o site sair com "noindex" e sem ser indexado.
+  "env": {
+    "homologacao": {
+      "assets": {
+        "directory": "./dist"
+      }
+    }
   }
 }

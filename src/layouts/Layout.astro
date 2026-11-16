@@ -32,12 +32,15 @@ const home = Astro.url.pathname === '/' ? '' : '/';
 const blogPage = Astro.url.pathname.startsWith('/blog');
 const empresasPage = Astro.url.pathname.startsWith('/empresas');
 const gtm = site.gtmId;
+// Build de homologação (SITE_ENV=homologacao no painel da Cloudflare): páginas marcadas para não serem indexadas.
+const homologacao = process.env.SITE_ENV === 'homologacao';
 ---
 <!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {homologacao && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
