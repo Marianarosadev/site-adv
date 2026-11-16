@@ -7,9 +7,12 @@ import user from 'lucide-static/icons/user-round.svg?raw';
 import scale from 'lucide-static/icons/scale.svg?raw';
 import briefcase from 'lucide-static/icons/briefcase-business.svg?raw';
 import check from 'lucide-static/icons/check.svg?raw';
+import chevronLeft from 'lucide-static/icons/chevron-left.svg?raw';
+import chevronRight from 'lucide-static/icons/chevron-right.svg?raw';
+import building from 'lucide-static/icons/building-2.svg?raw';
 
 interface Props {
-  name: 'whatsapp' | 'arrow' | 'phone' | 'book' | 'shield' | 'user' | 'scale' | 'briefcase' | 'check';
+  name: 'whatsapp' | 'arrow' | 'phone' | 'book' | 'shield' | 'user' | 'scale' | 'briefcase' | 'check' | 'chevron-left' | 'chevron-right' | 'building';
 }
 
 const { name } = Astro.props;
@@ -30,3 +33,6 @@ const lucide = (svg: string) => svg
 {name === 'scale' && <Fragment set:html={lucide(scale)} />}
 {name === 'briefcase' && <Fragment set:html={lucide(briefcase)} />}
 {name === 'check' && <Fragment set:html={lucide(check)} />}
+{name === 'chevron-left' && <Fragment set:html={lucide(chevronLeft)} />}
+{name === 'chevron-right' && <Fragment set:html={lucide(chevronRight)} />}
+{name === 'building' && <Fragment set:html={lucide(building)} />}

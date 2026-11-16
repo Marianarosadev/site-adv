@@ -6,7 +6,7 @@ import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
 import ContactCard from '../components/ContactCard.astro';
-import { getPosts, postUrl, readingTime, formatDate } from '../data/blog';
+import { getPosts, postUrl, readingTime } from '../data/blog';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
@@ -15,7 +15,8 @@ import {
 } from '../data/site';
 
 const pad = (n: number) => String(n).padStart(2, '0');
-const latestPosts = (await getPosts()).slice(0, 3);
+// Carrossel da home: até 8 artigos mais recentes.
+const latestPosts = (await getPosts()).slice(0, 8);
 
 // Foto do topo: mesmas opções no <Picture> e no preload, para o navegador baixar o arquivo certo o quanto antes.
 const heroWidths = [640, 1000, 1086];
@@ -161,6 +162,7 @@ const schema = [
       <ul class="highlights reveal">
         {stats.map((s) => (
           <li class="highlight">
+            <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
             <AreaIcon name={s.icon} class="highlight__icon" />
             <h3 class="highlight__title">{s.title}</h3>
             <p class="highlight__text">{s.text}</p>
@@ -176,23 +178,22 @@ const schema = [
       <div class="section-head reveal">
         <h2 class="display">Como posso ajudar <span class="soft">no seu caso.</span></h2>
       </div>
-      <ul class="areas">
+      <!-- Cartões de tema: ícone, número, título e a frase na voz de quem procura. O cartão inteiro leva à página do tema;
+           o WhatsApp fica num atalho discreto no rodapé do cartão. -->
+      <ul class="topics">
         {areas.map((area) => (
-          <li class="area reveal" id={`area-${area.slug}`}>
-            <div class="area__head">
-              <AreaIcon name={area.icon} />
-              <h3 class="area__title"><a href={areaUrl(area.slug)}>{area.title}</a></h3>
+          <li class="topic reveal" id={`area-${area.slug}`}>
+            <span class="topic__mark" aria-hidden="true"><AreaIcon name={area.icon} /></span>
+            <div class="topic__top">
+              <AreaIcon name={area.icon} class="topic__icon" />
+              <h3 class="topic__title"><a href={areaUrl(area.slug)}>{area.title}</a></h3>
             </div>
-            <p class="area__situation">“{area.situation}”</p>
-            <p class="area__text">{area.text}</p>
-            <!-- Ação principal: a página do tema. Ao lado, atalho direto para o WhatsApp. -->
-            <div class="area__actions">
-              <a class="area__more" href={areaUrl(area.slug)}>
-                <span>Entenda seus direitos</span>
-                <Icon name="arrow" />
-              </a>
+            <p class="topic__quote">“{area.situation}”</p>
+            <p class="topic__text">{area.text}</p>
+            <div class="topic__foot">
+              <span class="topic__more" aria-hidden="true">Entenda seus direitos <Icon name="arrow" /></span>
               <a
-                class="area__wa"
+                class="topic__wa"
                 href={whatsappLink(area.message)}
                 target="_blank"
                 rel="noopener"
@@ -207,10 +208,10 @@ const schema = [
             </div>
           </li>
         ))}
-        <li class="area area--cta reveal">
+        <li class="topic topic--cta reveal">
           <div>
-            <h3 class="area__title">Não encontrou a sua situação?</h3>
-            <p class="area__text">Me conte o que aconteceu. Eu explico se e como o seu caso pode ser analisado.</p>
+            <h3 class="topic__title">Não encontrou a sua situação?</h3>
+            <p class="topic__cta-text">Me conte o que aconteceu. Eu explico se e como o seu caso pode ser analisado.</p>
           </div>
           <Button href={whatsappLink()} icon="whatsapp" local="card-outro" publico="trabalhador">Tire sua dúvida pelo WhatsApp</Button>
         </li>
@@ -317,8 +318,10 @@ const schema = [
         {steps.map((s, i) => (
           <li class="step">
             <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <h3 class="step__title">{s.title}</h3>
-            <p class="step__text">{s.text}</p>
+            <div class="step__card">
+              <h3 class="step__title">{s.title}</h3>
+              <p class="step__text">{s.text}</p>
+            </div>
           </li>
         ))}
       </ol>
@@ -339,52 +342,41 @@ const schema = [
     </div>
   </section>
 
-  <!-- 6b. Artigos: vitrine do blog -->
+  <!-- 6b. Artigos: painel suave com identidade de blog (selo, marca d'água de livro e cartões com foto desfocada) -->
   {latestPosts.length > 0 && (
-    <div class="blog-band-wrap">
-      <section class="blog-band" aria-labelledby="artigos-titulo">
-        <div class="container blog-band__grid">
-          <div class="blog-band__intro reveal">
-            <p class="eyebrow">Artigos</p>
-            <h2 class="display" id="artigos-titulo">Entenda os seus direitos <span class="soft">antes de decidir.</span></h2>
-            <p>
-              Textos curtos e em linguagem simples sobre rescisão, horas extras, vínculo de emprego e outros temas do
-              dia a dia do trabalho.
-            </p>
-            <a class="btn btn--light" href="/blog/">
-              <span>Ver todos os artigos</span><span class="btn__icon"><Icon name="arrow" /></span>
-            </a>
+    <div class="blog-panel-wrap">
+      <section class="blog-panel" aria-labelledby="artigos-titulo">
+        <span class="blog-panel__mark" aria-hidden="true"><Icon name="book" /></span>
+        <div class="container">
+          <div class="blog-panel__head reveal">
+            <div>
+              <p class="blog-panel__badge"><Icon name="book" /> Blog</p>
+              <h2 class="display display--md" id="artigos-titulo">Artigos <span class="soft">recentes.</span></h2>
+              <p class="blog-panel__intro">Textos curtos, em linguagem simples, sobre as dúvidas mais comuns do dia a dia do trabalho.</p>
+            </div>
+            <a class="blog-panel__all" href="/blog/"><span>Ver todos os artigos</span><Icon name="arrow" /></a>
           </div>
-
-          <div class="blog-band__posts reveal">
-            <a class="blog-band__featured" href={postUrl(latestPosts[0])}>
-              {latestPosts[0].data.cover && (
-                <Picture
-                  src={latestPosts[0].data.cover.src}
-                  alt=""
-                  widths={[480, 800, 1000]}
-                  sizes="(min-width: 900px) 600px, 100vw"
-                  formats={['avif', 'webp']}
-                  class="blog-band__img"
-                />
-              )}
-              <span class="blog-band__cat">{latestPosts[0].data.category}</span>
-              <h3>{latestPosts[0].data.title}</h3>
-              <p>{latestPosts[0].data.description}</p>
-              <span class="blog-band__meta">{formatDate(latestPosts[0].data.date)} · {readingTime(latestPosts[0])}</span>
-              <span class="blog-band__read">Ler artigo <Icon name="arrow" /></span>
-            </a>
-            <ul class="blog-band__list">
-              {latestPosts.slice(1).map((post) => (
-                <li>
-                  <a href={postUrl(post)}>
-                    <span class="blog-band__cat">{post.data.category}</span>
-                    <span class="blog-band__title">{post.data.title}</span>
-                    <span class="blog-band__meta">{readingTime(post)}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <div class="carousel reveal">
+          <button type="button" class="carousel__btn carousel__btn--prev" aria-label="Artigos anteriores" data-carousel-prev><Icon name="chevron-left" /></button>
+          <button type="button" class="carousel__btn carousel__btn--next" aria-label="Próximos artigos" data-carousel-next><Icon name="chevron-right" /></button>
+          <ul class="mini-posts carousel__track" data-carousel aria-label="Artigos recentes">
+            {latestPosts.map((post) => (
+              <li>
+                <a class="mini-post" href={postUrl(post)}>
+                  <span class="mini-post__media">
+                    {post.data.cover && (
+                      <Picture src={post.data.cover.src} alt="" widths={[320, 480]} sizes="(min-width: 760px) 360px, 100vw" formats={['avif', 'webp']} />
+                    )}
+                    <span class="mini-post__cat">{post.data.category}</span>
+                  </span>
+                  <div class="mini-post__body">
+                    <h3 class="mini-post__title">{post.data.title}</h3>
+                    <span class="mini-post__meta">{readingTime(post)} <Icon name="arrow" /></span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
           </div>
         </div>
       </section>
@@ -395,8 +387,7 @@ const schema = [
   <section class="section" id="duvidas">
     <div class="container faq">
       <div class="faq__aside reveal">
-        <h2 class="display">Dúvidas <span class="soft">respondidas.</span></h2>
-        <p>Ainda com dúvida? Fale comigo pelo <a href={whatsappLink()} target="_blank" rel="noopener" data-local="duvidas">WhatsApp</a>.</p>
+        <h2 class="display display--inline">Perguntas <span class="soft">frequentes.</span></h2>
       </div>
       <div class="faq__list reveal">
         {faq.map(({ q, a, link }) => (
@@ -432,3 +423,50 @@ const schema = [
     </section>
   </div>
 </Layout>
+
+<script>
+  // Carrossel de artigos: setas, arrastar com o mouse e deslizar no celular (rolagem nativa com encaixe).
+  const track = document.querySelector<HTMLElement>('[data-carousel]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
+
+  if (track && prev && next) {
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('li');
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return card ? card.offsetWidth + gap : track.clientWidth;
+    };
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max;
+      track.closest('.blog-panel')?.classList.toggle('carousel--static', max <= 0);
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    // Arrastar com o mouse (no toque, a rolagem nativa já resolve)
+    let startX = 0, startLeft = 0, dragging = false, moved = false;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      dragging = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+      track.classList.add('is-dragging');
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      track.scrollLeft = startLeft - dx;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!dragging) return;
+      dragging = false; track.classList.remove('is-dragging');
+    });
+    // Se arrastou, não abre o artigo ao soltar o botão
+    track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; } }, true);
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+</script>

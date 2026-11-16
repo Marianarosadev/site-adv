@@ -163,8 +163,10 @@ const schema = [
         {steps.map((s, i) => (
           <li class="step">
             <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <h3 class="step__title">{s.title}</h3>
-            <p class="step__text">{s.text}</p>
+            <div class="step__card">
+              <h3 class="step__title">{s.title}</h3>
+              <p class="step__text">{s.text}</p>
+            </div>
           </li>
         ))}
       </ol>

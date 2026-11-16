@@ -37,7 +37,7 @@ const stepsEmpresa = [
     </div>
     <div class="container lp-hero__inner">
       <p class="eyebrow eyebrow--pill">Para empresas · Goiânia e online</p>
-      <h1 class="display display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
+      <h1 class="display display--inline display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
       <p class="lp-hero__intro">
         Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
         Trabalho quando o processo chega, com orientação clara em cada decisão.
@@ -55,7 +55,7 @@ const stepsEmpresa = [
   <section class="section section--tight">
     <div class="container">
       <div class="section-head">
-        <h2 class="display display--md">Quando <span class="soft">me procurar.</span></h2>
+        <h2 class="display display--inline display--md">Quando <span class="soft">me procurar.</span></h2>
       </div>
       <ul class="checks">
         {moments.map((m) => (
@@ -68,7 +68,7 @@ const stepsEmpresa = [
   <section class="section section--tight">
     <div class="container">
       <div class="section-head">
-        <h2 class="display display--md">Como posso <span class="soft">ajudar a empresa.</span></h2>
+        <h2 class="display display--inline display--md">Como posso <span class="soft">ajudar a empresa.</span></h2>
       </div>
       <ul class="diffs">
         {servicesEmpresa.map((s) => (
@@ -81,14 +81,16 @@ const stepsEmpresa = [
   <section class="section section--tight">
     <div class="container">
       <div class="section-head">
-        <h2 class="display display--md">Como funciona <span class="soft">o atendimento.</span></h2>
+        <h2 class="display display--inline display--md">Como funciona <span class="soft">o atendimento.</span></h2>
       </div>
       <ol class="steps">
         {stepsEmpresa.map((s, i) => (
           <li class="step">
             <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <h3 class="step__title">{s.title}</h3>
-            <p class="step__text">{s.text}</p>
+            <div class="step__card">
+              <h3 class="step__title">{s.title}</h3>
+              <p class="step__text">{s.text}</p>
+            </div>
           </li>
         ))}
       </ol>
@@ -99,7 +101,7 @@ const stepsEmpresa = [
     <section class="contact" aria-labelledby="contato-titulo">
       <div class="container contact__grid">
         <div>
-          <h2 class="display" id="contato-titulo">Vamos conversar <span class="soft">sobre o caso da empresa.</span></h2>
+          <h2 class="display display--inline" id="contato-titulo">Vamos conversar <span class="soft">sobre o caso da empresa.</span></h2>
           <p class="contact__intro">
             Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.
           </p>
