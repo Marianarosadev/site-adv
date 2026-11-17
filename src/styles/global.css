@@ -1590,9 +1590,12 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
 .carousel--static .carousel__btn { display: none; }
 /* Sem espaço nas laterais (telas menores), as setas saem: arrasta-se com o dedo ou o mouse */
 @media (max-width: 1239px) { .carousel__btn { display: none; } }
+/* Sem scroll-behavior: smooth no trilho: junto com o scroll-snap, o Chrome faz uma rolagem suave de encaixe
+   ao carregar a página e deixa de medir o LCP da home (erro NO_LCP no PageSpeed). As setas já rolam suave
+   pelo script (behavior: 'smooth'). */
 .carousel__track {
   --gap: 14px; display: grid; grid-auto-flow: column; grid-auto-columns: 84%; gap: var(--gap);
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
   padding: 4px 2px 24px; margin: -4px -2px -24px; scrollbar-width: none;
 }
 .carousel__track::-webkit-scrollbar { display: none; }
