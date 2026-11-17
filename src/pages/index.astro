@@ -386,11 +386,22 @@ const schema = [
       <div class="section-head reveal">
         <h2 class="display" id="diferenciais-titulo">Técnica no processo, <span class="soft">clareza com você.</span></h2>
       </div>
-      <ul class="diffs reveal">
-        {differentials.map((d) => (
-          <li class="diff"><h3>{d.title}</h3><p>{d.text}</p></li>
-        ))}
-      </ul>
+      <!-- Vídeo decorativo, sem som, ao lado da lista: só ambientação, sem controles -->
+      <div class="diffs-wrap">
+        <div class="diffs-video" aria-hidden="true">
+          <video muted loop playsinline preload="none" data-bg-video>
+            <source data-src="/video/apresentacao.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <ul class="diffs reveal">
+          {differentials.map((d) => (
+            <li class="diff">
+              <h3><LineIcon name={d.icon} class="diff__icon" />{d.title}</h3>
+              <p>{d.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 

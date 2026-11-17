@@ -172,11 +172,11 @@ export const steps = [
   { title: 'Acompanhamento em cada etapa', text: 'Se decidir seguir, formalizamos o contrato digitalmente e eu mantenho você informado sobre o andamento.' },
 ];
 
-export const differentials = [
-  { title: 'Atendimento pessoal', text: 'Você fala diretamente comigo, do primeiro contato ao fim do processo.' },
-  { title: 'Experiência em todas as instâncias', text: 'Atuação das audiências à sustentação oral nos tribunais.' },
-  { title: 'Comunicação clara', text: 'Explicações simples e retorno sobre o andamento do seu caso.' },
-  { title: 'Atendimento online', text: 'WhatsApp, videochamada e assinatura digital. A Justiça do Trabalho também é eletrônica.' },
+export const differentials: { icon: LineIconName; title: string; text: string }[] = [
+  { icon: 'message-circle-more', title: 'Atendimento pessoal', text: 'Você fala diretamente comigo, do primeiro contato ao fim do processo.' },
+  { icon: 'scale', title: 'Experiência em todas as instâncias', text: 'Atuação das audiências à sustentação oral nos tribunais.' },
+  { icon: 'book-open-text', title: 'Comunicação clara', text: 'Explicações simples e retorno sobre o andamento do seu caso.' },
+  { icon: 'monitor-smartphone', title: 'Atendimento online', text: 'WhatsApp, videochamada e assinatura digital. A Justiça do Trabalho também é eletrônica.' },
 ];
 
 export const faq: { q: string; a: string; link?: { href: string; label: string } }[] = [
