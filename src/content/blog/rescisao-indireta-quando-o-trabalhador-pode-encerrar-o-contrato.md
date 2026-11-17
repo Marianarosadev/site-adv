@@ -1,5 +1,6 @@
 ---
 title: 'Rescisão indireta: quando o trabalhador pode encerrar o contrato'
+seoTitle: 'Rescisão indireta: quando pedir e o que recebe'
 description: 'Quando a falta grave é da empresa, o trabalhador pode pedir o fim do contrato e receber como em uma dispensa sem justa causa. Veja as situações mais comuns.'
 date: 2026-10-27
 category: 'Rescisão'

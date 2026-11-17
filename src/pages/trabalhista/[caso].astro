@@ -40,7 +40,7 @@ const schema = [
 ];
 ---
 <Layout
-  title={`${caso.title} | Advogada Trabalhista Dra. Giovanna Cabral, OAB/GO 66.313`}
+  title={`${caso.seoTitle} | Giovanna Cabral`}
   description={caso.description}
   schema={schema}
   whatsapp={wa}
@@ -180,7 +180,7 @@ const schema = [
   <section class="section section--tight" id="duvidas">
     <div class="container faq">
       <div class="faq__aside">
-        <h2 class="display display--md">Dúvidas <span class="soft">frequentes.</span></h2>
+        <h2 class="display display--md">Dúvidas <span class="soft">sobre {topicName}.</span></h2>
       </div>
       <div class="faq__list">
         {caso.faq.map(({ q, a }) => (

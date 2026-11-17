@@ -9,3 +9,6 @@ plano-*.md
 
 # Arquivos locais do Wrangler (Cloudflare)
 .wrangler/
+
+# Relatórios de auditoria para a cliente
+relatorio-*.html

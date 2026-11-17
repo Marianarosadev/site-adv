@@ -221,7 +221,7 @@ export const faq: { q: string; a: string; link?: { href: string; label: string }
   },
   {
     q: 'Atende em todo o Brasil?',
-    a: 'Sim. O atendimento é online e o processo trabalhista é eletrônico, então posso atender pessoas e empresas de qualquer cidade ou estado.',
+    a: 'Sim. O atendimento é online e o processo trabalhista é eletrônico, então posso atender pessoas e empresas de qualquer cidade ou estado, de Goiânia, Aparecida de Goiânia e Senador Canedo a outras regiões do país.',
   },
   {
     q: 'Sou servidor público. Você pode me ajudar?',

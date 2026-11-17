@@ -24,10 +24,44 @@ const stepsEmpresa = [
   { title: 'Explico os caminhos', text: 'Defesa, acordo ou outra estratégia: você decide com informação clara.' },
   { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
 ];
+
+// O serviço aponta para o escritório descrito na home (mesmo @id), com os dados básicos repetidos para validar sozinho.
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Advocacia trabalhista para empresas',
+    serviceType: 'Advocacia trabalhista empresarial',
+    description: 'Defesa de empresas em reclamações trabalhistas, preparação de preposto, audiências, acordos e orientação preventiva.',
+    url: new URL('/empresas/', Astro.site).href,
+    provider: {
+      '@type': ['LegalService', 'Attorney'],
+      '@id': new URL('/#escritorio', Astro.site).href,
+      name: `${site.fullName}, Advogada Trabalhista`,
+      url: Astro.site?.href,
+      telephone: site.phoneE164,
+      identifier: site.oab,
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Goiânia' },
+      { '@type': 'State', name: 'Goiás' },
+      { '@type': 'Country', name: 'Brasil' },
+    ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Serviços para empresas',
+      itemListElement: servicesEmpresa.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s.title, description: s.text },
+      })),
+    },
+  },
+];
 ---
 <Layout
-  title="Advocacia Trabalhista para Empresas em Goiânia e Online | Dra. Giovanna Cabral, OAB/GO 66.313"
+  title="Advocacia Trabalhista para Empresas em Goiânia | Giovanna Cabral"
   description="Defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
+  schema={schema}
   whatsapp={wa}
   publico="empresa"
   contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.' }}

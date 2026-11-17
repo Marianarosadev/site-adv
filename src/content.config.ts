@@ -8,6 +8,8 @@ const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: ({ image }) => z.object({
     title: z.string(),
+    // Título da aba e do Google, quando o título do artigo passa de ~45 caracteres. Sem ele, usa o título.
+    seoTitle: z.string().optional(),
     description: z.string(),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),

@@ -1,5 +1,6 @@
 ---
 title: 'Trabalho como PJ, mas tenho chefe e horário. Tenho vínculo?'
+seoTitle: 'PJ com chefe e horário tem vínculo?'
 description: 'O contrato como PJ não impede o reconhecimento do vínculo de emprego quando a rotina é de empregado. Veja os requisitos que a Justiça do Trabalho analisa.'
 date: 2026-10-20
 category: 'Vínculo de emprego'

@@ -22,13 +22,17 @@ interface Props {
   publico?: 'trabalhador' | 'empresa' | 'geral';
   // Imagem de compartilhamento (WhatsApp, redes). Sem ela, usa a imagem padrão do site.
   ogImage?: string;
+  // Artigos do blog: og:type "article" com as datas de publicação e atualização (ISO 8601).
+  article?: { published: string; modified: string };
+  // Páginas que não devem ir para o Google (ex.: 404): noindex e sem canonical.
+  noindex?: boolean;
   // Título e texto da seção de contato do fim da página (o padrão serve para a maioria das páginas).
   contato?: { title?: string; soft?: string; intro?: string };
 }
 
 const {
   title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
-  ogImage: ogImagePath = '/og-image.jpg', contato = {},
+  ogImage: ogImagePath = '/og-image.jpg', contato = {}, article, noindex = false,
 } = Astro.props;
 const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -46,9 +50,10 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {homologacao && <meta name="robots" content="noindex, nofollow" />}
+    {noindex && !homologacao && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#f7eeeb" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href={newsreaderFont} as="font" type="font/woff2" crossorigin />
@@ -84,7 +89,9 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
       </script>
     )}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.published} />}
+    {article && <meta property="article:modified_time" content={article.modified} />}
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content={site.fullName} />
     <meta property="og:title" content={title} />

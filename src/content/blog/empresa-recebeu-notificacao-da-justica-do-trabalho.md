@@ -1,5 +1,6 @@
 ---
 title: 'A empresa recebeu uma notificação da Justiça do Trabalho. E agora?'
+seoTitle: 'Empresa notificada pela Justiça do Trabalho'
 description: 'O que fazer nos primeiros dias depois de receber a citação de uma reclamação trabalhista: prazos, documentos e a preparação para a audiência.'
 date: 2026-10-13
 category: 'Para empresas'

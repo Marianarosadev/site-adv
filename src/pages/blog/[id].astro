@@ -16,7 +16,12 @@ export async function getStaticPaths() {
 
 const { post, posts } = Astro.props as { post: Post; posts: Post[] };
 const { Content } = await render(post);
-const { title, description, date, updated, category, audience, cover } = post.data;
+const { title, seoTitle, description, date, updated, category, audience, cover } = post.data;
+// As datas do .md (ex.: 2026-11-10) viram meia-noite em UTC, que em Goiânia ainda é o dia anterior.
+// No schema e no og:type elas saem com o fuso de Brasília, para o Google mostrar o dia certo.
+const isoBrasilia = (d: Date) => `${d.toISOString().slice(0, 10)}T00:00:00-03:00`;
+const published = isoBrasilia(date);
+const modified = isoBrasilia(updated ?? date);
 const empresa = audience === 'empresa';
 // Prévia do link no WhatsApp e nas redes: a foto do artigo, no formato 1200x630.
 const ogImage = cover
@@ -40,12 +45,19 @@ const schema = [
     '@type': 'BlogPosting',
     headline: title,
     description,
-    datePublished: date.toISOString(),
-    dateModified: (updated ?? date).toISOString(),
+    datePublished: published,
+    dateModified: modified,
     url,
     mainEntityOfPage: url,
     image: new URL(ogImage ?? '/og-image.jpg', Astro.site).href,
-    author: { '@type': 'Person', name: site.fullName, jobTitle: 'Advogada trabalhista', identifier: site.oab },
+    author: {
+      '@type': 'Person',
+      name: site.fullName,
+      url: new URL('/#sobre', Astro.site).href,
+      jobTitle: 'Advogada trabalhista',
+      identifier: site.oab,
+      sameAs: [instagramLink],
+    },
     publisher: { '@type': 'Person', name: site.fullName },
     inLanguage: 'pt-BR',
   },
@@ -61,9 +73,10 @@ const schema = [
 ];
 ---
 <Layout
-  title={`${title} | Dra. Giovanna Cabral`}
+  title={`${seoTitle ?? title} | Giovanna Cabral`}
   description={description}
   schema={schema}
+  article={{ published, modified }}
   whatsapp={wa}
   tema={`blog-${post.id}`}
   publico={publico}

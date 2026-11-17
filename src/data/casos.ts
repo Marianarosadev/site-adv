@@ -16,6 +16,8 @@ import fgts from '../assets/casos/fgts-e-seguro-desemprego.jpg';
 export interface Caso {
   slug: string;
   title: string;
+  // Título da aba e do Google: tema e cidade na frente, até cerca de 60 caracteres.
+  seoTitle: string;
   h1: [string, string];
   description: string;
   quote: string;
@@ -40,6 +42,7 @@ export const casos: Caso[] = [
   {
     slug: 'horas-extras',
     title: 'Horas extras',
+    seoTitle: 'Advogada de Horas Extras em Goiânia',
     h1: ['Horas extras:', 'quando a jornada deve ser paga a mais.'],
     description: 'Entenda quando você tem direito a horas extras, intervalo e adicional noturno, como funciona o banco de horas e como comprovar a jornada. Atendimento online.',
     quote: 'Faço hora extra e não recebo.',
@@ -85,6 +88,7 @@ export const casos: Caso[] = [
   {
     slug: 'rescisao-indireta',
     title: 'Rescisão indireta',
+    seoTitle: 'Advogada de Rescisão Indireta em Goiânia',
     h1: ['Rescisão indireta:', 'quando a falta grave é da empresa.'],
     description: 'Entenda quando o trabalhador pode encerrar o contrato por falta grave do empregador e receber como em uma dispensa sem justa causa. Atendimento online.',
     quote: 'A empresa não cumpre o que deve e eu quero sair.',
@@ -130,6 +134,7 @@ export const casos: Caso[] = [
   {
     slug: 'carteira-nao-assinada',
     title: 'Carteira não assinada ou contrato PJ',
+    seoTitle: 'Carteira Não Assinada e PJ em Goiânia',
     h1: ['Carteira não assinada ou PJ:', 'quando existe vínculo de emprego.'],
     description: 'Trabalha sem registro ou foi contratado como PJ, mas tem chefe e horário? Entenda os requisitos do vínculo de emprego e os direitos que vêm com ele.',
     quote: 'Trabalho sem registro ou fui contratado como PJ.',
@@ -175,6 +180,7 @@ export const casos: Caso[] = [
   {
     slug: 'acidente-de-trabalho',
     title: 'Acidente e doença do trabalho',
+    seoTitle: 'Advogada de Acidente de Trabalho em Goiânia',
     h1: ['Acidente e doença do trabalho:', 'estabilidade e indenização.'],
     description: 'Sofreu um acidente ou adoeceu por causa do trabalho? Entenda a CAT, o afastamento, a estabilidade de 12 meses e quando há indenização. Atendimento online.',
     quote: 'Me acidentei ou adoeci por causa do trabalho.',
@@ -220,6 +226,7 @@ export const casos: Caso[] = [
   {
     slug: 'insalubridade-e-periculosidade',
     title: 'Insalubridade e periculosidade',
+    seoTitle: 'Insalubridade e Periculosidade em Goiânia',
     h1: ['Insalubridade e periculosidade:', 'adicionais pelo risco do trabalho.'],
     description: 'Trabalha exposto a ruído, produtos químicos, calor, eletricidade ou inflamáveis? Entenda os adicionais de insalubridade e periculosidade e como são calculados.',
     quote: 'Trabalho exposto a risco ou a agentes nocivos.',
@@ -266,6 +273,7 @@ export const casos: Caso[] = [
   {
     slug: 'direitos-da-gestante',
     title: 'Direitos da gestante',
+    seoTitle: 'Gestante Demitida: Advogada em Goiânia',
     h1: ['Direitos da gestante:', 'estabilidade e licença-maternidade.'],
     description: 'Foi demitida grávida? Entenda a estabilidade da gestante, a licença-maternidade e as garantias durante a gravidez. Atendimento online e pessoal.',
     quote: 'Fui demitida grávida.',
@@ -311,6 +319,7 @@ export const casos: Caso[] = [
   {
     slug: 'justa-causa',
     title: 'Justa causa',
+    seoTitle: 'Reverter Justa Causa: Advogada em Goiânia',
     h1: ['Justa causa:', 'quando ela pode ser questionada.'],
     description: 'Foi demitido por justa causa e não concorda? Entenda os motivos previstos na lei, os requisitos para aplicar a justa causa e o que muda se ela for revertida.',
     quote: 'Fui demitido por justa causa e não concordo.',
@@ -357,6 +366,7 @@ export const casos: Caso[] = [
   {
     slug: 'assedio-moral',
     title: 'Assédio moral',
+    seoTitle: 'Advogada de Assédio Moral em Goiânia',
     h1: ['Assédio moral no trabalho:', 'como reconhecer e agir.'],
     description: 'É humilhado, isolado ou pressionado de forma abusiva no trabalho? Entenda o que é assédio moral, como reunir provas e quais caminhos a lei oferece.',
     quote: 'Sou humilhado ou pressionado no trabalho.',
@@ -400,6 +410,7 @@ export const casos: Caso[] = [
   {
     slug: 'fgts-e-seguro-desemprego',
     title: 'FGTS e seguro-desemprego',
+    seoTitle: 'FGTS e Seguro-Desemprego em Goiânia',
     h1: ['FGTS e seguro-desemprego:', 'como conferir e cobrar.'],
     description: 'Seu FGTS não foi depositado ou o seguro-desemprego foi negado? Entenda como conferir os depósitos, a multa de 40% e os requisitos do seguro-desemprego.',
     quote: 'Meu FGTS não foi depositado.',

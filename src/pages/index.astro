@@ -36,6 +36,8 @@ const schema = [
   {
     '@context': 'https://schema.org',
     '@type': ['LegalService', 'Attorney'],
+    // Identificador usado pelo serviço de /empresas/ para apontar para este escritório.
+    '@id': new URL('/#escritorio', Astro.site).href,
     name: `${site.fullName}, Advogada Trabalhista`,
     description: 'Advogada trabalhista em Goiânia, com atendimento online para trabalhadores e empresas em todo o Brasil.',
     url: Astro.site?.href,
@@ -47,6 +49,8 @@ const schema = [
     knowsAbout: ['Direito do Trabalho', 'Processo do Trabalho', ...areas.map((a) => a.title)],
     areaServed: [
       { '@type': 'City', name: 'Goiânia' },
+      { '@type': 'City', name: 'Aparecida de Goiânia' },
+      { '@type': 'City', name: 'Senador Canedo' },
       { '@type': 'State', name: 'Goiás' },
       { '@type': 'Country', name: 'Brasil' },
     ],
@@ -70,8 +74,8 @@ const schema = [
 ];
 ---
 <Layout
-  title="Advogada Trabalhista em Goiânia e Online | Dra. Giovanna Cabral, OAB/GO 66.313"
-  description="Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil. Orientação sobre rescisão, horas extras, rescisão indireta e carteira não assinada. Também atendo empresas."
+  title="Advogada Trabalhista em Goiânia | Giovanna Cabral"
+  description="Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil. Rescisão, horas extras, rescisão indireta e carteira não assinada. Atendo empresas."
   schema={schema}
 >
   <link
@@ -105,7 +109,7 @@ const schema = [
       <div class="hero__content">
         <p class="eyebrow eyebrow--pill">Goiânia · Atendimento online para todo o Brasil</p>
         <h1 class="display display--hero">
-          Advogada trabalhista <span class="soft">com clareza em cada etapa.</span>
+          Advogada trabalhista em Goiânia, <span class="soft">com clareza em cada etapa.</span>
         </h1>
         <p class="hero__intro">
           Sou a <strong>Dra. Giovanna Cabral</strong>, {site.oab}. Atendimento 100% online, com linguagem clara do
@@ -192,7 +196,7 @@ const schema = [
           <li class="highlight">
             <span class="highlight__mark" aria-hidden="true"><AreaIcon name={s.icon} /></span>
             <AreaIcon name={s.icon} class="highlight__icon" />
-            <h3 class="highlight__title">{s.title}</h3>
+            <p class="highlight__title">{s.title}</p>
             <p class="highlight__text">{s.text}</p>
           </li>
         ))}
@@ -294,9 +298,9 @@ const schema = [
           <p class="about__role">{site.fullName} · Advogada trabalhista · {site.oab}</p>
           <!-- Credenciais: faixa com três colunas separadas por filetes, ícone em anel, rótulo e valor -->
           <dl class="about__meta">
-            <div><LineIcon name="badge-check" class="about__meta-icon" /><dt>Inscrição</dt><dd>{site.oab}</dd></div>
-            <div><LineIcon name="scale" class="about__meta-icon" /><dt>Área</dt><dd>Direito do Trabalho</dd></div>
-            <div><LineIcon name="map-pin" class="about__meta-icon" /><dt>Atendimento</dt><dd>Online · todo o Brasil</dd></div>
+            <div><dt><LineIcon name="badge-check" class="about__meta-icon" />Inscrição</dt><dd>{site.oab}</dd></div>
+            <div><dt><LineIcon name="scale" class="about__meta-icon" />Área</dt><dd>Direito do Trabalho</dd></div>
+            <div><dt><LineIcon name="map-pin" class="about__meta-icon" />Atendimento</dt><dd>Online · todo o Brasil</dd></div>
           </dl>
           <div class="about__bio">
             <p>
