@@ -4,7 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import PostCover from '../../components/PostCover.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
-import { site, whatsappLink } from '../../data/site';
+import { site, whatsappLink, instagramLink } from '../../data/site';
+import LineIcon from '../../components/LineIcon.astro';
 import { getPosts, categories, categorySlug, postUrl, readingTime, formatDate } from '../../data/blog';
 
 const posts = await getPosts();
@@ -132,6 +133,9 @@ const schema = [
           <p class="blog-author__role">Advogada trabalhista · {site.oab}</p>
           <p class="blog-author__bio">{site.title}. Escrevo para explicar, sem "juridiquês", o que a lei diz sobre o trabalho.</p>
           <a class="link-arrow" href="/#sobre">Conheça minha trajetória</a>
+          <a class="blog-author__social" href={instagramLink} target="_blank" rel="noopener" data-local="blog-instagram">
+            <LineIcon name="instagram" /><span>@{site.instagram}</span>
+          </a>
         </div>
 
         {used.length > 0 && (

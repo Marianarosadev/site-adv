@@ -562,6 +562,75 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .footer__top { display: grid; gap: 48px; padding-top: 64px; padding-bottom: 48px; }
 .footer__call { font-size: 14px; color: var(--rodape-suave); }
 .footer__phone { display: block; white-space: nowrap; font-family: var(--sans); font-size: clamp(36px, 5vw, 60px); line-height: 1.05; letter-spacing: -0.02em; margin: 10px 0 14px; }
+/* Link para o Instagram fora do rodapé: texto em vinho com o ícone de linha, discreto ao lado dos botões */
+.insta-link {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; line-height: 1.3;
+  color: var(--vinho); text-decoration: none; transition: color .2s;
+}
+.insta-link .line-icon svg { width: 18px; height: 18px; }
+.insta-link:hover { color: var(--rose-destaque); }
+.mnav__social { margin-top: 18px; padding: 4px 2px; }
+.article__social { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--linha); display: flex; }
+/* Seção do Instagram: texto à esquerda e o cartão da prévia do perfil à direita, na moldura clara do site */
+/* respiro próprio depois do painel de artigos (a seção usa section--tight, que zera o topo) */
+.section.insta { padding-top: var(--section); }
+.insta__grid { display: grid; gap: 32px; align-items: center; }
+.insta__btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; color: var(--vinho); border-color: color-mix(in srgb, var(--rose-titulo) 60%, transparent); }
+.insta__btn .line-icon svg { width: 18px; height: 18px; }
+.insta__btn:hover { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+/* moldura: passe-partout rosé em degradê com filete, tela interna arredondada com filete fino
+   e uma faixa de rodapé no estilo do site, para o iframe branco do Instagram parecer parte do layout */
+.insta__card {
+  position: relative; padding: 12px 12px 0;
+  border: 1px solid color-mix(in srgb, var(--rose-titulo) 30%, var(--linha)); border-radius: 18px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--rose-titulo) 14%, transparent), transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--rose-titulo) 8%, var(--superficie)), var(--superficie));
+  box-shadow: 0 26px 50px -36px rgba(58, 24, 32, .5);
+}
+.insta__screen {
+  container-type: inline-size; overflow: hidden; border-radius: 11px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rose-titulo) 22%, var(--linha)), 0 8px 20px -16px rgba(58, 24, 32, .35);
+}
+.insta__frame { display: block; width: 100%; height: calc(33.4cqw + 150px); border: 0; background: #fff; }
+.insta__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 6px 16px;
+  font-size: 13.5px; font-weight: 600; color: var(--vinho); text-decoration: none;
+}
+.insta__foot span { display: inline-flex; align-items: center; gap: 8px; }
+.insta__foot .line-icon svg { width: 17px; height: 17px; }
+.insta__foot svg:not(.line-icon svg) { width: 14px; height: 14px; transition: transform .25s; }
+.insta__foot:hover { color: var(--rose-destaque); }
+.insta__foot:hover span:last-child svg { transform: translateX(3px); }
+.insta__card:not(.is-loaded) { padding-bottom: 12px; }
+.insta__card:not(.is-loaded) .insta__foot { display: none; }
+.insta__placeholder { display: grid; gap: 18px; padding: 18px; background: linear-gradient(180deg, var(--superficie), color-mix(in srgb, var(--superficie) 55%, var(--fundo))); }
+.insta__head { display: flex; align-items: center; gap: 14px; }
+.insta__head img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; object-position: 40% 20%; border: 2px solid var(--superficie); box-shadow: 0 0 0 1px color-mix(in srgb, var(--rose-titulo) 45%, transparent); }
+.insta__head div { display: grid; gap: 2px; }
+.insta__head strong { font-size: 15px; font-weight: 600; }
+.insta__head span { font-size: 13px; color: var(--texto-suave); }
+.insta__tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.insta__tiles span {
+  display: grid; place-items: center; aspect-ratio: 1; border-radius: 6px; color: color-mix(in srgb, var(--rose-titulo) 55%, transparent);
+  background: linear-gradient(140deg, color-mix(in srgb, var(--rose-titulo) 16%, var(--superficie)), color-mix(in srgb, var(--rose-titulo) 6%, var(--superficie)));
+}
+.insta__tiles .line-icon svg { width: 26px; height: 26px; }
+.insta__load { justify-self: start; color: var(--vinho); border-color: color-mix(in srgb, var(--rose-titulo) 60%, transparent); }
+.insta__load:hover { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+.insta__note { margin: -6px 0 0; font-size: 12.5px; color: var(--texto-suave); }
+@media (min-width: 900px) {
+  .insta__grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: 72px; }
+}
+
+/* Instagram no rodapé: link discreto em pílula com o ícone de linha, logo abaixo do WhatsApp */
+.footer__social {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 14px 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--rodape-suave) 35%, transparent); border-radius: 999px;
+  font-size: 14px; color: var(--rodape-texto); text-decoration: none; transition: border-color .2s, background-color .2s;
+}
+.footer__social .line-icon svg { width: 18px; height: 18px; }
+.footer__social:hover { border-color: var(--rodape-suave); background: color-mix(in srgb, var(--rodape-suave) 10%, transparent); }
 .footer__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 24px; font-size: 14px; line-height: 1.45; }
 .footer__cols h2 { font: 600 12px var(--sans); color: var(--rodape-suave); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
 .footer__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -1056,6 +1125,16 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 
 /* ---------- Menu do celular ---------- */
+/* Instagram no cabeçalho: botão só com o ícone, do tamanho do botão de menu, em contorno rosé discreto */
+.ig-btn {
+  display: grid; place-items: center; width: 42px; height: 42px; flex: none; border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--rose-titulo) 55%, transparent); color: var(--vinho);
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.ig-btn .line-icon svg { width: 19px; height: 19px; }
+.ig-btn:hover { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+/* Celular: não cabe ao lado do nome, do WhatsApp e do menu; ali o Instagram fica dentro do menu */
+@media (max-width: 479px) { .ig-btn { display: none; } }
 .menu-btn {
   display: grid; place-content: center; gap: 4px; width: 42px; height: 42px; flex: none;
   border: 1px solid var(--texto); border-radius: var(--radius); background: transparent; cursor: pointer; padding: 0;
@@ -1278,6 +1357,9 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .blog-author__name { font-family: var(--serif); font-size: 24px; line-height: 1.15; }
 .blog-author__role { margin: 4px 0 12px; font-size: 13px; font-weight: 600; color: var(--texto-suave); }
 .blog-author__bio { font-size: 14px; color: var(--texto-suave); }
+.blog-author__social { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--linha); font-size: 14px; font-weight: 600; color: var(--vinho); text-decoration: none; }
+.blog-author__social .line-icon svg { width: 18px; height: 18px; }
+.blog-author__social:hover { color: var(--rose-destaque); }
 .blog-topics { list-style: none; margin: 0; padding: 0; }
 .blog-topics li + li { border-top: 1px solid var(--linha); }
 .blog-topics button {
@@ -1898,15 +1980,15 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
 .contact-card__actions .btn--call { background: transparent; color: var(--vinho); border-color: color-mix(in srgb, var(--vinho) 55%, transparent); }
 .contact-card__actions .btn--call:hover { background: var(--vinho); border-color: var(--vinho); color: #fff; }
 
-.contact-card__info { gap: 18px 24px; margin: 26px 0 22px; padding: 22px 0; }
-.contact-card__info > div { display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; align-items: center; }
+.contact-card__info { gap: 24px 28px; margin: 28px 0 24px; padding: 26px 0; }
+.contact-card__info > div { display: grid; grid-template-columns: 36px 1fr; column-gap: 14px; row-gap: 4px; align-items: center; }
 .contact-card__icon {
-  grid-row: span 2; width: 34px; height: 34px; border-radius: 50%; color: var(--vinho);
+  grid-row: span 2; width: 36px; height: 36px; border-radius: 50%; color: var(--vinho);
   border: 1px solid color-mix(in srgb, var(--rose-titulo) 45%, transparent);
 }
 .contact-card__icon svg { width: 15px; height: 15px; }
 .contact-card__info dt { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
-.contact-card__info dd { font-family: var(--sans); font-size: 17px; font-weight: 500; line-height: 1.3; overflow-wrap: break-word; }
+.contact-card__info dd { font-family: var(--sans); font-size: 16.5px; font-weight: 500; line-height: 1.35; overflow-wrap: break-word; }
 .contact-card__info-wide { grid-column: 1 / -1; }
 
 .contact-card__brief {

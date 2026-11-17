@@ -5,7 +5,8 @@ import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-lat
 import Icon from '../components/Icon.astro';
 import Button from '../components/Button.astro';
 import CookieBanner from '../components/CookieBanner.astro';
-import { site, whatsappLink, areas, areaUrl } from '../data/site';
+import { site, whatsappLink, instagramLink, areas, areaUrl } from '../data/site';
+import LineIcon from '../components/LineIcon.astro';
 
 interface Props {
   title: string;
@@ -121,6 +122,11 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
           </nav>
         )}
         <div class="header__actions">
+          {!landing && (
+            <a class="ig-btn" href={instagramLink} target="_blank" rel="noopener" aria-label={`Instagram @${site.instagram}`} data-local="cabecalho-instagram">
+              <LineIcon name="instagram" />
+            </a>
+          )}
           <Button href={whatsapp} icon="whatsapp" local="cabecalho" tema={tema} publico={publico}>
             <span class="btn__label-long">Falar no WhatsApp</span><span class="btn__label-short">WhatsApp</span>
           </Button>
@@ -147,6 +153,9 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
               <span><strong>Para empresas</strong><small>Advocacia preventiva e defesa em processos</small></span>
               <Icon name="chevron-right" />
             </a>
+            <a class="insta-link mnav__social" href={instagramLink} target="_blank" rel="noopener" data-local="menu-instagram">
+              <LineIcon name="instagram" /><span>Acompanhe no Instagram · @{site.instagram}</span>
+            </a>
           </div>
         </nav>
       )}
@@ -163,6 +172,9 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
             <p class="footer__call">Fale direto com a advogada.</p>
             <a class="footer__phone" href={whatsapp} target="_blank" rel="noopener" data-local="rodape" data-tema={tema} data-publico={publico}>{site.phoneShort}</a>
             <p class="footer__call">WhatsApp · {site.hours.toLowerCase()}</p>
+            <a class="footer__social" href={instagramLink} target="_blank" rel="noopener" data-local="rodape-instagram">
+              <LineIcon name="instagram" /><span>@{site.instagram}</span>
+            </a>
           </div>
           <div class="footer__cols">
             <div>

@@ -5,7 +5,8 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import PostCard from '../../components/PostCard.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
-import { site, whatsappLink, whatsappEmpresa, telLink } from '../../data/site';
+import { site, whatsappLink, whatsappEmpresa, telLink, instagramLink } from '../../data/site';
+import LineIcon from '../../components/LineIcon.astro';
 import { getPosts, postUrl, readingTime, formatDate, categorySlug, type Post } from '../../data/blog';
 
 export async function getStaticPaths() {
@@ -114,6 +115,9 @@ const schema = [
           <Button href={wa} icon="whatsapp" local="artigo" tema={`blog-${post.id}`} publico={publico}>Falar no WhatsApp</Button>
           <Button href={telLink} icon="phone" local="artigo" tema={`blog-${post.id}`} publico={publico}>Ligar</Button>
         </div>
+        <a class="insta-link article__social" href={instagramLink} target="_blank" rel="noopener" data-local="artigo-instagram">
+          <LineIcon name="instagram" /><span>Mais conteúdos como este no Instagram · @{site.instagram}</span>
+        </a>
       </aside>
 
       <p class="article__disclaimer">

@@ -24,6 +24,7 @@
     if (!choice) return;
     (window as any).applyConsent?.(choice);
     try { localStorage.setItem(KEY, choice); } catch {}
+    window.dispatchEvent(new CustomEvent('consentimento', { detail: choice }));
     banner.hidden = true;
   });
 

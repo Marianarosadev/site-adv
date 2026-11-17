@@ -14,6 +14,7 @@ export const site = {
   title: 'Pós-graduada em Direito e Processo do Trabalho',
   // Código do contêiner do Google Tag Manager (GTM-XXXXXXX). Vazio = nenhuma tag é carregada.
   gtmId: 'GTM-TL9C4W2F',
+  instagram: 'cabralgio',
 };
 
 // O script de origem troca "Vim pelo site e" por "Vim pelo Google e" quando a visita chega por um anúncio.
@@ -28,6 +29,8 @@ export function whatsappEmpresa(subject = 'Gostaria de falar sobre uma questão 
 }
 
 export const telLink = `tel:${site.phoneE164}`;
+
+export const instagramLink = `https://www.instagram.com/${site.instagram}/`;
 
 // O que pedir na primeira mensagem, para a triagem ser rápida.
 export const firstMessage = [
@@ -147,7 +150,7 @@ export const stats: { icon: AreaIconName; title: string; text: string }[] = [
 export type LineIconName =
   | 'graduation-cap' | 'award' | 'scroll-text' | 'book-open-text' | 'scale' | 'users' | 'monitor-smartphone'
   | 'badge-check' | 'map-pin' | 'phone' | 'clock' | 'mail' | 'lock'
-  | 'message-circle-more' | 'clipboard-list' | 'file-signature' | 'bell-ring' | 'calendar-clock' | 'handshake';
+  | 'message-circle-more' | 'clipboard-list' | 'file-signature' | 'bell-ring' | 'calendar-clock' | 'handshake' | 'instagram';
 
 export const timeline: { year: string; text: string; icon: LineIconName; current?: boolean }[] = [
   { year: '2020', text: 'Estágio em Direito do Trabalho', icon: 'book-open-text' },
