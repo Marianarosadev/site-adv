@@ -120,7 +120,11 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
         <style is:inline>
           .lcp-sem-foto .hero__bg, .lcp-sem-marca .hero__watermark, .lcp-sem-chips .chips,
           .lcp-sem-video .section--intro, .lcp-sem-abaixo main > :not(.hero), .lcp-sem-abaixo footer,
-          .lcp-sem-abaixo .cookies, .lcp-sem-abaixo .wa-float { display: none !important; }
+          .lcp-sem-abaixo .cookies, .lcp-sem-abaixo .wa-float,
+          .lcp-sem-mono .monogram-bg,
+          .lcp-sem-meio .section--highlights, .lcp-sem-meio #como-posso-ajudar, .lcp-sem-meio #para-empresas, .lcp-sem-meio #sobre,
+          .lcp-sem-funciona main > .monogram-zone:not(:last-of-type),
+          .lcp-sem-fim .blog-panel-wrap, .lcp-sem-fim main > .monogram-zone:last-of-type, .lcp-sem-fim .contact { display: none !important; }
         </style>
       </Fragment>
     )}
