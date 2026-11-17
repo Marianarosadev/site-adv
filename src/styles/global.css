@@ -486,14 +486,14 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   .diffs-video video {
     margin-left: auto; width: auto; height: 100%; aspect-ratio: 9 / 16; max-width: 60%;
     object-position: 50% 30%; border-radius: 0 9px 9px 0;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .12) 10%, rgb(0 0 0 / .4) 22%, rgb(0 0 0 / .75) 36%, #000 52%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .12) 10%, rgb(0 0 0 / .4) 22%, rgb(0 0 0 / .75) 36%, #000 52%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .15) 7%, rgb(0 0 0 / .45) 16%, rgb(0 0 0 / .8) 28%, #000 40%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .15) 7%, rgb(0 0 0 / .45) 16%, rgb(0 0 0 / .8) 28%, #000 40%);
   }
   /* véu vinho medido a partir da direita (o vídeo tem ~410px): tinge a borda esquerda do vídeo com a cor do card,
      para ele nascer do vinho em vez de clarear em cinza; brilho rosé suave atrás da lista */
   .diffs-video::after {
     background:
-      linear-gradient(to left, transparent 0, transparent 190px, rgb(var(--veu) / .3) 260px, rgb(var(--veu) / .7) 340px, rgb(var(--veu)) 420px),
+      linear-gradient(to left, transparent 0, transparent 245px, rgb(var(--veu) / .3) 305px, rgb(var(--veu) / .7) 370px, rgb(var(--veu)) 420px),
       radial-gradient(70% 90% at 18% 50%, rgb(122 66 80 / .35), transparent 70%);
   }
   .diffs-wrap .diffs {
