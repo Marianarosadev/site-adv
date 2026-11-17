@@ -182,7 +182,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 .hero__bg { position: absolute; z-index: -2; left: 0; right: 0; bottom: 0; height: 470px; overflow: hidden; }
 .hero__bg picture, .hero__bg img { display: block; width: 100%; height: 100%; }
-.hero__bg img { object-fit: cover; object-position: 62% 30%; }
+.hero__bg img { object-fit: cover; object-position: 64% 36%; }
 .hero__bg::after {
   content: ''; position: absolute; inset: 0;
   background:
@@ -256,7 +256,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 @media (min-width: 900px) {
   .hero { padding: 0; min-height: min(calc(100svh - 68px), 820px); display: flex; align-items: center; }
   .hero__bg { top: 0; left: auto; height: auto; width: min(66%, 1240px); }
-  .hero__bg img { object-position: 60% 35%; }
+  .hero__bg img { object-position: 62% 38%; }
   .hero__bg::after {
     background:
       linear-gradient(to right, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 75%, transparent) 22%, transparent 52%),
@@ -647,10 +647,10 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
    3. Textos e atalhos entram em sequência, saindo do desfoque. */
 .hero__placeholder {
   position: absolute; inset: 0;
-  background-size: cover; background-position: 62% 30%;
+  background-size: cover; background-position: 64% 36%;
   filter: blur(18px) saturate(1.1); transform: scale(1.08);
 }
-@media (min-width: 900px) { .hero__placeholder { background-position: 60% 35%; } }
+@media (min-width: 900px) { .hero__placeholder { background-position: 62% 38%; } }
 .hero__bg picture { position: relative; }
 .js .hero__bg img {
   opacity: 0; filter: blur(14px); transform: scale(1.06);

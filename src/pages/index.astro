@@ -8,7 +8,7 @@ import AreaIcon from '../components/AreaIcon.astro';
 import LineIcon from '../components/LineIcon.astro';
 import ContactCard from '../components/ContactCard.astro';
 import { getPosts, postUrl, readingTime } from '../data/blog';
-import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
+import fotoTopo from '../assets/giovanna-topo.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
   site, areaUrl, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
@@ -22,10 +22,10 @@ const latestPosts = (await getPosts()).slice(0, 8);
 // Foto do topo: mesmas opções no <Picture> e no preload, para o navegador baixar o arquivo certo o quanto antes.
 const heroWidths = [640, 1000, 1086];
 const heroSizes = '(min-width: 900px) 64vw, 100vw';
-const heroPreload = await getImage({ src: fotoEscritorio, widths: heroWidths, sizes: heroSizes, format: 'avif' });
+const heroPreload = await getImage({ src: fotoTopo, widths: heroWidths, sizes: heroSizes, format: 'avif' });
 // Prévia minúscula (~1 KB) embutida no HTML: aparece desfocada na hora, enquanto a foto real carrega.
 const heroPlaceholder = `data:image/webp;base64,${(
-  await sharp('src/assets/giovanna-escritorio.jpg').resize(32).webp({ quality: 50 }).toBuffer()
+  await sharp('src/assets/giovanna-topo.jpg').resize(32).webp({ quality: 50 }).toBuffer()
 ).toString('base64')}`;
 const shortcuts = [
   { label: 'Rescisão', hint: 'Recebi tudo?', id: 'area-rescisao', icon: 'receipt-text' },
@@ -89,8 +89,8 @@ const schema = [
     <div class="hero__bg">
       <div class="hero__placeholder" style={`background-image: url(${heroPlaceholder})`} aria-hidden="true"></div>
       <Picture
-        src={fotoEscritorio}
-        alt="Dra. Giovanna Cabral, advogada trabalhista, analisando um processo em seu escritório"
+        src={fotoTopo}
+        alt="Dra. Giovanna Cabral, advogada trabalhista, em seu escritório"
         widths={heroWidths}
         sizes={heroSizes}
         onload="this.classList.add('is-loaded')"
