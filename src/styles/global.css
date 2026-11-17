@@ -192,9 +192,11 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .hero__watermark {
   position: absolute; z-index: -1; left: 50%; transform: translateX(-50%);
   bottom: 300px;
-  font-family: var(--sans); font-size: clamp(96px, 23vw, 330px); line-height: 1;
+  font-family: var(--sans); font-size: clamp(60px, 17vw, 250px); line-height: 1;
   letter-spacing: -0.03em; color: var(--rose-titulo); opacity: .16;
   white-space: nowrap; pointer-events: none; user-select: none;
+  /* a palavra cabe inteira na largura e some de leve embaixo, sem corte seco na emenda com a seção seguinte */
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
 }
 .hero__inner { position: relative; padding-bottom: 400px; }
 .hero__content { max-width: 700px; }
@@ -264,7 +266,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
       linear-gradient(to top, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 80%, transparent) 10%,
         color-mix(in srgb, var(--fundo) 40%, transparent) 22%, transparent 36%);
   }
-  .hero__watermark { bottom: 0; transform: translate(-50%, 18%); }
+  .hero__watermark { bottom: 24px; } /* termina antes da emenda; a parte de baixo já some pela máscara */
   .hero__inner { padding-top: 64px; padding-bottom: 112px; }
   .hero__actions .btn, .hero__actions .btn--ghost { flex: 0 0 auto; }
   .chips {
@@ -669,11 +671,11 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   }
   /* brilho branco suave à direita, onde os textos param */
   .scrolly__media::after {
-    background: radial-gradient(60% 70% at 72% 50%, rgb(255 255 255 / .55), transparent 70%);
+    background: radial-gradient(60% 70% at 78% 50%, rgb(255 255 255 / .55), transparent 70%);
   }
   .scrolly__step {
     place-content: center start; justify-items: start; text-align: left; padding: 0;
-    margin-left: min(48%, calc(var(--max) * .46)); max-width: 520px;
+    margin-left: min(58%, calc(var(--max) * .56)); max-width: 480px;
   }
   .scrolly .statement__text { max-width: none; font-size: clamp(28px, 2.8vw, 40px); text-shadow: none; }
   .scrolly .statement__text .soft { color: var(--rose-titulo); }
@@ -1576,16 +1578,20 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
 .topic__wa:hover { background: var(--whatsapp-botao); border-color: var(--whatsapp-botao); color: #fff; }
 .topic__wa svg { width: 19px; height: 19px; }
 
-/* Cartão final: convite para falar, em vinho suave */
+/* Cartão final: convite para falar. Destaque sutil: rosé claro com brilho no canto e filete rosé,
+   texto escuro como o resto da seção; só o botão do WhatsApp leva cor forte. */
 .topic--cta {
   justify-content: space-between; gap: 24px; padding: 30px 28px;
-  background: linear-gradient(140deg, var(--vinho), color-mix(in srgb, var(--vinho) 70%, var(--rodape)));
-  border-color: transparent; color: var(--superficie);
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--rose-titulo) 16%, transparent), transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--rose-titulo) 9%, var(--superficie)), var(--superficie));
+  border-color: color-mix(in srgb, var(--rose-titulo) 35%, var(--linha));
 }
-.topic--cta:hover { transform: none; box-shadow: none; border-color: transparent; }
+.topic--cta:hover { transform: none; box-shadow: none; border-color: color-mix(in srgb, var(--rose-titulo) 35%, var(--linha)); }
 .topic--cta::before { display: none; }
 .topic--cta .topic__title { font-size: clamp(26px, 3vw, 34px); margin: 0 0 10px; }
-.topic__cta-text { margin: 0; font-size: 15px; color: var(--rodape-suave); max-width: 44ch; }
+.topic--cta .topic__title .soft { color: var(--rose-titulo); }
+.topic__cta-text { margin: 0; font-size: 15px; color: var(--texto-suave); max-width: 44ch; }
 .topic--cta .btn { align-self: flex-start; }
 @media (min-width: 640px) { .topic--cta { grid-column: span 2; } }
 
@@ -1668,10 +1674,12 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
    Cada marcador numerado segue no fio; abaixo dele (ou ao lado, no celular) vem um cartão
    com uma pequena seta apontando para o marcador, no mesmo estilo dos outros cartões do site. */
 .step { align-items: start; }
-.step__num { grid-row: auto; }
+.step__num { grid-row: auto; font-family: var(--serif); font-size: 19px; }
 .step__card {
   position: relative; isolation: isolate;
-  padding: 20px 22px 22px; border: 1px solid var(--linha); border-radius: 10px; background: var(--superficie);
+  padding: 20px 22px 22px; border: 1px solid var(--linha); border-radius: 10px;
+  background: linear-gradient(180deg, var(--superficie), color-mix(in srgb, var(--superficie) 55%, var(--fundo)));
+  box-shadow: 0 14px 32px -30px rgba(58, 24, 32, .45);
   transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s, border-color .3s;
 }
 .step__card::before {
@@ -1680,20 +1688,10 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
   border-left: 1px solid var(--linha); border-top: 1px solid var(--linha);
   left: -7px; top: 17px; transform: rotate(-45deg); transition: border-color .3s;
 }
-.step__card::after {
-  content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit;
-  background: radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--rose-titulo) 14%, transparent), transparent 60%);
-  opacity: .5; transition: opacity .35s;
-}
-.step .step__title { padding-top: 0; margin-bottom: 8px; }
-.step .step__title::after {
-  content: ''; display: block; width: 24px; height: 2px; margin-top: 10px;
-  background: var(--rose-titulo); opacity: .6; transition: width .3s;
-}
+.step .step__title { padding-top: 0; margin-bottom: 10px; font-weight: 500; font-size: 19px; line-height: 1.3; letter-spacing: -.005em; }
+.step__text { line-height: 1.65; }
 .step:hover .step__card { transform: translateY(-3px); border-color: color-mix(in srgb, var(--rose-titulo) 55%, var(--linha)); box-shadow: 0 24px 44px -34px rgba(58, 24, 32, .5); }
 .step:hover .step__card::before { border-color: color-mix(in srgb, var(--rose-titulo) 55%, var(--linha)); }
-.step:hover .step__card::after { opacity: 1; }
-.step:hover .step__title::after { width: 40px; }
 @media (min-width: 900px) {
   .step__num { margin-bottom: 18px; }
   .step__card { height: 100%; padding: 22px 22px 24px; }
