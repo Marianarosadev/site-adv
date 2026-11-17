@@ -189,6 +189,18 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
     linear-gradient(to bottom, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 70%, transparent) 22%, transparent 55%),
     linear-gradient(to top, var(--fundo) 0%, transparent 18%);
 }
+/* Celular: a foto some por máscara na base. Só o véu de cor deixava a borda da foto aparecer como uma linha
+   quando o fim do topo caía em fração de pixel. */
+@media (max-width: 899px) {
+  .hero__bg { -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 16%); mask-image: linear-gradient(to top, transparent 0%, #000 16%); }
+  /* topo da seção do vídeo começa na cor do fundo e se abre aos poucos: a emenda com o topo fica contínua
+     em qualquer aparelho, sem depender só da máscara do vídeo */
+  .section--intro { position: relative; }
+  .section--intro::before {
+    content: ''; position: absolute; z-index: 1; left: 0; right: 0; top: -1px; height: 140px; pointer-events: none;
+    background: linear-gradient(to bottom, var(--fundo) 0%, var(--fundo) 12%, color-mix(in srgb, var(--fundo) 55%, transparent) 50%, transparent 100%);
+  }
+}
 .hero__watermark {
   position: absolute; z-index: -1; left: 50%; transform: translateX(-50%);
   bottom: 300px;
@@ -470,13 +482,18 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 @media (hover: hover) { .diffs-wrap .diff:hover { background: none; } }
 @media (min-width: 900px) {
   .diffs-wrap { display: flex; align-items: center; min-height: 740px; }
+  /* o vídeo é vertical: ocupa a altura do painel na proporção original (sem zoom) e se funde à esquerda no vinho */
   .diffs-video video {
-    margin-left: auto; width: 62%; object-position: 50% 20%; border-radius: 0 9px 9px 0;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 35%); mask-image: linear-gradient(90deg, transparent 0%, #000 35%);
+    margin-left: auto; width: auto; height: 100%; aspect-ratio: 9 / 16; max-width: 60%;
+    object-position: 50% 30%; border-radius: 0 9px 9px 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .12) 10%, rgb(0 0 0 / .4) 22%, rgb(0 0 0 / .75) 36%, #000 52%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / .12) 10%, rgb(0 0 0 / .4) 22%, rgb(0 0 0 / .75) 36%, #000 52%);
   }
+  /* véu vinho medido a partir da direita (o vídeo tem ~410px): tinge a borda esquerda do vídeo com a cor do card,
+     para ele nascer do vinho em vez de clarear em cinza; brilho rosé suave atrás da lista */
   .diffs-video::after {
     background:
-      linear-gradient(90deg, rgb(var(--veu)) 0%, rgb(var(--veu)) 40%, rgb(var(--veu) / .7) 52%, rgb(var(--veu) / .18) 70%, transparent 88%),
+      linear-gradient(to left, transparent 0, transparent 190px, rgb(var(--veu) / .3) 260px, rgb(var(--veu) / .7) 340px, rgb(var(--veu)) 420px),
       radial-gradient(70% 90% at 18% 50%, rgb(122 66 80 / .35), transparent 70%);
   }
   .diffs-wrap .diffs {
