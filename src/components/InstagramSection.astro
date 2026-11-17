@@ -1,0 +1,78 @@
+---
+// Seção do Instagram, parte do fim padrão de todas as páginas (logo acima do contato).
+// Texto à esquerda e a prévia real do perfil (iframe do Instagram) num cartão à direita.
+// O iframe só carrega com cookies aceitos ou se a pessoa clicar; antes disso fica uma prévia no estilo do site.
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import LineIcon from './LineIcon.astro';
+import fotoPerfil from '../assets/giovanna-perfil.jpg';
+import { site, instagramLink } from '../data/site';
+---
+<section class="section section--tight insta" aria-labelledby="insta-titulo">
+  <div class="container insta__grid">
+    <div class="insta__text reveal">
+      <p class="eyebrow eyebrow--pill">Instagram</p>
+      <h2 class="display" id="insta-titulo">Acompanhe <span class="soft">no Instagram.</span></h2>
+      <a class="btn btn--ghost insta__btn" href={instagramLink} target="_blank" rel="noopener" data-local="secao-instagram">
+        <LineIcon name="instagram" /><span>Ver perfil @{site.instagram}</span>
+      </a>
+    </div>
+
+    <div class="insta__card reveal" data-insta data-src={`${instagramLink}embed`}>
+      <div class="insta__screen" data-insta-screen>
+        <div class="insta__placeholder" data-insta-placeholder>
+          <div class="insta__head">
+            <Picture src={fotoPerfil} alt="" widths={[112]} sizes="56px" formats={['avif', 'webp']} />
+            <div><strong>@{site.instagram}</strong><span>{site.name} · Advogada</span></div>
+          </div>
+          <div class="insta__tiles" aria-hidden="true">
+            <span><LineIcon name="instagram" /></span><span><LineIcon name="instagram" /></span><span><LineIcon name="instagram" /></span>
+          </div>
+          <button type="button" class="btn btn--ghost insta__load" data-insta-load>Mostrar publicações</button>
+          <p class="insta__note">As publicações vêm do Instagram, que pode usar cookies próprios.</p>
+        </div>
+      </div>
+      <a class="insta__foot" href={instagramLink} target="_blank" rel="noopener" data-local="secao-instagram-cartao">
+        <span><LineIcon name="instagram" />@{site.instagram}</span>
+        <span>Abrir no Instagram <Icon name="arrow" /></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Prévia do Instagram: troca o cartão pelo iframe do perfil quando a pessoa aceitou cookies
+  // (ou aceita depois, pelo banner) e a seção chega perto da tela, ou na hora em que ela clica em "Mostrar publicações".
+  const insta = document.querySelector<HTMLElement>('[data-insta]');
+  if (insta) {
+    let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      const frame = document.createElement('iframe');
+      frame.src = insta.dataset.src!;
+      frame.title = 'Perfil da Dra. Giovanna Cabral no Instagram';
+      frame.loading = 'lazy';
+      frame.className = 'insta__frame';
+      frame.setAttribute('scrolling', 'no');
+      insta.querySelector('[data-insta-placeholder]')?.remove();
+      insta.querySelector('[data-insta-screen]')!.append(frame);
+      insta.classList.add('is-loaded');
+      // o Instagram avisa a altura do conteúdo (mensagem MEASURE); o quadro acompanha, sem barra de rolagem interna
+      window.addEventListener('message', (event) => {
+        if (event.source !== frame.contentWindow || !/(^|\.)instagram\.com$/.test(new URL(event.origin).hostname)) return;
+        let data: { type?: string; details?: { height?: number } } = {};
+        try { data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data; } catch { return; }
+        if (data?.type === 'MEASURE' && data.details?.height) frame.style.height = `${data.details.height}px`;
+      });
+    };
+    const consented = () => { try { return localStorage.getItem('consentimento-cookies') === 'granted'; } catch { return false; } };
+    let near = false;
+    new IntersectionObserver(([entry]) => {
+      near = entry.isIntersecting;
+      if (near && consented()) load();
+    }, { rootMargin: '400px 0px' }).observe(insta);
+    window.addEventListener('consentimento', () => { if (near && consented()) load(); });
+    insta.querySelector('[data-insta-load]')?.addEventListener('click', load);
+  }
+</script>

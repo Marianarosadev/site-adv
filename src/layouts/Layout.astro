@@ -7,6 +7,8 @@ import Button from '../components/Button.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { site, whatsappLink, instagramLink, areas, areaUrl } from '../data/site';
 import LineIcon from '../components/LineIcon.astro';
+import InstagramSection from '../components/InstagramSection.astro';
+import ContactSection from '../components/ContactSection.astro';
 
 interface Props {
   title: string;
@@ -20,11 +22,13 @@ interface Props {
   publico?: 'trabalhador' | 'empresa' | 'geral';
   // Imagem de compartilhamento (WhatsApp, redes). Sem ela, usa a imagem padrão do site.
   ogImage?: string;
+  // Título e texto da seção de contato do fim da página (o padrão serve para a maioria das páginas).
+  contato?: { title?: string; soft?: string; intro?: string };
 }
 
 const {
   title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
-  ogImage: ogImagePath = '/og-image.jpg',
+  ogImage: ogImagePath = '/og-image.jpg', contato = {},
 } = Astro.props;
 const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -163,6 +167,17 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
 
     <main id="conteudo">
       <slot />
+
+      <!-- Fim padrão de todas as páginas: Instagram e contato, logo antes do rodapé.
+           A faixa do monograma fixo cobre o Instagram e o que a página puser no slot "antes-do-fim" (na home, as dúvidas). -->
+      <div class="monogram-zone">
+        <div class="monogram-bg" aria-hidden="true">
+          <span class="brand__mark monogram-bg__mark"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
+        </div>
+        <slot name="antes-do-fim" />
+        <InstagramSection />
+      </div>
+      <ContactSection whatsapp={whatsapp} tema={tema} publico={publico} {...contato} />
     </main>
 
     <footer class:list={['footer', { 'footer--landing': landing }]}>

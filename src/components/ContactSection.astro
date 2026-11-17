@@ -1,0 +1,43 @@
+---
+// Seção de contato, parte do fim padrão de todas as páginas (logo antes do rodapé).
+// Título e texto podem mudar por página; a linha do tempo do atendimento e o cartão são sempre os mesmos.
+import ContactCard from './ContactCard.astro';
+import LineIcon from './LineIcon.astro';
+import { firstMessage, firstMessageEmpresa } from '../data/site';
+
+interface Props {
+  whatsapp: string;
+  tema?: string;
+  publico?: 'trabalhador' | 'empresa' | 'geral';
+  title?: string;
+  soft?: string;
+  intro?: string;
+}
+
+const {
+  whatsapp, tema, publico = 'geral',
+  title = 'Vamos conversar',
+  soft = 'sobre o seu caso.',
+  intro = 'Me conte o que aconteceu pelo WhatsApp. O primeiro passo é entender a sua situação, e para isso você não precisa ter todos os documentos em mãos.',
+} = Astro.props;
+const checklist = publico === 'empresa' ? firstMessageEmpresa : firstMessage;
+---
+<div class="contact-wrap" id="contato">
+  <section class="contact" aria-labelledby="contato-titulo">
+    <div class="container contact__grid">
+      <div class="reveal">
+        <h2 class="display" id="contato-titulo">{title} <span class="soft">{soft}</span></h2>
+        <p class="contact__intro">{intro}</p>
+        <!-- O que acontece depois da mensagem: linha do tempo curta, com ícone em anel em cada etapa -->
+        <ol class="next">
+          <li><LineIcon name="message-circle-more" class="next__node" /><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
+          <li><LineIcon name="clipboard-list" class="next__node" /><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
+          <li><LineIcon name="file-signature" class="next__node" /><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
+          <li><LineIcon name="bell-ring" class="next__node" /><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
+        </ol>
+      </div>
+
+      <ContactCard whatsapp={whatsapp} checklist={checklist} tema={tema} publico={publico} />
+    </div>
+  </section>
+</div>

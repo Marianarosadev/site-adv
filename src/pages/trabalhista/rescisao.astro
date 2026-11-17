@@ -2,14 +2,13 @@
 import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
-import ContactCard from '../../components/ContactCard.astro';
 import LineIcon from '../../components/LineIcon.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
 // Foto de Gabrielle Henderson na Unsplash (licença de uso livre).
 import fotoRescisao from '../../assets/casos/rescisao.jpg';
 import { getPostsByTopic } from '../../data/blog';
-import { site, whatsappLink, telLink, firstMessage, steps } from '../../data/site';
+import { site, whatsappLink, telLink, steps } from '../../data/site';
 import { situations, checks, documents, rescisaoFaq } from '../../data/rescisao';
 
 const wa = whatsappLink('tenho dúvidas sobre a minha rescisão.');
@@ -45,6 +44,7 @@ const schema = [
   whatsapp={wa}
   tema={tema}
   publico="trabalhador"
+  contato={{ title: 'Tire sua dúvida', soft: 'no WhatsApp.', intro: 'Me conte como foi a sua saída e o que você recebeu. Para começar, você não precisa ter todos os documentos em mãos.' }}
 >
   <!-- 1. Topo -->
   <section class="lp-hero">
@@ -205,20 +205,4 @@ const schema = [
       </div>
     </div>
   </section>
-
-  <!-- 9. Contato -->
-  <div class="contact-wrap" id="contato">
-    <section class="contact" aria-labelledby="contato-titulo">
-      <div class="container contact__grid">
-        <div>
-          <h2 class="display" id="contato-titulo">Tire sua dúvida <span class="soft">no WhatsApp.</span></h2>
-          <p class="contact__intro">
-            Me conte como foi a sua saída e o que você recebeu. Para começar, você não precisa ter todos os documentos
-            em mãos.
-          </p>
-        </div>
-        <ContactCard whatsapp={wa} checklist={firstMessage} tema={tema} publico="trabalhador" />
-      </div>
-    </section>
-  </div>
 </Layout>

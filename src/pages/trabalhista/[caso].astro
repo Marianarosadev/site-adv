@@ -2,11 +2,10 @@
 import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
-import ContactCard from '../../components/ContactCard.astro';
 import LineIcon from '../../components/LineIcon.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
-import { site, whatsappLink, telLink, firstMessage, steps, areas, areaUrl } from '../../data/site';
+import { site, whatsappLink, telLink, steps, areas, areaUrl } from '../../data/site';
 import { casos, type Caso } from '../../data/casos';
 import { getPostsByTopic } from '../../data/blog';
 
@@ -47,6 +46,7 @@ const schema = [
   whatsapp={wa}
   tema={tema}
   publico="trabalhador"
+  contato={{ intro: 'Me conte o que aconteceu. Para começar, você não precisa ter todos os documentos em mãos.' }}
 >
   <!-- Topo: texto e foto ilustrativa -->
   <section class="case-hero">
@@ -190,31 +190,6 @@ const schema = [
           </details>
         ))}
       </div>
-    </div>
-  </section>
-
-  <!-- Contato -->
-  <div class="contact-wrap" id="contato">
-    <section class="contact" aria-labelledby="contato-titulo">
-      <div class="container contact__grid">
-        <div>
-          <h2 class="display" id="contato-titulo">Vamos conversar <span class="soft">sobre o seu caso.</span></h2>
-          <p class="contact__intro">
-            Me conte o que aconteceu. Para começar, você não precisa ter todos os documentos em mãos.
-          </p>
-        </div>
-        <ContactCard whatsapp={wa} checklist={firstMessage} tema={tema} publico="trabalhador" />
-      </div>
-    </section>
-  </div>
-
-  <!-- Outros temas -->
-  <section class="section" aria-labelledby="outros-temas">
-    <div class="container">
-      <h2 class="subhead" id="outros-temas">Outros temas</h2>
-      <ul class="case-others">
-        {others.map((a) => <li><a href={areaUrl(a.slug)}>{a.title}</a></li>)}
-      </ul>
     </div>
   </section>
 </Layout>

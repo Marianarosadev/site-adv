@@ -2,12 +2,11 @@
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import ContactCard from '../components/ContactCard.astro';
 import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 // Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
 import fotoReuniao from '../assets/empresas-reuniao.jpg';
-import { site, whatsappEmpresa, firstMessageEmpresa, servicesEmpresa, type LineIconName } from '../data/site';
+import { site, whatsappEmpresa, servicesEmpresa, type LineIconName } from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
 const wa = whatsappEmpresa();
@@ -31,6 +30,7 @@ const stepsEmpresa = [
   description="Defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
   whatsapp={wa}
   publico="empresa"
+  contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.' }}
 >
   <section class="lp-hero lp-hero--empresa">
     <div class="lp-hero__bg" aria-hidden="true">
@@ -97,18 +97,4 @@ const stepsEmpresa = [
       </ol>
     </div>
   </section>
-
-  <div class="contact-wrap" id="contato">
-    <section class="contact" aria-labelledby="contato-titulo">
-      <div class="container contact__grid">
-        <div>
-          <h2 class="display display--inline" id="contato-titulo">Vamos conversar <span class="soft">sobre o caso da empresa.</span></h2>
-          <p class="contact__intro">
-            Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.
-          </p>
-        </div>
-        <ContactCard whatsapp={wa} checklist={firstMessageEmpresa} publico="empresa" />
-      </div>
-    </section>
-  </div>
 </Layout>

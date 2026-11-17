@@ -6,12 +6,11 @@ import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import AreaIcon from '../components/AreaIcon.astro';
 import LineIcon from '../components/LineIcon.astro';
-import ContactCard from '../components/ContactCard.astro';
 import { getPosts, postUrl, readingTime } from '../data/blog';
 import fotoTopo from '../assets/giovanna-topo.jpg';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import {
-  site, areaUrl, whatsappLink, whatsappEmpresa, firstMessage, areas, stats, timeline, education, steps, differentials, faq,
+  site, areaUrl, whatsappLink, whatsappEmpresa, areas, stats, timeline, education, steps, differentials, faq,
   frentesEmpresa, instagramLink,
 } from '../data/site';
 
@@ -449,48 +448,8 @@ const schema = [
     </div>
   )}
 
-  <!-- Faixa com o monograma fixo ao fundo: da seção do Instagram até as perguntas frequentes -->
-  <div class="monogram-zone">
-    <div class="monogram-bg" aria-hidden="true">
-      <span class="brand__mark monogram-bg__mark"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
-    </div>
-
-  <!-- 6c. Instagram: texto à esquerda e a prévia real do perfil (iframe do Instagram) num cartão à direita.
-       O iframe só carrega com cookies aceitos ou se a pessoa clicar; antes disso fica uma prévia no estilo do site. -->
-  <section class="section section--tight insta" aria-labelledby="insta-titulo">
-    <div class="container insta__grid">
-      <div class="insta__text reveal">
-        <p class="eyebrow eyebrow--pill">Instagram</p>
-        <h2 class="display" id="insta-titulo">Acompanhe <span class="soft">no Instagram.</span></h2>
-        <a class="btn btn--ghost insta__btn" href={instagramLink} target="_blank" rel="noopener" data-local="secao-instagram">
-          <LineIcon name="instagram" /><span>Ver perfil @{site.instagram}</span>
-        </a>
-      </div>
-
-      <div class="insta__card reveal" data-insta data-src={`${instagramLink}embed`}>
-        <div class="insta__screen" data-insta-screen>
-        <div class="insta__placeholder" data-insta-placeholder>
-          <div class="insta__head">
-            <Picture src={fotoPerfil} alt="" widths={[112]} sizes="56px" formats={['avif', 'webp']} />
-            <div><strong>@{site.instagram}</strong><span>{site.name} · Advogada</span></div>
-          </div>
-          <div class="insta__tiles" aria-hidden="true">
-            <span><LineIcon name="instagram" /></span><span><LineIcon name="instagram" /></span><span><LineIcon name="instagram" /></span>
-          </div>
-          <button type="button" class="btn btn--ghost insta__load" data-insta-load>Mostrar publicações</button>
-          <p class="insta__note">As publicações vêm do Instagram, que pode usar cookies próprios.</p>
-        </div>
-        </div>
-        <a class="insta__foot" href={instagramLink} target="_blank" rel="noopener" data-local="secao-instagram-cartao">
-          <span><LineIcon name="instagram" />@{site.instagram}</span>
-          <span>Abrir no Instagram <Icon name="arrow" /></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. Perguntas frequentes -->
-  <section class="section" id="duvidas">
+  <!-- 7. Perguntas frequentes: entram na faixa do monograma do fim padrão, logo acima do Instagram -->
+  <section class="section" id="duvidas" slot="antes-do-fim">
     <div class="container faq">
       <div class="faq__aside reveal">
         <h2 class="display display--inline">Perguntas <span class="soft">frequentes.</span></h2>
@@ -505,69 +464,9 @@ const schema = [
       </div>
     </div>
   </section>
-  </div>
-
-  <!-- 8. Contato -->
-  <div class="contact-wrap" id="contato">
-    <section class="contact" aria-labelledby="contato-titulo">
-      <div class="container contact__grid">
-        <div class="reveal">
-          <h2 class="display" id="contato-titulo">Vamos conversar <span class="soft">sobre o seu caso.</span></h2>
-          <p class="contact__intro">
-            Me conte o que aconteceu pelo WhatsApp. O primeiro passo é entender a sua situação, e para isso você não
-            precisa ter todos os documentos em mãos.
-          </p>
-          <!-- O que acontece depois da mensagem: linha do tempo curta, com ícone em anel em cada etapa -->
-          <ol class="next">
-            <li><LineIcon name="message-circle-more" class="next__node" /><b>Ao enviar a mensagem</b><span>Eu leio e respondo pessoalmente</span></li>
-            <li><LineIcon name="clipboard-list" class="next__node" /><b>Na conversa</b><span>Entendo o caso e indico os documentos</span></li>
-            <li><LineIcon name="file-signature" class="next__node" /><b>Antes de qualquer trabalho</b><span>Contrato por escrito, assinado digitalmente</span></li>
-            <li><LineIcon name="bell-ring" class="next__node" /><b>Durante o processo</b><span>Você é informado de cada etapa importante</span></li>
-          </ol>
-        </div>
-
-        <ContactCard whatsapp={whatsappLink()} checklist={firstMessage} publico="geral" />
-      </div>
-    </section>
-  </div>
 </Layout>
 
 <script>
-  // Prévia do Instagram: troca o cartão pelo iframe do perfil quando a pessoa aceitou cookies
-  // (ou aceita depois, pelo banner) e a seção chega perto da tela, ou na hora em que ela clica em "Mostrar publicações".
-  const insta = document.querySelector<HTMLElement>('[data-insta]');
-  if (insta) {
-    let loaded = false;
-    const load = () => {
-      if (loaded) return;
-      loaded = true;
-      const frame = document.createElement('iframe');
-      frame.src = insta.dataset.src!;
-      frame.title = 'Perfil da Dra. Giovanna Cabral no Instagram';
-      frame.loading = 'lazy';
-      frame.className = 'insta__frame';
-      frame.setAttribute('scrolling', 'no');
-      insta.querySelector('[data-insta-placeholder]')?.remove();
-      insta.querySelector('[data-insta-screen]')!.append(frame);
-      insta.classList.add('is-loaded');
-      // o Instagram avisa a altura do conteúdo (mensagem MEASURE); o quadro acompanha, sem barra de rolagem interna
-      window.addEventListener('message', (event) => {
-        if (event.source !== frame.contentWindow || !/(^|\.)instagram\.com$/.test(new URL(event.origin).hostname)) return;
-        let data: { type?: string; details?: { height?: number } } = {};
-        try { data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data; } catch { return; }
-        if (data?.type === 'MEASURE' && data.details?.height) frame.style.height = `${data.details.height}px`;
-      });
-    };
-    const consented = () => { try { return localStorage.getItem('consentimento-cookies') === 'granted'; } catch { return false; } };
-    let near = false;
-    new IntersectionObserver(([entry]) => {
-      near = entry.isIntersecting;
-      if (near && consented()) load();
-    }, { rootMargin: '400px 0px' }).observe(insta);
-    window.addEventListener('consentimento', () => { if (near && consented()) load(); });
-    insta.querySelector('[data-insta-load]')?.addEventListener('click', load);
-  }
-
   // Vídeo de fundo: só carrega e toca quando aparece na tela; pausa fora dela.
   // Quem prefere menos movimento vê apenas a imagem parada.
   const bgVideos = document.querySelectorAll<HTMLVideoElement>('[data-bg-video]');

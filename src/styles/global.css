@@ -582,8 +582,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .mnav__social { margin-top: 18px; padding: 4px 2px; }
 .article__social { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--linha); display: flex; }
 /* Seção do Instagram: texto à esquerda e o cartão da prévia do perfil à direita, na moldura clara do site */
-/* respiro próprio depois do painel de artigos (a seção usa section--tight, que zera o topo) */
-.section.insta { padding-top: var(--section); }
 .insta__grid { display: grid; gap: 32px; align-items: center; }
 .insta__btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; color: var(--vinho); border-color: color-mix(in srgb, var(--rose-titulo) 60%, transparent); }
 .insta__btn .line-icon svg { width: 18px; height: 18px; }
