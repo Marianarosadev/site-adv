@@ -108,22 +108,6 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
 
     <slot name="head" />
     <script is:inline>document.documentElement.classList.add('js');</script>
-    {homologacao && (
-      <Fragment>
-        {/* TEMPORÁRIO (diagnóstico do LCP, só na homologação): ?teste-lcp=foto,marca,chips,video,abaixo esconde partes da home. */}
-        <script is:inline>
-          (function () {
-            var v = new URLSearchParams(location.search).get('teste-lcp');
-            if (v) v.split(',').forEach(function (p) { document.documentElement.classList.add('lcp-sem-' + p.trim()); });
-          })();
-        </script>
-        <style is:inline>
-          .lcp-sem-foto .hero__bg, .lcp-sem-marca .hero__watermark, .lcp-sem-chips .chips,
-          .lcp-sem-video .section--intro, .lcp-sem-abaixo main > :not(.hero), .lcp-sem-abaixo footer,
-          .lcp-sem-abaixo .cookies, .lcp-sem-abaixo .wa-float { display: none !important; }
-        </style>
-      </Fragment>
-    )}
   </head>
   <body>
     {gtm && (
