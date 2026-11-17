@@ -418,6 +418,16 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .step__title { font-weight: 600; font-size: 16px; line-height: 1.35; padding-top: 12px; }
 .step__text { font-size: 15px; color: var(--texto-suave); max-width: 34ch; }
 .steps-cta { margin-top: 48px; }
+/* Celular: o fio vertical vai em trechos, do centro de cada número ao do seguinte, e termina no último número
+   (o fio único ia até o fim da lista e sobrava abaixo do último quando o cartão era mais alto que o número) */
+@media (max-width: 899px) {
+  .steps::before { content: none; }
+  .step:not(:last-child)::before {
+    content: ''; position: absolute; left: calc(var(--node) / 2); top: calc(var(--node) / 2); width: 1px;
+    bottom: calc(-1 * (var(--steps-gap) + var(--node) / 2));
+    background: color-mix(in srgb, var(--rose-titulo) 45%, var(--linha));
+  }
+}
 @media (min-width: 900px) {
   .steps { --steps-gap: 36px; grid-template-columns: repeat(4, 1fr); }
   /* Fio horizontal do centro do 1º marcador ao centro do 4º */
@@ -1878,15 +1888,16 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
 .edu__item--main .edu__icon { background: var(--vinho); border-color: var(--vinho); color: #fff; }
 
 .tl { list-style: none; margin: 0; padding: 0; position: relative; }
-/* o fio da linha do tempo passa pelo centro dos ícones */
-.tl::before {
-  content: ''; position: absolute; left: 19px; top: 20px; bottom: 20px; width: 1px;
-  background: linear-gradient(180deg, var(--linha), color-mix(in srgb, var(--rose-titulo) 55%, var(--linha)));
-}
+/* o fio da linha do tempo liga o centro de cada ícone ao do seguinte e termina no último ícone,
+   mesmo quando o texto do último item é mais alto que o ícone */
 .tl__item { position: relative; display: grid; grid-template-columns: 40px 1fr; column-gap: 18px; padding: 0 0 22px; }
 .tl__item:last-child { padding-bottom: 0; }
+.tl__item:not(:last-child)::before {
+  content: ''; position: absolute; left: 19px; top: 20px; bottom: -20px; width: 1px;
+  background: color-mix(in srgb, var(--rose-titulo) 35%, var(--linha));
+}
 .tl__node {
-  grid-row: span 2; position: relative; width: 40px; height: 40px; border-radius: 50%;
+  grid-row: span 2; position: relative; z-index: 1; width: 40px; height: 40px; border-radius: 50%;
   background: var(--fundo); color: var(--vinho);
   border: 1px solid color-mix(in srgb, var(--rose-titulo) 45%, transparent);
 }
@@ -1938,17 +1949,19 @@ a:hover .cover__img, a:hover .cover__img img { transform: scale(1.04); }
 
 /* etapas */
 .next { list-style: none; margin: 0 0 8px; padding: 0; border: 0; position: relative; }
-.next::before {
-  content: ''; position: absolute; left: 19px; top: 20px; bottom: 20px; width: 1px;
-  background: color-mix(in srgb, var(--rose-titulo) 40%, var(--linha));
-}
 .next li {
   position: relative; display: grid; grid-template-columns: 40px 1fr; column-gap: 18px; row-gap: 2px;
   padding: 0 0 22px; border: 0; font-size: 15px;
 }
 .next li:last-child { padding-bottom: 0; }
+/* o fio vai em trechos, do centro de cada ícone ao do seguinte, e termina no último ícone
+   mesmo quando o texto do último item quebra em mais linhas */
+.next li:not(:last-child)::before {
+  content: ''; position: absolute; left: 19px; top: 20px; bottom: -20px; width: 1px;
+  background: color-mix(in srgb, var(--rose-titulo) 40%, var(--linha));
+}
 .next__node {
-  grid-row: span 2; width: 40px; height: 40px; border-radius: 50%; color: var(--vinho);
+  grid-row: span 2; position: relative; z-index: 1; width: 40px; height: 40px; border-radius: 50%; color: var(--vinho);
   background: var(--fundo-alt); border: 1px solid color-mix(in srgb, var(--rose-titulo) 50%, transparent);
 }
 .next b { margin-top: 2px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--rose-destaque); }
