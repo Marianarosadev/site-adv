@@ -269,11 +269,12 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 
 @media (min-width: 900px) {
   .hero { padding: 0; min-height: min(calc(100svh - 68px), 820px); display: flex; align-items: center; }
-  .hero__bg { top: 0; left: auto; height: auto; width: min(66%, 1240px); }
-  .hero__bg img { object-position: 62% 38%; }
+  /* área da foto mais estreita: a foto vertical aparece menor (menos zoom) e quase inteira na altura do topo */
+  .hero__bg { top: 0; left: auto; height: auto; width: min(50%, 760px); }
+  .hero__bg img { object-position: 60% 30%; }
   .hero__bg::after {
     background:
-      linear-gradient(to right, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 75%, transparent) 22%, transparent 52%),
+      linear-gradient(to right, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 70%, transparent) 16%, transparent 38%),
       /* base mais longa e gradual, para a foto se desfazer devagar e emendar com o vídeo abaixo */
       linear-gradient(to top, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 80%, transparent) 10%,
         color-mix(in srgb, var(--fundo) 40%, transparent) 22%, transparent 36%);
@@ -805,7 +806,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   background-size: cover; background-position: 64% 36%;
   filter: blur(18px) saturate(1.1); transform: scale(1.08);
 }
-@media (min-width: 900px) { .hero__placeholder { background-position: 62% 38%; } }
+@media (min-width: 900px) { .hero__placeholder { background-position: 60% 30%; } }
 .hero__bg picture { position: relative; }
 .js .hero__bg img {
   opacity: 0; filter: blur(14px); transform: scale(1.06);
