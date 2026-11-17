@@ -418,17 +418,13 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 
 /* Diferenciais */
-/* Diferenciais: ícone de linha solto, na mesma linha do título serifado; número discreto à direita;
+/* Diferenciais: ícone de linha solto, na mesma linha do título serifado;
    ao passar o mouse, a linha recebe um fundo rosé suave. */
-.diffs { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linha); counter-reset: diff; }
+.diffs { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linha); }
 .diff {
-  position: relative; counter-increment: diff;
-  padding: 22px 40px 22px 0; border-bottom: 1px solid var(--linha);
+  position: relative;
+  padding: 22px 0; border-bottom: 1px solid var(--linha);
   transition: background .3s ease;
-}
-.diff::after {
-  content: counter(diff, decimal-leading-zero); position: absolute; top: 26px; right: 4px;
-  font-family: var(--serif); font-size: 15px; color: color-mix(in srgb, var(--rose-titulo) 70%, transparent);
 }
 .diff h3 { display: flex; align-items: flex-start; gap: 12px; font-family: var(--serif); font-size: 22px; line-height: 1.2; margin: 0 0 8px; }
 .diff__icon { color: var(--vinho); margin-top: .14em; } /* centrado na primeira linha do título, mesmo quando ele quebra */
@@ -439,40 +435,56 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 @media (min-width: 900px) {
   .diffs { grid-template-columns: 1fr 1fr; column-gap: 64px; }
-  .diff { padding: 26px 48px 26px 12px; }
+  .diff { padding: 26px 12px; }
   .diff h3 { font-size: 24px; }
 }
-/* Vídeo decorativo dos diferenciais: imagem nítida numa moldura fina (passe-partout claro com o filete do site).
-   No desktop fica à direita da lista. */
-.diffs-wrap { display: grid; gap: 24px; }
+/* Vídeo decorativo dos diferenciais: painel com moldura fina (passe-partout claro com o filete do site),
+   o vídeo ao fundo e a lista por cima, em texto claro sobre um véu vinho.
+   Celular: vídeo vertical ocupando o painel todo, rosto livre no topo e a lista embaixo.
+   Desktop: vídeo na metade direita, fundido por um degradê no vinho sólido da esquerda, onde fica a lista em uma coluna. */
+.diffs-wrap {
+  position: relative; border-radius: 14px; overflow: hidden;
+  --veu: 40 20 26; /* vinho bem escuro do véu, em RGB para variar a opacidade */
+}
 .diffs-video {
-  position: relative; aspect-ratio: 4 / 3; pointer-events: none; padding: 6px;
+  position: absolute; inset: 0; pointer-events: none; padding: 6px;
   border: 1px solid var(--linha); border-radius: 14px; background: var(--superficie);
   box-shadow: 0 16px 36px -28px color-mix(in srgb, var(--rodape) 45%, transparent);
 }
-.diffs-video video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; border-radius: 9px; }
-/* Celular: o vídeo vira o fundo vertical do bloco e a lista fica por cima, com um véu vinho para o texto claro ler bem. */
-@media (max-width: 899px) {
-  .diffs-wrap { position: relative; display: block; min-height: min(170vw, 760px); border-radius: 14px; overflow: hidden; }
-  .diffs-video { position: absolute; inset: 0; aspect-ratio: auto; }
-  .diffs-video video { object-position: 50% 8%; }
-  .diffs-video::after {
-    content: ''; position: absolute; inset: 6px; border-radius: 9px; pointer-events: none;
-    background: linear-gradient(180deg, rgb(40 20 26 / .05) 0%, rgb(40 20 26 / .15) 22%, rgb(40 20 26 / .68) 42%, rgb(40 20 26 / .8) 100%);
-  }
-  .diffs-wrap .diffs { position: relative; z-index: 1; border-top: 0; padding: 60% 22px 18px; } /* topo livre para o rosto */
-  .diffs-wrap .diff { border-bottom-color: rgb(255 255 255 / .2); padding: 18px 34px 18px 0; }
-  .diffs-wrap .diff:last-child { border-bottom: 0; }
-  .diffs-wrap .diff h3 { color: #fff; font-size: 21px; }
-  .diffs-wrap .diff__icon { color: #f2cdd2; }
-  .diffs-wrap .diff p { color: rgb(255 255 255 / .86); }
-  .diffs-wrap .diff::after { color: rgb(255 255 255 / .55); top: 22px; }
+.diffs-video::before { content: ''; position: absolute; inset: 6px; border-radius: 9px; background: rgb(var(--veu)); }
+.diffs-video video {
+  position: relative; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; border-radius: 9px;
 }
+.diffs-video::after {
+  content: ''; position: absolute; inset: 6px; border-radius: 9px; pointer-events: none;
+  background: linear-gradient(180deg, rgb(var(--veu) / .05) 0%, rgb(var(--veu) / .15) 22%, rgb(var(--veu) / .68) 42%, rgb(var(--veu) / .8) 100%);
+}
+.diffs-wrap .diffs { position: relative; z-index: 1; border-top: 0; padding: 60% 22px 18px; } /* topo livre para o rosto */
+.diffs-wrap .diff { border-bottom-color: rgb(255 255 255 / .2); padding: 18px 0; }
+.diffs-wrap .diff:last-child { border-bottom: 0; }
+.diffs-wrap .diff h3 { color: #fff; font-size: 21px; }
+.diffs-wrap .diff__icon { color: #f2cdd2; }
+.diffs-wrap .diff p { color: rgb(255 255 255 / .86); }
+@media (hover: hover) { .diffs-wrap .diff:hover { background: none; } }
 @media (min-width: 900px) {
-  .diffs-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); gap: 64px; align-items: center; }
-  .diffs-wrap .diffs { grid-template-columns: 1fr; order: -1; }
-  .diffs-video { aspect-ratio: 4 / 5; max-height: 600px; }
+  .diffs-wrap { display: flex; align-items: center; min-height: 740px; }
+  .diffs-video video {
+    margin-left: auto; width: 62%; object-position: 50% 20%; border-radius: 0 9px 9px 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 35%); mask-image: linear-gradient(90deg, transparent 0%, #000 35%);
+  }
+  .diffs-video::after {
+    background:
+      linear-gradient(90deg, rgb(var(--veu)) 0%, rgb(var(--veu)) 40%, rgb(var(--veu) / .7) 52%, rgb(var(--veu) / .18) 70%, transparent 88%),
+      radial-gradient(70% 90% at 18% 50%, rgb(122 66 80 / .35), transparent 70%);
+  }
+  .diffs-wrap .diffs {
+    width: min(50%, 540px); padding: 56px 0 56px 56px;
+    grid-template-columns: 1fr;
+  }
+  .diffs-wrap .diff { padding: 26px 0; }
+  .diffs-wrap .diff h3 { font-size: 23px; }
 }
+@media (min-width: 1200px) { .diffs-wrap .diffs { padding-left: 72px; } }
 
 /* FAQ */
 .faq { display: grid; gap: 32px; }
