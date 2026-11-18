@@ -1256,18 +1256,16 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   .emp-ficha div:last-child { padding-bottom: 0; }
 }
 
-/* Dúvidas com o título fixo ao lado no desktop; as respostas abrem com a altura animada onde o navegador permite */
-.faq--side { interpolate-size: allow-keywords; }
-.faq--side details::details-content {
+/* Perguntas frequentes de empresas: título numa linha só no desktop e as perguntas logo abaixo, na largura toda;
+   as respostas abrem com a altura animada onde o navegador permite */
+.faq--suave { interpolate-size: allow-keywords; }
+.faq--suave details::details-content {
   block-size: 0; overflow: clip;
   transition: block-size .45s cubic-bezier(.2, .7, .2, 1), content-visibility .45s allow-discrete;
 }
-.faq--side details[open]::details-content { block-size: auto; }
-@media (prefers-reduced-motion: reduce) { .faq--side details::details-content { transition: none; } }
-@media (min-width: 960px) {
-  .faq--side { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 80px; align-items: start; }
-  .faq--side .faq__aside { position: sticky; top: 120px; }
-}
+.faq--suave details[open]::details-content { block-size: auto; }
+@media (prefers-reduced-motion: reduce) { .faq--suave details::details-content { transition: none; } }
+@media (min-width: 960px) { .faq--suave .display { white-space: nowrap; } }
 
 /* Cabeçalho das páginas longas: barra de leitura na borda de baixo e o nome da seção no lugar do subtítulo */
 .header__progress {
