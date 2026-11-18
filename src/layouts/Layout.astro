@@ -120,7 +120,7 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
     )}
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-    <header class:list={['header', { 'header--landing': landing, 'header--leitura': leitura }]} data-header>
+    <header class:list={['header', { 'header--landing': landing, 'header--leitura': leitura, 'header--empresas': empresasPage }]} data-header>
       {leitura && <span class="header__progress" data-progress aria-hidden="true"></span>}
       <div class="container header__inner">
         <a class="brand" href={landing ? '/' : `${home}#topo`} aria-label={`${site.fullName}, página inicial`}>
@@ -131,7 +131,17 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
             {leitura && <span class="brand__where" data-where aria-hidden="true"></span>}
           </span>
         </a>
-        {!landing && (
+        <!-- Página de empresas: "Para empresas" ativo à frente, Serviços e Blog; depois, mais discreto, o caminho do trabalhador -->
+        {!landing && empresasPage && (
+          <nav class="nav nav--empresas" aria-label="Seções">
+            <a class="nav__empresas" href="/empresas/" aria-current="page"><Icon name="building" /> Para empresas</a>
+            <a href="#servicos">Serviços</a>
+            <a href="/blog/">Blog</a>
+            <span class="nav__sep" aria-hidden="true"></span>
+            <a class="nav__sec" href="/#como-posso-ajudar">Para trabalhadores</a>
+          </nav>
+        )}
+        {!landing && !empresasPage && (
           <nav class="nav" aria-label="Seções">
             <a href={`${home}#como-posso-ajudar`}>Para trabalhadores</a>
             <a href={`${home}#sobre`}>Sobre</a>
@@ -159,18 +169,35 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
       {!landing && (
         <nav class="mnav" id="menu-celular" aria-label="Menu" data-menu hidden>
           <div class="container mnav__inner">
-            <!-- Só o essencial: as mesmas entradas do menu do computador, mais as dúvidas; empresas à parte -->
-            <ul class="mnav__main">
-              <li><a href={`${home}#como-posso-ajudar`}><Icon name="user" /><span>Para trabalhadores</span><Icon name="chevron-right" /></a></li>
-              <li><a href={`${home}#sobre`}><Icon name="briefcase" /><span>Sobre a advogada</span><Icon name="chevron-right" /></a></li>
-              <li><a href={`${home}#duvidas`}><Icon name="check" /><span>Perguntas frequentes</span><Icon name="chevron-right" /></a></li>
-              <li><a class="mnav__blog" href="/blog/"><Icon name="book" /><span>Blog</span><Icon name="chevron-right" /></a></li>
-            </ul>
-            <a class="mnav__empresas" href="/empresas/">
-              <Icon name="building" />
-              <span><strong>Para empresas</strong><small>Advocacia preventiva e defesa em processos</small></span>
-              <Icon name="chevron-right" />
-            </a>
+            {empresasPage ? (
+              <>
+                <!-- Página de empresas: ela aparece ativa no topo, seguida de Serviços, Blog e do caminho do trabalhador -->
+                <p class="mnav__empresas mnav__empresas--atual" aria-current="page">
+                  <Icon name="building" />
+                  <span><strong>Para empresas</strong><small>Você está aqui</small></span>
+                </p>
+                <ul class="mnav__main">
+                  <li><a href="#servicos"><Icon name="briefcase" /><span>Serviços</span><Icon name="chevron-right" /></a></li>
+                  <li><a href="/blog/"><Icon name="book" /><span>Blog</span><Icon name="chevron-right" /></a></li>
+                  <li><a href="/#como-posso-ajudar"><Icon name="user" /><span>Para trabalhadores</span><Icon name="chevron-right" /></a></li>
+                </ul>
+              </>
+            ) : (
+              <>
+                <!-- Só o essencial: as mesmas entradas do menu do computador, mais as dúvidas; empresas à parte -->
+                <ul class="mnav__main">
+                  <li><a href={`${home}#como-posso-ajudar`}><Icon name="user" /><span>Para trabalhadores</span><Icon name="chevron-right" /></a></li>
+                  <li><a href={`${home}#sobre`}><Icon name="briefcase" /><span>Sobre a advogada</span><Icon name="chevron-right" /></a></li>
+                  <li><a href={`${home}#duvidas`}><Icon name="check" /><span>Perguntas frequentes</span><Icon name="chevron-right" /></a></li>
+                  <li><a class="mnav__blog" href="/blog/"><Icon name="book" /><span>Blog</span><Icon name="chevron-right" /></a></li>
+                </ul>
+                <a class="mnav__empresas" href="/empresas/">
+                  <Icon name="building" />
+                  <span><strong>Para empresas</strong><small>Advocacia preventiva e defesa em processos</small></span>
+                  <Icon name="chevron-right" />
+                </a>
+              </>
+            )}
             <a class="insta-link mnav__social" href={instagramLink} target="_blank" rel="noopener" data-local="menu-instagram">
               <LineIcon name="instagram" /><span>Acompanhe no Instagram · @{site.instagram}</span>
             </a>

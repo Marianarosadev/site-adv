@@ -1044,9 +1044,24 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .emp-hero__title { font-size: clamp(40px, 5.6vw, 76px); line-height: .98; letter-spacing: -0.025em; font-weight: 350; text-wrap: balance; }
 .emp-hero__intro { margin: 24px 0 0; max-width: 46ch; font-size: 17px; color: var(--texto-suave); }
 .emp-hero .hero__actions { margin-top: 32px; }
+/* "Ver como funciona": secundário ao WhatsApp, mas com acabamento. Vidro claro com leve desfoque (como o cartão da
+   credencial), borda vinho suave e uma seta solta à direita. Com mouse, a borda escurece e a seta anda um pouco
+   para a direita; no toque, nada se move. */
+.emp-hero .hero__actions .emp-hero__more {
+  gap: 12px; padding: 6px 18px 6px 20px; justify-content: space-between;
+  background: rgb(252 247 245 / .72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-color: color-mix(in srgb, var(--vinho) 35%, transparent); color: var(--texto);
+  transition: border-color .25s, background-color .25s;
+}
+.emp-hero__more-icon { display: grid; place-items: center; flex: none; color: var(--vinho); }
+.emp-hero__more-icon svg { width: 16px; height: 16px; transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+@media (hover: hover) {
+  .emp-hero .hero__actions .emp-hero__more:hover { background: rgb(252 247 245 / .92); border-color: var(--vinho); color: var(--texto); }
+  .emp-hero .hero__actions .emp-hero__more:hover .emp-hero__more-icon svg { transform: translateX(4px); }
+}
 
-/* moldura discreta, integrada à sala: um traço translúcido colado na foto e um filete rosé translúcido flutuando
-   a alguns pixels dela, com os mesmos cantos arredondados; a sombra longa separa a foto do fundo */
+/* moldura discreta, integrada à sala: dois filetes rosé translúcidos na mesma cor, um colado na foto e outro
+   flutuando a alguns pixels dela, com os mesmos cantos arredondados; a sombra longa separa a foto do fundo */
 .emp-hero__media { position: relative; margin: 0 0 28px; }
 .emp-hero__frame { position: relative; border-radius: 12px; box-shadow: 0 44px 80px -48px rgb(40 20 26 / .7); }
 .emp-hero__frame::before {
@@ -1055,7 +1070,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 .emp-hero__frame picture {
   display: block; overflow: hidden; border-radius: 12px; aspect-ratio: 4 / 4.2; background: var(--fundo-alt);
-  box-shadow: 0 0 0 1px rgb(255 255 255 / .22);
+  box-shadow: 0 0 0 1px rgb(226 169 177 / .45);
 }
 .emp-hero__frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; animation: emp-photo-in 1.4s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes emp-photo-in { from { transform: scale(1.05); } }
@@ -1343,6 +1358,38 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .header.has-where .brand__role { opacity: 0; }
 .header.has-where .brand__where { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .brand__where, .header--leitura .brand__role { transition: none; } }
+
+/* Cabeçalho na página de empresas: o vinho do rodapé (--rodape), com as mesmas cores de texto dele, e uma navegação
+   própria, para a pessoa saber que está na área de empresas. Fundo escuro pede o texto
+   claro: logo, links, Instagram e menu trocam de cor; o botão verde do WhatsApp continua igual.
+   O menu do celular abre no fundo claro de sempre. */
+.header--empresas, .header--empresas.is-scrolled {
+  background: color-mix(in srgb, var(--rodape) 97%, transparent); border-bottom-color: var(--rodape-linha);
+  color: var(--rodape-texto);
+}
+.header--empresas .mono-g { color: var(--rodape-texto); }
+.header--empresas .mono-c { color: #e2a9b1; --halo: var(--rodape); }
+.header--empresas .brand__role { color: var(--rodape-suave); }
+.header--empresas .brand__where { color: var(--rodape-suave); }
+.header--empresas .header__progress { background: #e2a9b1; }
+.header--empresas .nav a { color: var(--rodape-texto); }
+.header--empresas .nav a:hover { color: var(--rodape-suave); }
+/* Navegação própria da página: "Para empresas" ativo (pílula clara, a mais forte da barra), Serviços e o Blog
+   (sem destaque, como link comum) e, depois de um filete, Para trabalhadores menor e num tom mais suave */
+.nav--empresas { align-items: center; gap: 20px; }
+.header--empresas .nav--empresas a.nav__empresas {
+  margin: -7px 0; padding: 7px 14px; border: 0; border-radius: 999px;
+  background: var(--rodape-texto); color: var(--vinho); text-decoration: none;
+}
+.header--empresas .nav--empresas a.nav__empresas:hover,
+.header--empresas .nav--empresas a.nav__empresas[aria-current="page"] { color: var(--vinho); text-decoration: none; }
+.nav__sep { width: 1px; height: 18px; background: var(--rodape-linha); }
+.header--empresas .nav a.nav__sec { font-size: 13px; color: var(--rodape-suave); }
+.header--empresas .nav a.nav__sec:hover { color: var(--rodape-texto); }
+.header--empresas .ig-btn { border-color: var(--rodape-linha); color: var(--rodape-texto); }
+.header--empresas .ig-btn:hover { background: var(--rodape-texto); border-color: var(--rodape-texto); color: var(--vinho); }
+.header--empresas .menu-btn { border-color: var(--rodape-suave); }
+.header--empresas .menu-btn span { background: var(--rodape-texto); }
 
 .deadlines { display: grid; gap: 12px; }
 .deadline { padding: 26px 22px; background: var(--fundo-alt); border-radius: var(--radius); }
@@ -1965,6 +2012,9 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .mnav__empresas strong { font-size: 16px; font-weight: 600; }
 .mnav__empresas small { font-size: 13px; color: #4f6578; } /* azul acinzentado: combina com o fundo azul-claro (contraste 5,1:1) */
 .mnav__empresas svg { width: 20px; height: 20px; flex: none; }
+/* página de empresas: o cartão fica no topo do menu como item atual, sem seta, no vinho do cabeçalho dessa página */
+.mnav__empresas--atual { margin: 4px 0 8px; background: var(--rodape); border-color: var(--rodape); color: var(--rodape-texto); }
+.mnav__empresas--atual small { color: var(--rodape-suave); }
 .mnav__empresas svg:last-child { width: 16px; height: 16px; opacity: .7; }
 
 /* Topo: os dois cartões ficam claros e sólidos (para não sumirem no fundo rosé do topo),

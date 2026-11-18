@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
 import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
@@ -98,7 +99,7 @@ const schema = [
           </p>
           <div class="hero__actions">
             <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
-            <a class="btn btn--ghost" href="#como-funciona">Ver como funciona</a>
+            <a class="btn btn--ghost emp-hero__more" href="#como-funciona"><span>Ver como funciona</span><span class="emp-hero__more-icon" aria-hidden="true"><Icon name="arrow" /></span></a>
           </div>
         </div>
         <figure class="emp-hero__media">
@@ -156,7 +157,7 @@ const schema = [
 
   <!-- 3. Serviços: pilha de cartões centralizada. Cada cartão fica fixo um pouco abaixo do anterior e o próximo
        desliza por cima durante a rolagem; o de trás recua levemente. Todo o conteúdo fica visível, sem clique. -->
-  <section class="section section--tight" aria-labelledby="servicos-titulo" data-secao="Como posso ajudar">
+  <section class="section section--tight" id="servicos" aria-labelledby="servicos-titulo" data-secao="Como posso ajudar">
     <div class="container">
       <div class="emp-stack__head reveal">
         <h2 class="display display--inline display--md" id="servicos-titulo">Como posso <span class="soft">ajudar a sua empresa.</span></h2>
