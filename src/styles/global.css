@@ -1174,13 +1174,13 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .emp-dark + .section { padding-top: clamp(80px, 10vw, 128px); }
 
 /* Como funciona: linha do tempo. Eixo fino (central no desktop, à esquerda no celular) que se preenche em vinho
-   com a rolagem e começa no centro do primeiro marco (o script ajusta --rail-top); em cada marco, centralizado na
+   com a rolagem e vai do centro do primeiro marco ao do último (o script ajusta --rail-top e --rail-bottom); em cada marco, centralizado na
    altura do texto, um bloco com a fase (como a data de uma cronologia) logo acima da etapa,
-   alternando os lados no desktop. O marco alcançado se preenche de vinho. O botão fica no fim do eixo, fechando a linha. */
+   alternando os lados no desktop. O marco alcançado se preenche de vinho. */
 .emp-time__head { margin-bottom: 56px; text-align: center; }
 .emp-time { --node: 56px; position: relative; }
 .emp-time__rail {
-  position: absolute; top: var(--rail-top, calc(var(--node) / 2)); bottom: 24px; left: calc(var(--node) / 2); width: 1px;
+  position: absolute; top: var(--rail-top, calc(var(--node) / 2)); bottom: var(--rail-bottom, 0); left: calc(var(--node) / 2); width: 1px;
   background: var(--linha);
 }
 .emp-time__fill { position: absolute; inset: 0; background: var(--vinho); transform-origin: 50% 0; }
@@ -1208,8 +1208,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .emp-time__phase::before { content: ''; width: 20px; height: 1px; background: currentColor; opacity: .6; }
 .emp-time__title { margin-top: 6px; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
 .emp-time__text { margin: 10px 0 0; max-width: 40ch; color: var(--texto-suave); }
-.emp-time__end { position: relative; z-index: 1; padding-top: 8px; }
-.emp-time__end .btn { width: 100%; }
 @media (prefers-reduced-motion: reduce) { .emp-time__node { transition: none; } }
 /* Celular: o número fica no início da etapa, com o topo alinhado ao topo do primeiro texto (a fase), e não no meio do bloco */
 @media (max-width: 899px) {
@@ -1229,8 +1227,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   .emp-time__step:nth-child(even) .emp-time__phase { justify-content: flex-end; }
   .emp-time__step:nth-child(even) .emp-time__phase::before { order: 1; }
   .emp-time__step:nth-child(even) .emp-time__text { margin-left: auto; }
-  .emp-time__end { display: flex; justify-content: center; padding-top: 0; }
-  .emp-time__end .btn { width: auto; }
 }
 
 /* Quem cuida do caso: foto deslocada para baixo, a frase dela em destaque e a ficha com pontilhado */
@@ -1238,7 +1234,6 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .emp-who > * { min-width: 0; }
 .emp-who__photo { margin: 0; }
 .emp-who__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 22%; border-radius: 2px; }
-.emp-who__photo figcaption { margin-top: 12px; font-size: 13px; color: var(--texto-suave); }
 .emp-who__title { margin-bottom: 26px; font-size: clamp(22px, 2vw, 26px); line-height: 1.2; color: var(--texto-suave); }
 .emp-who__quote { font-family: var(--serif); font-size: clamp(28px, 3.4vw, 44px); line-height: 1.14; letter-spacing: -0.015em; font-weight: 350; text-wrap: balance; }
 .emp-who__quote::before { content: '“'; display: block; height: .5em; font-size: 2.2em; line-height: 1; color: var(--rose-titulo); }
@@ -1252,9 +1247,13 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 }
 .emp-ficha dd { order: 2; margin: 0; font-size: 15px; font-weight: 600; text-align: right; }
 @media (min-width: 960px) {
-  .emp-who { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 96px; align-items: center; }
-  .emp-who__photo { margin-top: 80px; }
-  .emp-who__photo img { aspect-ratio: 4 / 4.6; }
+  /* a foto acompanha a altura do texto, do título à última linha da ficha: a linha da grade é definida pelo texto
+     e a imagem preenche a célula, recortada a partir do rosto */
+  .emp-who { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 96px; align-items: stretch; }
+  .emp-who__photo { position: relative; min-height: 420px; }
+  .emp-who__photo picture, .emp-who__photo img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .emp-who__photo img { aspect-ratio: auto; object-position: 50% 20%; }
+  .emp-ficha div:last-child { padding-bottom: 0; }
 }
 
 /* Dúvidas com o título fixo ao lado no desktop; as respostas abrem com a altura animada onde o navegador permite */

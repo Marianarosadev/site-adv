@@ -189,7 +189,7 @@ const schema = [
   </section>
 
   <!-- 5. Como funciona: linha do tempo. Eixo central (à esquerda no celular) que se preenche com a rolagem;
-       em cada marco, a fase e a etapa juntas num bloco, alternando os lados. O botão fecha a linha. -->
+       em cada marco, a fase e a etapa juntas num bloco, alternando os lados. -->
   <section class="section section--tight" id="como-funciona" aria-labelledby="etapas-titulo" data-secao="Como funciona">
     <div class="container">
       <div class="emp-time__head reveal">
@@ -209,9 +209,6 @@ const schema = [
             </li>
           ))}
         </ol>
-        <div class="emp-time__end">
-          <Button href={wa} icon="whatsapp" local="empresas-etapas" publico="empresa">Começar pelo WhatsApp</Button>
-        </div>
       </div>
     </div>
   </section>
@@ -228,7 +225,6 @@ const schema = [
           sizes="(min-width: 960px) 40vw, 100vw"
           formats={['avif', 'webp']}
         />
-        <figcaption>{site.fullName}, advogada trabalhista em Goiânia.</figcaption>
       </figure>
       <div class="reveal">
         <h2 class="emp-who__title" id="advogada-titulo">Quem cuida do caso.</h2>
@@ -317,9 +313,12 @@ const schema = [
   const steps = [...document.querySelectorAll<HTMLElement>('[data-timeline-step]')];
   const updateTimeline = () => {
     if (!timeline || !fill) return;
-    // o eixo começa no centro do primeiro marco, que fica centralizado na altura do texto da etapa
+    // o eixo vai do centro do primeiro marco ao centro do último (a posição deles depende da altura do texto)
+    const box = timeline.getBoundingClientRect();
     const first = steps[0]?.querySelector('.emp-time__node')?.getBoundingClientRect();
-    if (first) timeline.style.setProperty('--rail-top', `${first.top + first.height / 2 - timeline.getBoundingClientRect().top}px`);
+    const last = steps[steps.length - 1]?.querySelector('.emp-time__node')?.getBoundingClientRect();
+    if (first) timeline.style.setProperty('--rail-top', `${first.top + first.height / 2 - box.top}px`);
+    if (last) timeline.style.setProperty('--rail-bottom', `${box.bottom - (last.top + last.height / 2)}px`);
     const rail = fill.parentElement!.getBoundingClientRect();
     const line = innerHeight * 0.6;
     const p = reduce ? 1 : Math.min(1, Math.max(0, (line - rail.top) / rail.height));
