@@ -1,0 +1,24 @@
+---
+// Versão discreta do Instagram para páginas de destino (ex.: /empresas/): uma faixa de uma linha perto do rodapé,
+// com a foto de perfil, o @ e um link para o perfil. Sem a prévia do perfil (iframe), que é da seção completa.
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import LineIcon from './LineIcon.astro';
+import fotoPerfil from '../assets/giovanna-perfil.jpg';
+import { site, instagramLink } from '../data/site';
+---
+<section class="insta-strip" aria-labelledby="insta-faixa-titulo">
+  <div class="container">
+    <a class="insta-strip__card reveal" href={instagramLink} target="_blank" rel="noopener" data-local="faixa-instagram">
+      <span class="insta-strip__avatar">
+        <Picture src={fotoPerfil} alt="" widths={[96]} sizes="48px" formats={['avif', 'webp']} />
+        <span class="insta-strip__badge" aria-hidden="true"><LineIcon name="instagram" /></span>
+      </span>
+      <div class="insta-strip__text">
+        <h2 class="insta-strip__title" id="insta-faixa-titulo">Acompanhe no Instagram</h2>
+        <p class="insta-strip__handle">@{site.instagram} · conteúdos sobre direito do trabalho</p>
+      </div>
+      <span class="insta-strip__go">Ver perfil <Icon name="arrow" /></span>
+    </a>
+  </div>
+</section>
