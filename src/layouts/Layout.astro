@@ -30,11 +30,14 @@ interface Props {
   contato?: { title?: string; soft?: string; intro?: string };
   // Landing pages focadas em conversão (ex.: /empresas/) podem esconder o Instagram do fim padrão.
   instagram?: boolean;
+  // Páginas longas (ex.: /empresas/): barra de leitura no cabeçalho e o nome da seção atual sob o nome da advogada.
+  // A página marca as seções com data-secao e cuida da atualização (ver o script de /empresas/).
+  leitura?: boolean;
 }
 
 const {
   title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
-  ogImage: ogImagePath = '/og-image.jpg', contato = {}, article, noindex = false, instagram = true,
+  ogImage: ogImagePath = '/og-image.jpg', contato = {}, article, noindex = false, instagram = true, leitura = false,
 } = Astro.props;
 const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -117,13 +120,15 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
     )}
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-    <header class:list={['header', { 'header--landing': landing }]} data-header>
+    <header class:list={['header', { 'header--landing': landing, 'header--leitura': leitura }]} data-header>
+      {leitura && <span class="header__progress" data-progress aria-hidden="true"></span>}
       <div class="container header__inner">
         <a class="brand" href={landing ? '/' : `${home}#topo`} aria-label={`${site.fullName}, página inicial`}>
           <span class="brand__mark" aria-hidden="true"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
           <span>
             <span class="brand__name">Giovanna Cabral</span>
             <span class="brand__role">{landing ? `Advogada · ${site.oab}` : 'Advocacia Trabalhista'}</span>
+            {leitura && <span class="brand__where" data-where aria-hidden="true"></span>}
           </span>
         </a>
         {!landing && (

@@ -284,9 +284,13 @@ export const servicesEmpresa: { front: 'prevencao' | 'defesa'; title: string; te
 export const frontsEmpresa = { prevencao: 'Prevenção e acompanhamento', defesa: 'Defesa em processos' } as const;
 
 // Situações que levam a empresa a procurar a advogada: o processo que chegou e as decisões antes do conflito.
-export const situationsEmpresa: { group: string; items: { title: string; text: string; icon: LineIconName }[] }[] = [
+export const situationsEmpresa: {
+  group: string; tag: string; tagIcon: LineIconName; note: string; tone: 'prazo' | 'prevencao';
+  items: { title: string; text: string; icon: LineIconName }[];
+}[] = [
   {
-    group: 'O processo chegou',
+    group: 'O processo chegou', tag: 'Há prazo correndo', tagIcon: 'calendar-clock', tone: 'prazo',
+    note: 'A empresa já foi chamada pela Justiça do Trabalho e cada etapa tem data para acontecer.',
     items: [
       { icon: 'scroll-text', title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e a defesa tem prazo para ser preparada.' },
       { icon: 'calendar-clock', title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
@@ -294,7 +298,8 @@ export const situationsEmpresa: { group: string; items: { title: string; text: s
     ],
   },
   {
-    group: 'Antes do conflito',
+    group: 'Antes do conflito', tag: 'Antes de decidir', tagIcon: 'badge-check', tone: 'prevencao',
+    note: 'Ainda não existe processo: a orientação vem antes da decisão, para evitar que ele aconteça.',
     items: [
       { icon: 'file-signature', title: 'Um desligamento à vista', text: 'Dispensa, justa causa ou pedido de demissão: cada caminho tem regras, prazos e documentos próprios.' },
       { icon: 'clock', title: 'Dúvidas sobre a jornada', text: 'Horas extras, banco de horas, intervalos e escalas organizados de acordo com a lei.' },
