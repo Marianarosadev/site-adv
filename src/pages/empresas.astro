@@ -2,28 +2,22 @@
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
 import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 // Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
 import fotoReuniao from '../assets/empresas-reuniao.jpg';
-import { site, whatsappEmpresa, servicesEmpresa, type LineIconName } from '../data/site';
+import {
+  site, whatsappEmpresa, servicesEmpresa, frontsEmpresa, situationsEmpresa, valuesEmpresa, stepsEmpresa, faqEmpresa,
+} from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
 const wa = whatsappEmpresa();
 const pad = (n: number) => String(n).padStart(2, '0');
-
-const moments: { title: string; text: string; icon: LineIconName }[] = [
-  { icon: 'scroll-text', title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e é preciso preparar a defesa no prazo.' },
-  { icon: 'calendar-clock', title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
-  { icon: 'handshake', title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
-];
-
-const stepsEmpresa = [
-  { title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
-  { title: 'Analiso os documentos', text: 'Leio a reclamação e indico o que reunir para a defesa.' },
-  { title: 'Explico os caminhos', text: 'Defesa, acordo ou outra estratégia: você decide com informação clara.' },
-  { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
-];
+const fronts = (Object.keys(frontsEmpresa) as (keyof typeof frontsEmpresa)[]).map((key) => ({
+  title: frontsEmpresa[key],
+  services: servicesEmpresa.filter((s) => s.front === key),
+}));
 
 // O serviço aponta para o escritório descrito na home (mesmo @id), com os dados básicos repetidos para validar sozinho.
 const schema = [
@@ -56,30 +50,55 @@ const schema = [
       })),
     },
   },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEmpresa.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: Astro.site?.href },
+      { '@type': 'ListItem', position: 2, name: 'Para empresas', item: new URL('/empresas/', Astro.site).href },
+    ],
+  },
 ];
 ---
 <Layout
   title="Advocacia Trabalhista para Empresas em Goiânia | Giovanna Cabral"
-  description="Defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
+  description="Acompanhamento preventivo e defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
   schema={schema}
   whatsapp={wa}
   publico="empresa"
-  contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.' }}
+  instagram={false}
+  contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu ou a decisão que precisa tomar. Se houver audiência marcada, informe a data na primeira mensagem.' }}
 >
+  <!-- 1. Topo -->
   <section class="lp-hero lp-hero--empresa">
     <div class="lp-hero__bg" aria-hidden="true">
       <Picture src={fotoReuniao} alt="" widths={[640, 1200, 1600]} sizes="100vw" formats={['avif', 'webp']} loading="eager" />
     </div>
     <div class="container lp-hero__inner">
       <p class="eyebrow eyebrow--pill">Para empresas · Goiânia e online</p>
-      <h1 class="display display--inline display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
+      <h1 class="display display--inline display--lp">Advocacia trabalhista <span class="soft">para empresas em Goiânia.</span></h1>
       <p class="lp-hero__intro">
         Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
         Trabalho quando o processo chega, com orientação clara em cada decisão.
       </p>
       <div class="hero__actions">
         <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
+        <a class="btn btn--ghost" href="#como-funciona">Ver como funciona</a>
       </div>
+      <ul class="lp-facts">
+        <li><LineIcon name="monitor-smartphone" />Online em todo o Brasil</li>
+        <li><LineIcon name="scale" />Todas as instâncias</li>
+        <li><LineIcon name="message-circle-more" />Atendimento pela própria advogada</li>
+      </ul>
       <div class="cred">
         <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
         <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
@@ -87,36 +106,79 @@ const schema = [
     </div>
   </section>
 
-  <section class="section section--tight">
+  <!-- 2. Situações: o processo que chegou e as decisões antes do conflito -->
+  <section class="section section--tight" aria-labelledby="situacoes-titulo">
     <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Quando <span class="soft">me procurar.</span></h2>
+      <div class="section-head reveal">
+        <h2 class="display display--inline display--md" id="situacoes-titulo">Quando a empresa <span class="soft">precisa de orientação.</span></h2>
       </div>
-      <ul class="checks">
-        {moments.map((m) => (
-          <li class="check"><span class="check__mark" aria-hidden="true"><LineIcon name={m.icon} /></span><LineIcon name={m.icon} class="check__icon" /><h3>{m.title}</h3><p>{m.text}</p></li>
+      {situationsEmpresa.map((g) => (
+        <div class="situations reveal">
+          <p class="about-label"><span>{g.group}</span></p>
+          <ul class="checks">
+            {g.items.map((m) => (
+              <li class="check"><span class="check__mark" aria-hidden="true"><LineIcon name={m.icon} /></span><LineIcon name={m.icon} class="check__icon" /><h3>{m.title}</h3><p>{m.text}</p></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 3. Serviços, nas duas frentes da faixa da home -->
+  <section class="section section--tight" aria-labelledby="servicos-titulo">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2 class="display display--inline display--md" id="servicos-titulo">Como posso <span class="soft">ajudar a sua empresa.</span></h2>
+      </div>
+      <div class="fronts reveal">
+        {fronts.map((f) => (
+          <div class="fronts__col">
+            <p class="about-label"><span>{f.title}</span></p>
+            <ul class="services">
+              {f.services.map((s) => (
+                <li class="service">
+                  <LineIcon name={s.icon} class="service__icon" />
+                  <div>
+                    <h3 class="service__title">{s.title}</h3>
+                    <p class="service__text">{s.text}</p>
+                    <p class="service__delivers"><strong>A empresa recebe:</strong> {s.delivers}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div class="section-cta reveal">
+        <Button href={wa} icon="whatsapp" local="empresas-servicos" publico="empresa">Falar sobre a empresa</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. O que muda para a empresa -->
+  <section class="section section--tight" aria-labelledby="valor-titulo">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2 class="display display--inline display--md" id="valor-titulo">O que muda <span class="soft">para a empresa.</span></h2>
+      </div>
+      <ul class="values reveal">
+        {valuesEmpresa.map((v) => (
+          <li class="value">
+            <LineIcon name={v.icon} class="value__icon" />
+            <h3 class="value__title">{v.title}</h3>
+            <p class="value__text">{v.text}</p>
+          </li>
         ))}
       </ul>
     </div>
   </section>
 
-  <section class="section section--tight">
+  <!-- 5. Como funciona -->
+  <section class="section section--tight" id="como-funciona" aria-labelledby="etapas-titulo">
     <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Como posso <span class="soft">ajudar a empresa.</span></h2>
-      </div>
-      <ul class="diffs">
-        {servicesEmpresa.map((s) => (
-          <li class="diff"><h3>{s.title}</h3><p>{s.text}</p></li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Como funciona <span class="soft">o atendimento.</span></h2>
+      <div class="section-head reveal">
+        <h2 class="display display--inline display--md" id="etapas-titulo">Como funciona <span class="soft">o atendimento.</span></h2>
       </div>
       <ol class="steps">
         {stepsEmpresa.map((s, i) => (
@@ -129,6 +191,68 @@ const schema = [
           </li>
         ))}
       </ol>
+      <div class="section-cta reveal">
+        <Button href={wa} icon="whatsapp" local="empresas-etapas" publico="empresa">Começar pelo WhatsApp</Button>
+        <p class="section-cta__note">Se houver audiência marcada, informe a data na primeira mensagem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Quem cuida do caso: competência em vez de depoimentos (vedados pelo Provimento 205/2021) -->
+  <section class="section section--tight" aria-labelledby="advogada-titulo">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2 class="display display--inline display--md" id="advogada-titulo">Quem cuida <span class="soft">do caso.</span></h2>
+      </div>
+      <div class="about about--empresa">
+        <div class="about__photo reveal">
+          <Picture
+            src={fotoPerfil}
+            alt="Retrato da advogada trabalhista Giovanna Cabral"
+            widths={[480, 720, 1000]}
+            sizes="(min-width: 900px) 380px, 100vw"
+            formats={['avif', 'webp']}
+          />
+        </div>
+        <div class="reveal">
+          <p class="about__role">{site.fullName} · Advogada trabalhista · {site.oab}</p>
+          <dl class="about__meta">
+            <div><dt><LineIcon name="award" class="about__meta-icon" />Formação</dt><dd>Pós em Direito do Trabalho</dd></div>
+            <div><dt><LineIcon name="scale" class="about__meta-icon" />Atuação</dt><dd>Todas as instâncias</dd></div>
+            <div><dt><LineIcon name="map-pin" class="about__meta-icon" />Atendimento</dt><dd>Online · todo o Brasil</dd></div>
+          </dl>
+          <div class="about__bio">
+            <p>
+              Sou advogada trabalhista, pós-graduada em Direito e Processo do Trabalho, e atuo no Direito do Trabalho
+              desde o início da carreira.
+            </p>
+            <p>
+              Já conduzi processos em todas as fases e instâncias, das audiências à sustentação oral nos tribunais,
+              atuando para trabalhadores e para empresas. Na rotina da empresa, priorizo a clareza: cada decisão vem
+              acompanhada dos riscos e das alternativas, em linguagem direta.
+            </p>
+          </div>
+          <a class="link-arrow about__cna" href="https://cna.oab.org.br/" target="_blank" rel="noopener" title="Cadastro Nacional dos Advogados">Consultar a inscrição na OAB <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Dúvidas de empresas: entram na faixa do monograma do fim padrão, logo acima do contato -->
+  <section class="section" id="duvidas" slot="antes-do-fim" aria-labelledby="duvidas-titulo">
+    <div class="container faq">
+      <div class="faq__aside reveal">
+        <h2 class="display display--inline" id="duvidas-titulo">Dúvidas <span class="soft">de empresas.</span></h2>
+        <p>Não encontrou a sua? <a href={wa} target="_blank" rel="noopener" data-local="empresas-duvidas" data-publico="empresa">Pergunte pelo WhatsApp</a>.</p>
+      </div>
+      <div class="faq__list reveal">
+        {faqEmpresa.map(({ q, a, link }) => (
+          <details>
+            <summary><h3 class="faq__q">{q}</h3></summary>
+            <p>{a}{link && <> <a href={link.href}>{link.label}</a>.</>}</p>
+          </details>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>

@@ -540,8 +540,12 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
   transition: transform .25s ease, background-color .2s;
 }
 .faq details[open] summary::after { transform: rotate(180deg); }
-.faq summary:hover::after { background-color: var(--vinho); }
-.faq summary:hover { color: var(--rose-destaque); }
+@media (hover: hover) {
+  .faq summary:hover::after { background-color: var(--vinho); }
+  .faq summary:hover { color: var(--rose-destaque); }
+}
+/* Pergunta como título (h3) nas páginas que precisam da hierarquia: mesma aparência do texto do resumo */
+.faq__q { font-family: inherit; font-size: inherit; font-weight: inherit; line-height: 1.4; }
 .faq details p { color: var(--texto-suave); font-size: 15px; padding: 0 40px 22px 0; max-width: 68ch; }
 /* Título em cima e perguntas embaixo, também no computador */
 @media (min-width: 900px) { .faq { gap: 48px; } }
@@ -1018,6 +1022,126 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 @media (min-width: 640px) { .checks { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .checks { grid-template-columns: repeat(3, 1fr); } }
 
+/* ---------- Página /empresas/ ---------- */
+/* Topo: três fatos curtos em linha, com ícone de linha fina, entre os botões e a credencial */
+.lp-facts {
+  list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px;
+  font-size: 14px; font-weight: 500; color: var(--texto);
+}
+.lp-facts li { display: inline-flex; align-items: center; gap: 8px; }
+.lp-facts .line-icon { color: var(--azul); }
+.lp-facts .line-icon svg { width: 17px; height: 17px; }
+
+/* Situações em dois grupos, cada um com a etiqueta em versalete e filete (a mesma de "Formação" e "Trajetória") */
+.situations .about-label { margin: 0 0 18px; }
+.situations + .situations { margin-top: 48px; }
+/* Celular: seis cartões em pilha ficariam longos; viram cartões compactos, com o ícone ao lado do título */
+@media (max-width: 639px) {
+  .situations .check { display: grid; grid-template-columns: 40px 1fr; column-gap: 14px; align-items: center; padding: 20px 18px; }
+  .situations .check__icon { width: 40px; height: 40px; margin: 0; }
+  .situations .check__icon svg { width: 18px; height: 18px; }
+  .situations .check h3 { margin: 0; font-size: 20px; }
+  .situations .check h3::after { display: none; }
+  .situations .check p { grid-column: 1 / -1; margin-top: 12px; }
+  .situations + .situations { margin-top: 36px; }
+}
+
+/* Chamada no fim de uma seção: botão e, se houver, uma nota curta ao lado */
+.section-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 40px; }
+.section-cta .btn { flex: 1 1 260px; }
+.section-cta__note { margin: 0; font-size: 14px; color: var(--texto-suave); max-width: 46ch; }
+@media (min-width: 640px) { .section-cta .btn { flex: 0 0 auto; } }
+
+/* O que muda para a empresa: faixa clara entre filetes, quatro colunas separadas por linhas verticais
+   (duas no tablet, uma no celular), sem cartões, para alternar o ritmo com as seções vizinhas. */
+.values {
+  list-style: none; margin: 0; padding: 0; display: grid;
+  border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha);
+}
+.value { display: grid; grid-template-columns: 44px 1fr; column-gap: 16px; align-content: start; padding: 24px 0; }
+.value + .value { border-top: 1px solid var(--linha); }
+.value__icon {
+  grid-row: span 2; width: 44px; height: 44px; border-radius: 50%; color: var(--vinho);
+  border: 1px solid color-mix(in srgb, var(--rose-titulo) 45%, transparent);
+  transition: background-color .3s, color .3s, border-color .3s;
+}
+.value__icon svg { width: 19px; height: 19px; }
+.value__title { font-size: 21px; line-height: 1.2; letter-spacing: -0.005em; padding-top: 2px; }
+.value__text { margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: var(--texto-suave); }
+@media (hover: hover) {
+  .value:hover .value__icon { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+}
+@media (min-width: 640px) {
+  .values { grid-template-columns: 1fr 1fr; }
+  .value { grid-template-columns: 1fr; row-gap: 0; padding: 32px 28px 34px 0; }
+  .value + .value { border-top: 0; }
+  .value:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--linha); }
+  .value:nth-child(n+3) { border-top: 1px solid var(--linha); }
+  .value__icon { grid-row: auto; margin-bottom: 20px; }
+}
+@media (min-width: 1000px) {
+  .values { grid-template-columns: repeat(4, 1fr); }
+  .value, .value:nth-child(even) { padding: 36px 28px 38px; border-left: 1px solid var(--linha); }
+  .value:first-child { padding-left: 0; border-left: 0; }
+  .value:last-child { padding-right: 0; }
+  .value:nth-child(n+3) { border-top: 0; }
+  .value__title { font-size: 22px; }
+}
+
+/* Quem cuida do caso: o bloco "Sobre" da home, com a foto um pouco menor e o link para o CNA no fim.
+   No celular, a foto vira um recorte horizontal no rosto, para não ocupar a tela inteira. */
+.about--empresa > * { min-width: 0; }
+.about--empresa .about__bio { margin-bottom: 28px; }
+@media (max-width: 899px) { .about--empresa .about__photo img { aspect-ratio: 4 / 3; object-position: 50% 22%; } }
+.about__cna svg { width: 14px; height: 14px; }
+@media (min-width: 900px) { .about--empresa { grid-template-columns: 0.7fr 1fr; } }
+
+/* Serviços para empresas: lista aberta (a seção anterior já usa cartões), em duas frentes lado a lado no desktop,
+   cada uma com a etiqueta em versalete e filete. Ícone de linha em anel rosé, título em serifa com o traço rosé
+   curto dos destaques e texto alinhado ao título. Hover só com mouse: o anel se preenche de vinho e o traço se alonga. */
+.fronts { display: grid; }
+.fronts .about-label { margin: 0 0 4px; }
+.fronts__col + .fronts__col { margin-top: 40px; }
+.services { list-style: none; margin: 0; padding: 0; display: grid; }
+.service {
+  display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: start;
+  padding: 26px 0; border-bottom: 1px solid var(--linha);
+}
+.service__icon {
+  width: 44px; height: 44px; border-radius: 50%; color: var(--vinho);
+  border: 1px solid color-mix(in srgb, var(--rose-titulo) 45%, transparent);
+  transition: background-color .3s, color .3s, border-color .3s;
+}
+.service__icon svg { width: 19px; height: 19px; }
+.service__title { font-family: var(--serif); font-size: 22px; line-height: 1.2; letter-spacing: -0.005em; text-wrap: balance; padding-top: 8px; }
+.service__title::after {
+  content: ''; display: block; width: 24px; height: 2px; margin: 12px 0 12px;
+  background: var(--rose-titulo); opacity: .6; transition: width .3s;
+}
+.service__text { margin: 0; font-size: 15px; line-height: 1.65; color: var(--texto-suave); max-width: 44ch; }
+/* o que a empresa recebe: nota curta com filete rosé à esquerda, para ler como um complemento do serviço */
+.service__delivers {
+  margin: 14px 0 0; padding-left: 12px; border-left: 2px solid color-mix(in srgb, var(--rose-titulo) 40%, transparent);
+  font-size: 14px; line-height: 1.55; color: var(--texto-suave); max-width: 44ch;
+}
+.service__delivers strong { color: var(--texto); font-weight: 600; }
+@media (hover: hover) {
+  .service:hover .service__icon { background: var(--vinho); border-color: var(--vinho); color: var(--superficie); }
+  .service:hover .service__title::after { width: 44px; }
+}
+@media (min-width: 900px) {
+  .fronts { grid-template-columns: 1fr 1fr; column-gap: 72px; }
+  .fronts__col + .fronts__col { margin-top: 0; }
+  /* subgrid: o 1º e o 2º serviço de cada frente ficam na mesma altura, mesmo com textos de tamanhos diferentes */
+  .fronts__col { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; }
+  .fronts__col .services { grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; }
+  .service { grid-template-columns: 52px 1fr; gap: 24px; padding: 36px 0 38px; }
+  .service__icon { width: 52px; height: 52px; }
+  .service__icon svg { width: 22px; height: 22px; }
+  .service__title { font-size: 25px; padding-top: 10px; }
+  .service__title::after { width: 28px; margin: 14px 0 14px; }
+}
+
 .deadlines { display: grid; gap: 12px; }
 .deadline { padding: 26px 22px; background: var(--fundo-alt); border-radius: var(--radius); }
 .deadline__value { font-family: var(--sans); font-size: clamp(44px, 6vw, 64px); line-height: 1; letter-spacing: -0.02em; color: var(--vinho); margin-bottom: 14px; }
@@ -1465,6 +1589,10 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 /* Ícones da faixa de empresas: pequenos, na cor azul, só onde ajudam a ler */
 .band-empresas { position: relative; overflow: hidden; isolation: isolate; }
 .band-empresas__eyebrow { display: inline-flex; align-items: center; gap: 6px; }
+/* ícone colado na primeira palavra do título, para não ficar sozinho numa linha */
+.band-empresas__title .nowrap { white-space: nowrap; }
+.band-empresas__title-icon { display: inline-block; margin-right: .3em; color: var(--azul); vertical-align: -.08em; }
+.band-empresas__title-icon svg { display: block; width: .85em; height: .85em; }
 .band-empresas__eyebrow svg { width: 14px; height: 14px; }
 .front__title { display: flex; align-items: center; gap: 10px; }
 .front__icon { display: grid; place-items: center; flex: none; color: var(--azul); }

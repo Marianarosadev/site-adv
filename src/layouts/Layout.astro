@@ -28,11 +28,13 @@ interface Props {
   noindex?: boolean;
   // Título e texto da seção de contato do fim da página (o padrão serve para a maioria das páginas).
   contato?: { title?: string; soft?: string; intro?: string };
+  // Landing pages focadas em conversão (ex.: /empresas/) podem esconder o Instagram do fim padrão.
+  instagram?: boolean;
 }
 
 const {
   title, description, schema = [], variant = 'default', whatsapp = whatsappLink(), tema, publico = 'geral',
-  ogImage: ogImagePath = '/og-image.jpg', contato = {}, article, noindex = false,
+  ogImage: ogImagePath = '/og-image.jpg', contato = {}, article, noindex = false, instagram = true,
 } = Astro.props;
 const landing = variant === 'landing';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -182,7 +184,7 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
           <span class="brand__mark monogram-bg__mark"><span class="mono-g">G</span><span class="mono-c">C</span><span class="mono-g mono-g--over">G</span></span>
         </div>
         <slot name="antes-do-fim" />
-        <InstagramSection />
+        {instagram && <InstagramSection />}
       </div>
       <ContactSection whatsapp={whatsapp} tema={tema} publico={publico} {...contato} />
     </main>

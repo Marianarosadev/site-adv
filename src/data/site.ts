@@ -257,9 +257,96 @@ export const frentesEmpresa: { icon: 'shield' | 'scale'; title: string; items: s
   },
 ];
 
-export const servicesEmpresa = [
-  { title: 'Acompanhamento preventivo', text: 'Orientação contínua sobre rotinas, jornada e documentos, para prevenir conflitos antes que virem processos.' },
-  { title: 'Contratos e desligamentos', text: 'Contratos, admissões, advertências e desligamentos conduzidos com segurança jurídica.' },
-  { title: 'Defesa em reclamações trabalhistas', text: 'Análise da reclamação, contestação e acompanhamento do processo em todas as fases.' },
-  { title: 'Audiências e acordos', text: 'Preparação do preposto, atuação em audiências e análise ou negociação de acordos.' },
+// Página /empresas/: serviços em duas frentes (as mesmas da faixa da home), cada um com o que a empresa recebe.
+export const servicesEmpresa: { front: 'prevencao' | 'defesa'; title: string; text: string; delivers: string; icon: LineIconName }[] = [
+  {
+    front: 'prevencao', icon: 'clipboard-list', title: 'Acompanhamento preventivo',
+    text: 'Orientação contínua sobre rotinas, jornada e documentos, para prevenir conflitos antes que virem processos.',
+    delivers: 'Respostas às dúvidas do dia a dia e revisão das rotinas e dos documentos.',
+  },
+  {
+    front: 'prevencao', icon: 'file-signature', title: 'Contratos e desligamentos',
+    text: 'Contratos, admissões, advertências e desligamentos conduzidos com segurança jurídica.',
+    delivers: 'Documentos revisados e orientação em cada etapa, antes de a decisão ser tomada.',
+  },
+  {
+    front: 'defesa', icon: 'scale', title: 'Defesa em reclamações trabalhistas',
+    text: 'Análise da reclamação, contestação e acompanhamento do processo em todas as fases.',
+    delivers: 'Defesa preparada no prazo, a partir dos documentos da empresa, e retorno sobre cada etapa.',
+  },
+  {
+    front: 'defesa', icon: 'handshake', title: 'Audiências e acordos',
+    text: 'Preparação do preposto, atuação em audiências e análise ou negociação de acordos.',
+    delivers: 'Preposto orientado antes da audiência e análise dos riscos antes de qualquer acordo.',
+  },
+];
+
+export const frontsEmpresa = { prevencao: 'Prevenção e acompanhamento', defesa: 'Defesa em processos' } as const;
+
+// Situações que levam a empresa a procurar a advogada: o processo que chegou e as decisões antes do conflito.
+export const situationsEmpresa: { group: string; items: { title: string; text: string; icon: LineIconName }[] }[] = [
+  {
+    group: 'O processo chegou',
+    items: [
+      { icon: 'scroll-text', title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e a defesa tem prazo para ser preparada.' },
+      { icon: 'calendar-clock', title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
+      { icon: 'handshake', title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
+    ],
+  },
+  {
+    group: 'Antes do conflito',
+    items: [
+      { icon: 'file-signature', title: 'Um desligamento à vista', text: 'Dispensa, justa causa ou pedido de demissão: cada caminho tem regras, prazos e documentos próprios.' },
+      { icon: 'clock', title: 'Dúvidas sobre a jornada', text: 'Horas extras, banco de horas, intervalos e escalas organizados de acordo com a lei.' },
+      { icon: 'users', title: 'Contratações fora da CLT', text: 'Prestadores PJ, autônomos ou terceirizados: entender quando a relação pode ser vista como emprego.' },
+    ],
+  },
+];
+
+// O que a empresa ganha com o atendimento, sem promessa de resultado (Provimento 205/2021).
+export const valuesEmpresa: { icon: LineIconName; title: string; text: string }[] = [
+  { icon: 'message-circle-more', title: 'Decisões com informação', text: 'Os riscos e as alternativas explicados com clareza antes de cada escolha.' },
+  { icon: 'calendar-clock', title: 'Prazos acompanhados', text: 'A empresa sabe o que enviar e quando, em cada etapa do processo.' },
+  { icon: 'users', title: 'Preposto preparado', text: 'Uma conversa antes da audiência sobre como ela funciona e os fatos do caso.' },
+  { icon: 'badge-check', title: 'Um só contato', text: 'A própria advogada acompanha o caso, do primeiro contato ao fim.' },
+];
+
+export const stepsEmpresa = [
+  { title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
+  { title: 'Analiso os documentos', text: 'Leio a reclamação ou a situação e indico o que reunir.' },
+  { title: 'Apresento os caminhos', text: 'Por mensagem ou videochamada, explico as estratégias possíveis e a proposta de honorários.' },
+  { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
+];
+
+// Dúvidas de empresas. A do acompanhamento preventivo depende da decisão D4 (contínuo ou por demanda): confirmar com a cliente.
+export const faqEmpresa: { q: string; a: string; link?: { href: string; label: string } }[] = [
+  {
+    q: 'A empresa recebeu uma notificação da Justiça do Trabalho. E agora?',
+    a: 'Confira a data da audiência e não ignore a notificação: a ausência da empresa pode levar à revelia. A defesa é apresentada até a audiência, então vale buscar orientação com antecedência para reunir os documentos.',
+    link: { href: '/blog/empresa-recebeu-notificacao-da-justica-do-trabalho/', label: 'Leia o passo a passo' },
+  },
+  {
+    q: 'O preposto precisa ser empregado da empresa?',
+    a: 'Não. Desde a Reforma Trabalhista de 2017 (art. 843, § 3º, da CLT), o preposto não precisa ser empregado. Ele precisa conhecer os fatos do processo, porque o que declara na audiência vincula a empresa.',
+  },
+  {
+    q: 'Quais documentos a empresa deve separar?',
+    a: 'Em geral, o contrato de trabalho, os registros de ponto, os recibos de pagamento, o termo de rescisão e as comunicações com o funcionário. Depois de ler a reclamação, indico exatamente o que é necessário para o caso.',
+  },
+  {
+    q: 'Atende empresas de outros estados?',
+    a: 'Sim. O atendimento é online e o processo trabalhista é eletrônico, então posso atender empresas de Goiânia, da região metropolitana e de outros estados.',
+  },
+  {
+    q: 'A audiência é presencial?',
+    a: 'Depende da vara do trabalho. Muitas audiências acontecem por videoconferência, e outras são presenciais. Em todos os casos, explico antes como vai ser e acompanho a empresa e o preposto.',
+  },
+  {
+    q: 'Como são definidos os honorários?',
+    a: 'Os honorários são combinados em contrato depois da análise do caso ou da necessidade da empresa, observando a tabela de honorários da OAB/GO.',
+  },
+  {
+    q: 'Como funciona o acompanhamento preventivo?',
+    a: 'O formato é combinado com a empresa: pode ser contínuo ou para demandas específicas, como dúvidas do dia a dia, revisão de documentos e orientação antes de um desligamento.',
+  },
 ];
