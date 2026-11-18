@@ -5,6 +5,8 @@ import Button from '../components/Button.astro';
 import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
 import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
+// Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
+import fotoReuniao from '../assets/empresas-reuniao.jpg';
 import {
   site, whatsappEmpresa, servicesEmpresa, frontsEmpresa, situationsEmpresa, valuesEmpresa, stepsEmpresa, faqEmpresa,
 } from '../data/site';
@@ -78,39 +80,45 @@ const schema = [
   leitura
   contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu ou a decisão que precisa tomar.' }}
 >
-  <!-- 1. Topo assimétrico: texto à esquerda e a foto do escritório saindo pela borda direita;
-       embaixo, as áreas de atuação numa faixa que corre devagar -->
+  <!-- 1. Topo editorial em camadas: texto à esquerda, no fundo claro (botões com contraste pleno); à direita, uma sala
+       de reunião em duotone vinho, que se dissolve no fundo e se move devagar; a foto da advogada, com uma moldura discreta,
+       atravessa a sala e a credencial fica num cartão translúcido. Embaixo, as áreas de atuação numa faixa. -->
   <section class="emp-hero" data-hero>
-    <div class="container emp-hero__grid">
-      <div>
-        <p class="emp-hero__kicker">Para empresas, em Goiânia e online</p>
-        <h1 class="emp-hero__title">Advocacia trabalhista <span class="soft">para empresas em Goiânia.</span></h1>
-        <p class="emp-hero__intro">
-          Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
-          Trabalho quando o processo chega, com orientação clara em cada decisão.
-        </p>
-        <div class="hero__actions">
-          <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
-          <a class="btn btn--ghost" href="#como-funciona">Ver como funciona</a>
-        </div>
-        <div class="cred">
-          <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
-          <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
-        </div>
+    <div class="emp-hero__stage">
+      <div class="emp-hero__panel" aria-hidden="true">
+        <Picture src={fotoReuniao} alt="" widths={[640, 1000, 1400]} sizes="(min-width: 960px) 34vw, 100vw" formats={['avif', 'webp']} />
       </div>
-      <figure class="emp-hero__media">
-        <div class="emp-hero__frame">
-          <Picture
-            src={fotoEscritorio}
-            alt="A advogada Giovanna Cabral analisando documentos no escritório"
-            widths={[480, 720, 1000]}
-            sizes="(min-width: 960px) 44vw, 100vw"
-            formats={['avif', 'webp']}
-            loading="eager"
-            fetchpriority="high"
-          />
+      <div class="container emp-hero__grid">
+        <div class="emp-hero__text">
+          <p class="emp-hero__kicker">Para empresas, em Goiânia e online</p>
+          <h1 class="emp-hero__title">Advocacia trabalhista <span class="soft">para empresas em Goiânia.</span></h1>
+          <p class="emp-hero__intro">
+            Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
+            Trabalho quando o processo chega, com orientação clara em cada decisão.
+          </p>
+          <div class="hero__actions">
+            <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
+            <a class="btn btn--ghost" href="#como-funciona">Ver como funciona</a>
+          </div>
         </div>
-      </figure>
+        <figure class="emp-hero__media">
+          <div class="emp-hero__frame">
+            <Picture
+              src={fotoEscritorio}
+              alt="A advogada Giovanna Cabral analisando documentos no escritório"
+              widths={[480, 720, 1000]}
+              sizes="(min-width: 960px) 40vw, 100vw"
+              formats={['avif', 'webp']}
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+          <figcaption class="emp-hero__card">
+            <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
+            <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
+          </figcaption>
+        </figure>
+      </div>
     </div>
     <div class="emp-marquee" role="region" aria-label="Áreas de atuação para empresas">
       <div class="emp-marquee__track">
