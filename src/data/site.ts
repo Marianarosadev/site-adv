@@ -316,13 +316,13 @@ export const valuesEmpresa: { icon: LineIconName; title: string; text: string }[
   { icon: 'badge-check', title: 'Um só contato', text: 'A própria advogada acompanha o caso, do primeiro contato ao fim.' },
 ];
 
-export const stepsEmpresa = [
-  { title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
-  { title: 'Analiso os documentos', text: 'Leio a reclamação ou a situação e indico o que reunir.' },
-  { title: 'Apresento os caminhos', text: 'Por mensagem ou videochamada, explico as estratégias possíveis e a proposta de honorários.' },
-  { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
+// Etapas do atendimento para empresas: a fase aparece como o marco de tempo da linha do tempo.
+export const stepsEmpresa: { phase: string; title: string; text: string }[] = [
+  { phase: 'Primeiro contato', title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
+  { phase: 'Análise do caso', title: 'Analiso os documentos', text: 'Leio a reclamação ou a situação e indico o que reunir.' },
+  { phase: 'Decisão da empresa', title: 'Apresento os caminhos', text: 'Por mensagem ou videochamada, explico as estratégias possíveis e a proposta de honorários.' },
+  { phase: 'Durante o processo', title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
 ];
-
 // Dúvidas de empresas. A do acompanhamento preventivo depende da decisão D4 (contínuo ou por demanda): confirmar com a cliente.
 export const faqEmpresa: { q: string; a: string; link?: { href: string; label: string } }[] = [
   {

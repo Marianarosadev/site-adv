@@ -1170,6 +1170,69 @@ h1, h2, h3 { margin: 0; font-weight: 400; font-family: var(--serif); }
 .section-cta .btn { flex: 1 1 260px; }
 @media (min-width: 640px) { .section-cta .btn { flex: 0 0 auto; } }
 
+/* A seção depois da faixa escura é "tight" (sem respiro em cima); aqui ela precisa de espaço para não colar na faixa */
+.emp-dark + .section { padding-top: clamp(80px, 10vw, 128px); }
+
+/* Como funciona: linha do tempo. Eixo fino (central no desktop, à esquerda no celular) que se preenche em vinho
+   com a rolagem e começa no centro do primeiro marco (o script ajusta --rail-top); em cada marco, centralizado na
+   altura do texto, um bloco com a fase (como a data de uma cronologia) logo acima da etapa,
+   alternando os lados no desktop. O marco alcançado se preenche de vinho. O botão fica no fim do eixo, fechando a linha. */
+.emp-time__head { margin-bottom: 56px; text-align: center; }
+.emp-time { --node: 56px; position: relative; }
+.emp-time__rail {
+  position: absolute; top: var(--rail-top, calc(var(--node) / 2)); bottom: 24px; left: calc(var(--node) / 2); width: 1px;
+  background: var(--linha);
+}
+.emp-time__fill { position: absolute; inset: 0; background: var(--vinho); transform-origin: 50% 0; }
+.js .emp-time__fill { transform: scaleY(0); }
+/* todas as etapas com a altura da maior: os marcos ficam igualmente espaçados, seja qual for o tamanho dos textos */
+.emp-time__list { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-rows: 1fr; }
+.emp-time__step {
+  position: relative; display: grid; grid-template-columns: var(--node) 1fr; column-gap: 20px; align-items: center; padding-bottom: 44px;
+}
+.emp-time__node {
+  position: relative; z-index: 1; display: grid; place-items: center;
+  width: var(--node); height: var(--node); border-radius: 50%;
+  background: var(--fundo); border: 1px solid var(--rose-titulo);
+  font-family: var(--serif); font-size: 19px; color: var(--vinho);
+  transition: background-color .5s, color .5s, border-color .5s, box-shadow .5s;
+}
+.emp-time__step.is-reached .emp-time__node {
+  background: var(--vinho); border-color: var(--vinho); color: var(--superficie);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--vinho) 10%, transparent);
+}
+.emp-time__phase {
+  display: flex; align-items: center; gap: 10px; margin: 0; padding-top: 6px;
+  font-size: 14px; font-weight: 600; color: var(--rose-destaque);
+}
+.emp-time__phase::before { content: ''; width: 20px; height: 1px; background: currentColor; opacity: .6; }
+.emp-time__title { margin-top: 6px; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+.emp-time__text { margin: 10px 0 0; max-width: 40ch; color: var(--texto-suave); }
+.emp-time__end { position: relative; z-index: 1; padding-top: 8px; }
+.emp-time__end .btn { width: 100%; }
+@media (prefers-reduced-motion: reduce) { .emp-time__node { transition: none; } }
+/* Celular: o número fica no início da etapa, com o topo alinhado ao topo do primeiro texto (a fase), e não no meio do bloco */
+@media (max-width: 899px) {
+  .emp-time__step { align-items: start; }
+  .emp-time__phase { padding-top: 0; }
+}
+
+/* Desktop: eixo no centro e o bloco de cada etapa trocando de lado a cada marco (o par fica à esquerda, alinhado ao eixo) */
+@media (min-width: 900px) {
+  .emp-time__head { margin-bottom: 80px; }
+  .emp-time__rail { left: 50%; }
+  .emp-time__step { grid-template-columns: 1fr var(--node) 1fr; column-gap: 48px; align-items: center; padding-bottom: 64px; }
+  .emp-time__node { grid-row: 1; grid-column: 2; }
+  .emp-time__body { grid-row: 1; grid-column: 3; }
+  .emp-time__phase { font-size: 15px; }
+  .emp-time__step:nth-child(even) .emp-time__body { grid-column: 1; text-align: right; }
+  .emp-time__step:nth-child(even) .emp-time__phase { justify-content: flex-end; }
+  .emp-time__step:nth-child(even) .emp-time__phase::before { order: 1; }
+  .emp-time__step:nth-child(even) .emp-time__text { margin-left: auto; }
+  .emp-time__end { display: flex; justify-content: center; padding-top: 0; }
+  .emp-time__end .btn { width: auto; }
+}
+
 /* Quem cuida do caso: foto deslocada para baixo, a frase dela em destaque e a ficha com pontilhado */
 .emp-who { display: grid; gap: 40px; }
 .emp-who > * { min-width: 0; }

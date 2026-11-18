@@ -188,25 +188,30 @@ const schema = [
     </div>
   </section>
 
-  <!-- 5. Como funciona -->
+  <!-- 5. Como funciona: linha do tempo. Eixo central (à esquerda no celular) que se preenche com a rolagem;
+       em cada marco, a fase e a etapa juntas num bloco, alternando os lados. O botão fecha a linha. -->
   <section class="section section--tight" id="como-funciona" aria-labelledby="etapas-titulo" data-secao="Como funciona">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="emp-time__head reveal">
         <h2 class="display display--inline display--md" id="etapas-titulo">Como funciona <span class="soft">o atendimento.</span></h2>
       </div>
-      <ol class="steps">
-        {stepsEmpresa.map((s, i) => (
-          <li class="step">
-            <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <div class="step__card">
-              <h3 class="step__title">{s.title}</h3>
-              <p class="step__text">{s.text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <div class="section-cta reveal">
-        <Button href={wa} icon="whatsapp" local="empresas-etapas" publico="empresa">Começar pelo WhatsApp</Button>
+      <div class="emp-time" data-timeline>
+        <span class="emp-time__rail" aria-hidden="true"><span class="emp-time__fill" data-timeline-fill></span></span>
+        <ol class="emp-time__list">
+          {stepsEmpresa.map((s, i) => (
+            <li class="emp-time__step" data-timeline-step>
+              <span class="emp-time__node" aria-hidden="true">{pad(i + 1)}</span>
+              <div class="emp-time__body">
+                <p class="emp-time__phase">{s.phase}</p>
+                <h3 class="emp-time__title">{s.title}</h3>
+                <p class="emp-time__text">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div class="emp-time__end">
+          <Button href={wa} icon="whatsapp" local="empresas-etapas" publico="empresa">Começar pelo WhatsApp</Button>
+        </div>
       </div>
     </div>
   </section>
@@ -305,6 +310,29 @@ const schema = [
   addEventListener('scroll', () => requestAnimationFrame(updateStack), { passive: true });
   addEventListener('resize', updateStack);
   updateStack();
+
+  // Como funciona: o eixo se preenche conforme a linha do tempo atravessa a tela; cada marco alcançado acende
+  const timeline = document.querySelector<HTMLElement>('[data-timeline]');
+  const fill = document.querySelector<HTMLElement>('[data-timeline-fill]');
+  const steps = [...document.querySelectorAll<HTMLElement>('[data-timeline-step]')];
+  const updateTimeline = () => {
+    if (!timeline || !fill) return;
+    // o eixo começa no centro do primeiro marco, que fica centralizado na altura do texto da etapa
+    const first = steps[0]?.querySelector('.emp-time__node')?.getBoundingClientRect();
+    if (first) timeline.style.setProperty('--rail-top', `${first.top + first.height / 2 - timeline.getBoundingClientRect().top}px`);
+    const rail = fill.parentElement!.getBoundingClientRect();
+    const line = innerHeight * 0.6;
+    const p = reduce ? 1 : Math.min(1, Math.max(0, (line - rail.top) / rail.height));
+    fill.style.transform = `scaleY(${p})`;
+    const reached = rail.top + rail.height * p;
+    steps.forEach((step) => {
+      const node = step.querySelector('.emp-time__node')!.getBoundingClientRect();
+      step.classList.toggle('is-reached', reached >= node.top + node.height / 2);
+    });
+  };
+  addEventListener('scroll', () => requestAnimationFrame(updateTimeline), { passive: true });
+  addEventListener('resize', updateTimeline);
+  updateTimeline();
 
   // O que muda: cada frase acende ao passar pelo meio da tela e continua acesa; volta a apagar só se a pessoa subir
   const lit = [...document.querySelectorAll<HTMLElement>('.emp-lit li')];
