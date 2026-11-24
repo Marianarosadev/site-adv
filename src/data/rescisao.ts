@@ -24,6 +24,17 @@ export const documents = [
   'Carteira de trabalho, inclusive a digital',
 ];
 
+export const deadlines = [
+  {
+    value: '10 dias',
+    text: 'É o prazo da empresa para pagar a rescisão e entregar os documentos, contado do fim do contrato (CLT, art. 477, §6º). Se o pagamento atrasar, a lei prevê multa no valor de um salário (art. 477, §8º).',
+  },
+  {
+    value: '2 anos',
+    text: 'É o prazo para entrar com a ação depois do fim do contrato. Nela, é possível cobrar os direitos dos últimos 5 anos. Por isso, vale conferir a rescisão logo.',
+  },
+];
+
 export const rescisaoFaq = [
   {
     q: 'O que entra na rescisão?',

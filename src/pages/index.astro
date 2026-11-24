@@ -251,29 +251,28 @@ const schema = [
     </div>
   </section>
 
-  <!-- 3b. Para empresas -->
-  <section class="section section--tight" id="para-empresas" aria-labelledby="empresas-titulo">
-    <div class="container">
-      <div class="band-empresas reveal">
-        <span class="band-empresas__mark" aria-hidden="true"><Icon name="briefcase" /></span>
-        <div class="band-empresas__head">
-          <h2 class="band-empresas__title" id="empresas-titulo"><span class="nowrap"><span class="band-empresas__title-icon" aria-hidden="true"><Icon name="building" /></span>Atendimento</span> para empresas</h2>
-          <p>Acompanhamento contínuo para prevenir conflitos e, quando o processo chega, a defesa da empresa em todas as fases.</p>
-        </div>
-        <div class="band-empresas__fronts">
-          {frentesEmpresa.map((f) => (
-            <div class="front">
-              <h3 class="front__title"><span class="front__icon"><Icon name={f.icon} /></span>{f.title}</h3>
-              <ul class="band-empresas__list band-empresas__list--check">
-                {f.items.map((item) => <li><Icon name="check" />{item}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div class="band-empresas__actions">
+  <!-- 3b. Para empresas: faixa azul de ponta a ponta que entra como uma cortina, da direita, com a rolagem -->
+  <section class="curtain" id="para-empresas" aria-labelledby="empresas-titulo" data-curtain>
+    <span class="curtain__word" aria-hidden="true">Empresas</span>
+    <div class="container curtain__grid">
+      <div>
+        <p class="curtain__kicker">Também atendo</p>
+        <h2 class="curtain__title" id="empresas-titulo">Atendimento <em>para empresas.</em></h2>
+        <p class="curtain__lead">Acompanhamento contínuo para prevenir conflitos e, quando o processo chega, a defesa da empresa em todas as fases.</p>
+        <div class="curtain__actions">
           <Button href={whatsappEmpresa()} icon="whatsapp" local="faixa-empresas" publico="empresa">WhatsApp para empresas</Button>
-          <a class="band-empresas__more" href="/empresas/">Conhecer o atendimento <Icon name="arrow" /></a>
+          <a class="curtain__more" href="/empresas/">Conhecer o atendimento <Icon name="arrow" /></a>
         </div>
+      </div>
+      <div class="curtain__fronts">
+        {frentesEmpresa.map((f) => (
+          <div class="curtain__front">
+            <h3><Icon name={f.icon} />{f.title}</h3>
+            <ul>
+              {f.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -425,16 +424,18 @@ const schema = [
             </div>
             <a class="blog-panel__all" href="/blog/"><span>Ver todos os artigos</span><Icon name="arrow" /></a>
           </div>
-          <div class="carousel reveal">
-          <button type="button" class="carousel__btn carousel__btn--prev" aria-label="Artigos anteriores" data-carousel-prev><Icon name="chevron-left" /></button>
-          <button type="button" class="carousel__btn carousel__btn--next" aria-label="Próximos artigos" data-carousel-next><Icon name="chevron-right" /></button>
-          <ul class="mini-posts carousel__track" data-carousel aria-label="Artigos recentes">
-            {latestPosts.map((post) => (
-              <li>
-                <a class="mini-post" href={postUrl(post)}>
+        </div>
+        <!-- Trilho infinito: corre devagar, para com o mouse por cima e se arrasta. A lista vem três vezes
+             (a do meio é a real; as cópias, escondidas de leitores de tela, só aparecem com o script ativo).
+             Sem script ou com menos movimento, fica só a lista real em rolagem lateral comum. -->
+        <div class="loop reveal" data-loop>
+          <ul class="mini-posts loop__track" aria-label="Artigos recentes">
+            {[0, 1, 2].map((copy) => latestPosts.map((post) => (
+              <li {...(copy !== 1 ? { 'data-clone': '', 'aria-hidden': 'true' } : {})}>
+                <a class="mini-post" href={postUrl(post)} draggable="false" {...(copy !== 1 ? { tabindex: '-1' } : {})}>
                   <span class="mini-post__media">
                     {post.data.cover && (
-                      <Picture src={post.data.cover.src} alt="" widths={[320, 480]} sizes="(min-width: 760px) 360px, 100vw" formats={['avif', 'webp']} />
+                      <Picture src={post.data.cover.src} alt="" widths={[320, 480]} sizes="340px" formats={['avif', 'webp']} draggable="false" />
                     )}
                     <span class="mini-post__cat">{post.data.category}</span>
                   </span>
@@ -444,9 +445,8 @@ const schema = [
                   </div>
                 </a>
               </li>
-            ))}
+            )))}
           </ul>
-          </div>
         </div>
       </section>
     </div>
@@ -518,48 +518,88 @@ const schema = [
     update();
   }
 
-  // Carrossel de artigos: setas, arrastar com o mouse e deslizar no celular (rolagem nativa com encaixe).
-  const track = document.querySelector<HTMLElement>('[data-carousel]');
-  const prev = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
-  const next = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (track && prev && next) {
-    const step = () => {
-      const card = track.querySelector<HTMLElement>('li');
-      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-      return card ? card.offsetWidth + gap : track.clientWidth;
+  // Faixa de empresas: a cortina azul corre da direita enquanto a faixa sobe do pé da tela até 35% dela.
+  const curtain = document.querySelector<HTMLElement>('[data-curtain]');
+  if (curtain && !calm) {
+    curtain.classList.add('is-curtain');
+    let ticking = false;
+    const draw = () => {
+      ticking = false;
+      const p = Math.min(1, Math.max(0, (innerHeight - curtain.getBoundingClientRect().top) / (innerHeight * 0.65)));
+      curtain.style.setProperty('--c', (1 - p) ** 3 + ''); // 1 → 0, desacelerando no fim
     };
-    const update = () => {
-      const max = track.scrollWidth - track.clientWidth - 2;
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= max;
-      track.closest('.blog-panel')?.classList.toggle('carousel--static', max <= 0);
-    };
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
-    track.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    update();
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(draw); } }, { passive: true });
+    addEventListener('resize', draw);
+    draw();
+  }
 
-    // Arrastar com o mouse (no toque, a rolagem nativa já resolve)
-    let startX = 0, startLeft = 0, dragging = false, moved = false;
-    track.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      dragging = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
-      track.classList.add('is-dragging');
+  // Artigos em trilho infinito: corre devagar, para com o mouse ou o foco, e se arrasta com mouse ou dedo.
+  // A posição fica sempre na cópia do meio; ao passar de meia cópia para um lado, volta um ciclo inteiro
+  // (as cópias são idênticas, então não há salto visível).
+  const loop = document.querySelector<HTMLElement>('[data-loop]');
+  const loopTrack = loop?.querySelector<HTMLElement>('.loop__track');
+  if (loop && loopTrack && !calm) {
+    loop.classList.add('is-looping');
+    let x = 0, cycle = 0, hover = false, focused = false, visible = false, vel = 0, moved = false, frame = 0;
+    let drag: { x: number; y: number; start: number; id: number; axis: '' | 'x' | 'y' } | null = null;
+    const measure = () => {
+      const first = loopTrack.children[0] as HTMLElement;
+      const middle = loopTrack.children[loopTrack.children.length / 3] as HTMLElement;
+      const next = cycle ? x / cycle : -1;
+      cycle = middle.offsetLeft - first.offsetLeft;
+      x = next * cycle;
+    };
+    const wrap = (dx: number) => { x += dx; if (drag) drag.start += dx; };
+    const tick = () => {
+      frame = 0;
+      if (!drag) { vel *= 0.94; x += vel + (hover || focused || Math.abs(vel) > 0.2 ? 0 : -0.35); }
+      if (x > -cycle * 0.5) wrap(-cycle);
+      if (x < -cycle * 1.5) wrap(cycle);
+      loopTrack.style.transform = `translate3d(${x}px, 0, 0)`;
+      if (visible) frame = requestAnimationFrame(tick);
+    };
+    // só anima com o trilho na tela
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && !frame) frame = requestAnimationFrame(tick);
+    }).observe(loop);
+
+    loop.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
+    loop.addEventListener('pointerleave', () => { hover = false; });
+    // Com o teclado, o cartão em foco é trazido para a vista (o navegador rolaria o trilho por conta própria)
+    loop.addEventListener('focusin', (e) => {
+      focused = true;
+      loop.scrollLeft = 0;
+      const card = (e.target as HTMLElement).closest('li');
+      if (card) x = -(card.offsetLeft - parseFloat(getComputedStyle(loopTrack).paddingLeft));
     });
-    window.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 4) moved = true;
-      track.scrollLeft = startLeft - dx;
+    loop.addEventListener('focusout', () => { focused = false; });
+    loop.addEventListener('pointerdown', (e) => {
+      drag = { x: e.clientX, y: e.clientY, start: x, id: e.pointerId, axis: '' }; moved = false; vel = 0;
     });
-    window.addEventListener('pointerup', () => {
-      if (!dragging) return;
-      dragging = false; track.classList.remove('is-dragging');
+    addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      // no toque, decide pelo primeiro movimento: de lado arrasta o trilho, para baixo rola a página
+      if (!drag.axis && Math.hypot(dx, dy) > 6) {
+        drag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (drag.axis === 'x') { loop.classList.add('is-dragging'); loop.setPointerCapture(drag.id); }
+      }
+      if (drag.axis !== 'x') return;
+      moved = true;
+      const nx = drag.start + dx; vel = nx - x; x = nx;
     });
-    // Se arrastou, não abre o artigo ao soltar o botão
-    track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; } }, true);
-    track.addEventListener('dragstart', (e) => e.preventDefault());
+    const stop = () => { if (drag) { drag = null; loop.classList.remove('is-dragging'); } };
+    addEventListener('pointerup', stop);
+    addEventListener('pointercancel', stop);
+    // Se arrastou, não abre o artigo ao soltar
+    loop.addEventListener('click', (e) => { if (moved) { e.preventDefault(); moved = false; } }, true);
+    loop.addEventListener('dragstart', (e) => e.preventDefault());
+
+    measure();
+    addEventListener('resize', measure);
+    addEventListener('load', measure);
   }
 </script>

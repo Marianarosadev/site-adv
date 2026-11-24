@@ -1,11 +1,6 @@
 ---
-import { Picture } from 'astro:assets';
-import Layout from '../../layouts/Layout.astro';
-import Button from '../../components/Button.astro';
-import LineIcon from '../../components/LineIcon.astro';
-import RelatedPosts from '../../components/RelatedPosts.astro';
-import fotoPerfil from '../../assets/giovanna-perfil.jpg';
-import { site, whatsappLink, telLink, steps, areas, areaUrl } from '../../data/site';
+import CasePage from '../../components/CasePage.astro';
+import { whatsappLink, areaUrl } from '../../data/site';
 import { casos, type Caso } from '../../data/casos';
 import { getPostsByTopic } from '../../data/blog';
 
@@ -16,9 +11,7 @@ export function getStaticPaths() {
 const { caso } = Astro.props as { caso: Caso };
 const wa = whatsappLink(caso.message);
 const tema = caso.slug;
-const pad = (n: number) => String(n).padStart(2, '0');
 const related = await getPostsByTopic(caso.slug);
-const others = areas.filter((a) => a.slug !== caso.slug);
 // "Horas extras" vira "horas extras", mas siglas como "FGTS" e "PJ" ficam em maiúsculas.
 const topicName = /^[A-ZÀ-Ú][a-zà-ú]/.test(caso.title) ? caso.title[0].toLowerCase() + caso.title.slice(1) : caso.title;
 
@@ -39,157 +32,34 @@ const schema = [
   },
 ];
 ---
-<Layout
-  title={`${caso.seoTitle} | Giovanna Cabral`}
-  description={caso.description}
-  schema={schema}
-  whatsapp={wa}
-  tema={tema}
-  publico="trabalhador"
-  contato={{ intro: 'Me conte o que aconteceu. Para começar, você não precisa ter todos os documentos em mãos.' }}
->
-  <!-- Topo: texto e foto ilustrativa -->
-  <section class="case-hero">
-    <div class="container case-hero__grid">
-      <div class="case-hero__text">
-        <nav class="crumbs" aria-label="Você está em">
-          <a href="/">Início</a> <span aria-hidden="true">/</span>
-          <a href="/#como-posso-ajudar">Como posso ajudar</a> <span aria-hidden="true">/</span>
-          <span>{caso.title}</span>
-        </nav>
-        <h1 class="display display--lp">{caso.h1[0]} <span class="soft">{caso.h1[1]}</span></h1>
-        <p class="lp-hero__quote">“{caso.quote}”</p>
-        <p class="lp-hero__intro">{caso.intro}</p>
-        <div class="hero__actions">
-          <Button href={wa} icon="whatsapp" local="caso-topo" tema={tema} publico="trabalhador">Conversar sobre isso</Button>
-          <Button href={telLink} icon="phone" local="caso-topo" tema={tema} publico="trabalhador">Ligar</Button>
-        </div>
-        <div class="cred">
-          <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
-          <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
-        </div>
-      </div>
-      <figure class="case-hero__photo">
-        <Picture
-          src={caso.photo.src}
-          alt={caso.photo.alt}
-          widths={[480, 800, 1200]}
-          sizes="(min-width: 900px) 46vw, 100vw"
-          formats={['avif', 'webp']}
-          loading="eager"
-          fetchpriority="high"
-        />
-        <figcaption>Imagem ilustrativa · Foto: {caso.photo.credit} / Unsplash</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- O que é -->
-  <section class="section section--tight">
-    <div class="container lp-split">
-      <h2 class="display display--md">Entenda <span class="soft">o seu direito.</span></h2>
-      <div class="case-text">
-        {caso.what.map((p) => <p>{p}</p>)}
-      </div>
-    </div>
-  </section>
-
-  <!-- Quando pedir -->
-  <section class="section section--tight">
-    <div class="container lp-split">
-      <h2 class="display display--md">Quando você <span class="soft">pode pedir.</span></h2>
-      <div>
-        <ul class="ticks">
-          {caso.when.map((s) => <li>{s}</li>)}
-        </ul>
-        <p class="lp-note">Se você se identificou com algum desses pontos, vale conversar sobre o seu caso.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Direitos -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">
-          {caso.rightsTitle ? caso.rightsTitle[0] : 'O que pode'} <span class="soft">{caso.rightsTitle ? caso.rightsTitle[1] : 'ser reconhecido.'}</span>
-        </h2>
-        <p>Cada caso depende dos fatos e das provas. Estes são os direitos que a lei prevê.</p>
-      </div>
-      <ul class="checks">
-        {caso.rights.map((r) => (
-          <li class="check"><LineIcon name="badge-check" class="check__icon" /><h3>{r.title}</h3><p>{r.text}</p></li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- Provas e documentos -->
-  <section class="section section--tight">
-    <div class="container lp-split">
-      <h2 class="display display--md">Provas <span class="soft">que ajudam.</span></h2>
-      <div>
-        <ul class="ticks ticks--plain">
-          {caso.proof.map((d) => <li>{d}</li>)}
-        </ul>
-        <p class="lp-note">Se não tiver algum deles, não se preocupe: conversamos sobre isso.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Prazos -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">Prazos <span class="soft">importantes.</span></h2>
-      </div>
-      <div class="deadlines">
-        {caso.deadlines.map((d) => (
-          <div class="deadline">
-            <p class="deadline__value">{d.value}</p>
-            <p>{d.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Como funciona -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">Como funciona <span class="soft">o atendimento.</span></h2>
-      </div>
-      <ol class="steps">
-        {steps.map((s, i) => (
-          <li class="step">
-            <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <div class="step__card">
-              <h3 class="step__title">{s.title}</h3>
-              <p class="step__text">{s.text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <RelatedPosts posts={related} topic={topicName} />
-
-  <!-- Dúvidas -->
-  <section class="section section--tight" id="duvidas">
-    <div class="container faq">
-      <div class="faq__aside">
-        <h2 class="display display--md">Dúvidas <span class="soft">sobre {topicName}.</span></h2>
-      </div>
-      <div class="faq__list">
-        {caso.faq.map(({ q, a }) => (
-          <details>
-            <summary>{q}</summary>
-            <p>{a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-</Layout>
+<CasePage
+  layout={{
+    title: `${caso.seoTitle} | Giovanna Cabral`,
+    description: caso.description,
+    schema,
+    whatsapp: wa,
+    tema,
+    publico: 'trabalhador',
+    contato: { intro: 'Me conte o que aconteceu. Para começar, você não precisa ter todos os documentos em mãos.' },
+  }}
+  slug={caso.slug}
+  crumbs={[{ label: 'Início', href: '/' }, { label: 'Como posso ajudar', href: '/#como-posso-ajudar' }, { label: caso.title }]}
+  h1={caso.h1}
+  quote={caso.quote}
+  intro={caso.intro}
+  photo={caso.photo}
+  local="caso"
+  cta="Conversar sobre isso"
+  what={caso.what}
+  when={{ title: ['Quando você', 'pode pedir.'], items: caso.when, note: 'Se você se identificou com algum desses pontos, vale conversar sobre o seu caso.' }}
+  rights={{
+    title: caso.rightsTitle ?? ['O que pode', 'ser reconhecido.'],
+    intro: 'Cada caso depende dos fatos e das provas. Estes são os direitos que a lei prevê.',
+    items: caso.rights,
+  }}
+  proof={{ title: ['Provas', 'que ajudam.'], items: caso.proof }}
+  deadlines={{ title: ['Prazos', 'importantes.'], items: caso.deadlines }}
+  faq={caso.faq}
+  related={related}
+  topic={topicName}
+/>

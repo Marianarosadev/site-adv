@@ -272,33 +272,11 @@ const schema = [
 </Layout>
 
 <script>
+  import { initLeitura, initTimeline } from '../scripts/leitura';
+
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Cabeçalho: barra de leitura e o nome da seção atual no lugar do subtítulo da marca
-  const header = document.querySelector<HTMLElement>('[data-header]');
-  const bar = document.querySelector<HTMLElement>('[data-progress]');
-  const where = document.querySelector<HTMLElement>('[data-where]');
-  const sections = [...document.querySelectorAll<HTMLElement>('[data-secao]')];
-  let current = '';
-  const updateReading = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
-    const line = innerHeight * 0.35;
-    const sec = sections.filter((s) => s.getBoundingClientRect().top <= line).pop();
-    const name = sec?.dataset.secao ?? '';
-    if (name === current || !where || !header) return;
-    current = name;
-    header.classList.toggle('has-where', !!name);
-    if (name) where.textContent = name;
-  };
-  let ticking = false;
-  addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { updateReading(); ticking = false; });
-  }, { passive: true });
-  addEventListener('resize', updateReading);
-  updateReading();
+  initLeitura();
 
   // Serviços: enquanto o próximo cartão sobe por cima, o de trás recua um pouco (escala e opacidade do conteúdo)
   const cards = [...document.querySelectorAll<HTMLElement>('[data-stack] .emp-stack__card')];
@@ -316,31 +294,7 @@ const schema = [
   addEventListener('resize', updateStack);
   updateStack();
 
-  // Como funciona: o eixo se preenche conforme a linha do tempo atravessa a tela; cada marco alcançado acende
-  const timeline = document.querySelector<HTMLElement>('[data-timeline]');
-  const fill = document.querySelector<HTMLElement>('[data-timeline-fill]');
-  const steps = [...document.querySelectorAll<HTMLElement>('[data-timeline-step]')];
-  const updateTimeline = () => {
-    if (!timeline || !fill) return;
-    // o eixo vai do centro do primeiro marco ao centro do último (a posição deles depende da altura do texto)
-    const box = timeline.getBoundingClientRect();
-    const first = steps[0]?.querySelector('.emp-time__node')?.getBoundingClientRect();
-    const last = steps[steps.length - 1]?.querySelector('.emp-time__node')?.getBoundingClientRect();
-    if (first) timeline.style.setProperty('--rail-top', `${first.top + first.height / 2 - box.top}px`);
-    if (last) timeline.style.setProperty('--rail-bottom', `${box.bottom - (last.top + last.height / 2)}px`);
-    const rail = fill.parentElement!.getBoundingClientRect();
-    const line = innerHeight * 0.6;
-    const p = reduce ? 1 : Math.min(1, Math.max(0, (line - rail.top) / rail.height));
-    fill.style.transform = `scaleY(${p})`;
-    const reached = rail.top + rail.height * p;
-    steps.forEach((step) => {
-      const node = step.querySelector('.emp-time__node')!.getBoundingClientRect();
-      step.classList.toggle('is-reached', reached >= node.top + node.height / 2);
-    });
-  };
-  addEventListener('scroll', () => requestAnimationFrame(updateTimeline), { passive: true });
-  addEventListener('resize', updateTimeline);
-  updateTimeline();
+  initTimeline();
 
   // O que muda: cada frase acende ao passar pelo meio da tela e continua acesa; volta a apagar só se a pessoa subir
   const lit = [...document.querySelectorAll<HTMLElement>('.emp-lit li')];
