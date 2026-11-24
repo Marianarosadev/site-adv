@@ -1,19 +1,13 @@
 ---
-import { Picture } from 'astro:assets';
-import Layout from '../../layouts/Layout.astro';
-import Button from '../../components/Button.astro';
-import LineIcon from '../../components/LineIcon.astro';
-import RelatedPosts from '../../components/RelatedPosts.astro';
-import fotoPerfil from '../../assets/giovanna-perfil.jpg';
+import CasePage from '../../components/CasePage.astro';
 // Foto de Gabrielle Henderson na Unsplash (licença de uso livre).
 import fotoRescisao from '../../assets/casos/rescisao.jpg';
 import { getPostsByTopic } from '../../data/blog';
-import { site, whatsappLink, telLink, steps } from '../../data/site';
-import { situations, checks, documents, rescisaoFaq } from '../../data/rescisao';
+import { whatsappLink } from '../../data/site';
+import { situations, checks, documents, deadlines, rescisaoFaq } from '../../data/rescisao';
 
 const wa = whatsappLink('tenho dúvidas sobre a minha rescisão.');
 const tema = 'rescisao';
-const pad = (n: number) => String(n).padStart(2, '0');
 const related = await getPostsByTopic('rescisao');
 
 const schema = [
@@ -36,173 +30,34 @@ const schema = [
   },
 ];
 ---
-<Layout
-  title="Advogada de Rescisão Trabalhista em Goiânia | Giovanna Cabral"
-  description="Fui demitido e acho que não recebi tudo. Advogada trabalhista em Goiânia confere as verbas, os prazos e a multa do FGTS da sua rescisão. Atendimento online."
-  schema={schema}
-  variant="landing"
-  whatsapp={wa}
-  tema={tema}
-  publico="trabalhador"
-  contato={{ title: 'Tire sua dúvida', soft: 'no WhatsApp.', intro: 'Me conte como foi a sua saída e o que você recebeu. Para começar, você não precisa ter todos os documentos em mãos.' }}
->
-  <!-- 1. Topo -->
-  <section class="lp-hero">
-    <div class="container lp-hero__inner">
-      <p class="eyebrow eyebrow--pill">Goiânia · Atendimento online em todo o Brasil</p>
-      <h1 class="display display--lp">Rescisão trabalhista: <span class="soft">advogada com atendimento online.</span></h1>
-      <p class="lp-hero__quote">“Fui demitido e acho que não recebi tudo.”</p>
-      <p class="lp-hero__intro">
-        Eu confiro cada verba da sua rescisão, os prazos de pagamento e a multa do FGTS, e explico com clareza o que
-        foi pago e o que pode estar faltando.
-      </p>
-      <div class="hero__actions">
-        <Button href={wa} icon="whatsapp" local="lp-topo" tema={tema} publico="trabalhador">Tirar minha dúvida no WhatsApp</Button>
-        <Button href={telLink} icon="phone" local="lp-topo" tema={tema} publico="trabalhador">Ligar</Button>
-      </div>
-      <div class="cred">
-        <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
-        <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. Isso aconteceu com você? -->
-  <section class="section section--tight">
-    <div class="container lp-split">
-      <div>
-        <h2 class="display display--md">Isso aconteceu <span class="soft">com você?</span></h2>
-        <figure class="case-figure">
-          <Picture
-            src={fotoRescisao}
-            alt="Pessoa assinando documentos sobre uma mesa"
-            widths={[480, 800]}
-            sizes="(min-width: 900px) 40vw, 100vw"
-            formats={['avif', 'webp']}
-          />
-          <figcaption>Imagem ilustrativa · Foto: Gabrielle Henderson / Unsplash</figcaption>
-        </figure>
-      </div>
-      <div>
-        <ul class="ticks">
-          {situations.map((s) => <li>{s}</li>)}
-        </ul>
-        <p class="lp-note">Esta página é para quem trabalhou com carteira assinada, sem registro ou como PJ.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. O que eu confiro -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">O que eu confiro <span class="soft">na sua rescisão.</span></h2>
-        <p>Os itens variam conforme o tipo de saída: dispensa, pedido de demissão, justa causa ou acordo.</p>
-      </div>
-      <ul class="checks">
-        {checks.map((c) => (
-          <li class="check"><LineIcon name="badge-check" class="check__icon" /><h3>{c.title}</h3><p>{c.text}</p></li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- 4. Prazos -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">Os prazos <span class="soft">que a lei prevê.</span></h2>
-      </div>
-      <div class="deadlines">
-        <div class="deadline">
-          <p class="deadline__value">10 dias</p>
-          <p>
-            É o prazo da empresa para pagar a rescisão e entregar os documentos, contado do fim do contrato (CLT,
-            art. 477, §6º). Se o pagamento atrasar, a lei prevê multa no valor de um salário (art. 477, §8º).
-          </p>
-        </div>
-        <div class="deadline">
-          <p class="deadline__value">2 anos</p>
-          <p>
-            É o prazo para entrar com a ação depois do fim do contrato. Nela, é possível cobrar os direitos dos últimos
-            5 anos. Por isso, vale conferir a rescisão logo.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. Documentos úteis -->
-  <section class="section section--tight">
-    <div class="container lp-split">
-      <h2 class="display display--md">Documentos <span class="soft">que ajudam.</span></h2>
-      <div>
-        <ul class="ticks ticks--plain">
-          {documents.map((d) => <li>{d}</li>)}
-        </ul>
-        <p class="lp-note">Se não tiver algum deles, não se preocupe: conversamos sobre isso.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. Como funciona -->
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--md">Como funciona <span class="soft">o atendimento.</span></h2>
-      </div>
-      <ol class="steps">
-        {steps.map((s, i) => (
-          <li class="step">
-            <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <div class="step__card">
-              <h3 class="step__title">{s.title}</h3>
-              <p class="step__text">{s.text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- 7. Quem cuida do seu caso -->
-  <section class="section section--tight">
-    <div class="container lp-about">
-      <Picture
-        src={fotoPerfil}
-        alt="Retrato da advogada trabalhista Giovanna Cabral"
-        widths={[240, 480]}
-        sizes="240px"
-        formats={['avif', 'webp']}
-      />
-      <div>
-        <p class="eyebrow">Quem cuida do seu caso</p>
-        <h2 class="display display--md">{site.fullName}</h2>
-        <p class="about__role">Advogada trabalhista · {site.oab}</p>
-        <p class="muted">
-          {site.title}. Conduzo processos trabalhistas em todas as fases e instâncias, das audiências à sustentação
-          oral nos tribunais. Você fala diretamente comigo, do primeiro contato ao fim do processo.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <RelatedPosts posts={related} topic="rescisão" />
-
-  <!-- 8. Dúvidas -->
-  <section class="section section--tight" id="duvidas">
-    <div class="container faq">
-      <div class="faq__aside">
-        <h2 class="display display--md">Dúvidas <span class="soft">sobre rescisão.</span></h2>
-      </div>
-      <div class="faq__list">
-        {rescisaoFaq.map(({ q, a }) => (
-          <details>
-            <summary>{q}</summary>
-            <p>{a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-</Layout>
+<CasePage
+  layout={{
+    title: 'Advogada de Rescisão Trabalhista em Goiânia | Giovanna Cabral',
+    description: 'Fui demitido e acho que não recebi tudo. Advogada trabalhista em Goiânia confere as verbas, os prazos e a multa do FGTS da sua rescisão. Atendimento online.',
+    schema,
+    variant: 'landing',
+    whatsapp: wa,
+    tema,
+    publico: 'trabalhador',
+    contato: { title: 'Tire sua dúvida', soft: 'no WhatsApp.', intro: 'Me conte como foi a sua saída e o que você recebeu. Para começar, você não precisa ter todos os documentos em mãos.' },
+  }}
+  slug={tema}
+  h1={['Rescisão trabalhista:', 'advogada com atendimento online.']}
+  quote="Fui demitido e acho que não recebi tudo."
+  intro="Eu confiro cada verba da sua rescisão, os prazos de pagamento e a multa do FGTS, e explico com clareza o que foi pago e o que pode estar faltando."
+  photo={{ src: fotoRescisao, alt: 'Pessoa assinando documentos sobre uma mesa', credit: 'Gabrielle Henderson' }}
+  local="lp"
+  cta="Tirar minha dúvida no WhatsApp"
+  when={{ title: ['Isso aconteceu', 'com você?'], items: situations, note: 'Esta página é para quem trabalhou com carteira assinada, sem registro ou como PJ.' }}
+  rights={{
+    title: ['O que eu confiro', 'na sua rescisão.'],
+    intro: 'Os itens variam conforme o tipo de saída: dispensa, pedido de demissão, justa causa ou acordo.',
+    items: checks,
+  }}
+  proof={{ title: ['Documentos', 'que ajudam.'], items: documents }}
+  deadlines={{ title: ['Os prazos', 'que a lei prevê.'], items: deadlines }}
+  faq={rescisaoFaq}
+  related={related}
+  topic="rescisão"
+  others={false}
+/>

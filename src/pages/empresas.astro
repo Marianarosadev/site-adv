@@ -2,27 +2,23 @@
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
 import LineIcon from '../components/LineIcon.astro';
 import fotoPerfil from '../assets/giovanna-perfil.jpg';
+import fotoEscritorio from '../assets/giovanna-escritorio.jpg';
 // Foto de Michael Fousert na Unsplash (licença Unsplash, uso livre): unsplash.com/photos/RNsKphkdBTk
 import fotoReuniao from '../assets/empresas-reuniao.jpg';
-import { site, whatsappEmpresa, servicesEmpresa, type LineIconName } from '../data/site';
+import {
+  site, whatsappEmpresa, servicesEmpresa, frontsEmpresa, situationsEmpresa, valuesEmpresa, stepsEmpresa, faqEmpresa,
+} from '../data/site';
 
 // Versão enxuta (decisão A2): a página não recebe anúncio no 1º mês.
 const wa = whatsappEmpresa();
 const pad = (n: number) => String(n).padStart(2, '0');
-
-const moments: { title: string; text: string; icon: LineIconName }[] = [
-  { icon: 'scroll-text', title: 'A empresa recebeu uma notificação', text: 'Chegou a citação de uma reclamação trabalhista e é preciso preparar a defesa no prazo.' },
-  { icon: 'calendar-clock', title: 'Há uma audiência marcada', text: 'A empresa e o preposto precisam chegar preparados, com os documentos certos.' },
-  { icon: 'handshake', title: 'Existe uma proposta de acordo', text: 'Antes de aceitar ou propor um valor, vale entender os riscos e as alternativas.' },
-];
-
-const stepsEmpresa = [
-  { title: 'Você me chama no WhatsApp', text: 'Conte o que a empresa recebeu e, se houver, a data da audiência.' },
-  { title: 'Analiso os documentos', text: 'Leio a reclamação e indico o que reunir para a defesa.' },
-  { title: 'Explico os caminhos', text: 'Defesa, acordo ou outra estratégia: você decide com informação clara.' },
-  { title: 'Acompanho até o fim', text: 'Contrato por escrito, assinado digitalmente, e retorno sobre cada etapa.' },
+// Faixa contínua do topo: as áreas de atuação, sem repetir os títulos dos serviços.
+const areasEmpresa = [
+  'Defesa em reclamações trabalhistas', 'Preparação do preposto', 'Audiências', 'Análise e negociação de acordos',
+  'Contratos e admissões', 'Desligamentos e justa causa', 'Jornada e banco de horas', 'Acompanhamento preventivo',
 ];
 
 // O serviço aponta para o escritório descrito na home (mesmo @id), com os dados básicos repetidos para validar sozinho.
@@ -56,79 +52,260 @@ const schema = [
       })),
     },
   },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEmpresa.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: Astro.site?.href },
+      { '@type': 'ListItem', position: 2, name: 'Para empresas', item: new URL('/empresas/', Astro.site).href },
+    ],
+  },
 ];
 ---
 <Layout
   title="Advocacia Trabalhista para Empresas em Goiânia | Giovanna Cabral"
-  description="Defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
+  description="Acompanhamento preventivo e defesa de empresas em reclamações trabalhistas, audiências e acordos. Advogada trabalhista em Goiânia, com atendimento online em todo o Brasil."
   schema={schema}
   whatsapp={wa}
   publico="empresa"
-  contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu. Se houver audiência marcada, informe a data na primeira mensagem.' }}
+  instagram="compacto"
+  leitura
+  contato={{ soft: 'sobre o caso da empresa.', intro: 'Me conte o que a empresa recebeu ou a decisão que precisa tomar.' }}
 >
-  <section class="lp-hero lp-hero--empresa">
-    <div class="lp-hero__bg" aria-hidden="true">
-      <Picture src={fotoReuniao} alt="" widths={[640, 1200, 1600]} sizes="100vw" formats={['avif', 'webp']} loading="eager" />
-    </div>
-    <div class="container lp-hero__inner">
-      <p class="eyebrow eyebrow--pill">Para empresas · Goiânia e online</p>
-      <h1 class="display display--inline display--lp">Advocacia trabalhista <span class="soft">para empresas.</span></h1>
-      <p class="lp-hero__intro">
-        Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
-        Trabalho quando o processo chega, com orientação clara em cada decisão.
-      </p>
-      <div class="hero__actions">
-        <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
+  <!-- 1. Topo editorial em camadas: texto à esquerda, no fundo claro (botões com contraste pleno); à direita, uma sala
+       de reunião em duotone vinho, que se dissolve no fundo e se move devagar; a foto da advogada, com uma moldura discreta,
+       atravessa a sala e a credencial fica num cartão translúcido. Embaixo, as áreas de atuação numa faixa. -->
+  <section class="emp-hero" data-hero>
+    <div class="emp-hero__stage">
+      <div class="emp-hero__panel" aria-hidden="true">
+        <Picture src={fotoReuniao} alt="" widths={[640, 1000, 1400]} sizes="(min-width: 960px) 34vw, 100vw" formats={['avif', 'webp']} />
       </div>
-      <div class="cred">
-        <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
-        <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
+      <div class="container emp-hero__grid">
+        <div class="emp-hero__text">
+          <p class="emp-hero__kicker">Para empresas, em Goiânia e online</p>
+          <h1 class="emp-hero__title">Advocacia trabalhista <span class="soft">para empresas em Goiânia.</span></h1>
+          <p class="emp-hero__intro">
+            Acompanhamento preventivo contínuo, para evitar conflitos na rotina, e defesa da empresa na Justiça do
+            Trabalho quando o processo chega, com orientação clara em cada decisão.
+          </p>
+          <div class="hero__actions">
+            <Button href={wa} icon="whatsapp" local="empresas-topo" publico="empresa">Falar no WhatsApp</Button>
+            <a class="btn btn--ghost emp-hero__more" href="#como-funciona"><span>Ver como funciona</span><span class="emp-hero__more-icon" aria-hidden="true"><Icon name="arrow" /></span></a>
+          </div>
+        </div>
+        <figure class="emp-hero__media">
+          <div class="emp-hero__frame">
+            <Picture
+              src={fotoEscritorio}
+              alt="A advogada Giovanna Cabral analisando documentos no escritório"
+              widths={[480, 720, 1000]}
+              sizes="(min-width: 960px) 40vw, 100vw"
+              formats={['avif', 'webp']}
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+          <figcaption class="emp-hero__card">
+            <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
+            <span><strong>{site.fullName}</strong> · {site.oab}<br />{site.title}</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="emp-marquee" role="region" aria-label="Áreas de atuação para empresas">
+      <div class="emp-marquee__track">
+        <ul>{areasEmpresa.map((a) => <li>{a}</li>)}</ul>
+        <ul aria-hidden="true">{areasEmpresa.map((a) => <li>{a}</li>)}</ul>
       </div>
     </div>
   </section>
 
-  <section class="section section--tight">
+  <!-- 2. Situações: os dois momentos lado a lado (um embaixo do outro no celular), tudo visível sem clique.
+       Cada painel tem o nome do momento, uma etiqueta que resume o tom e uma frase que explica a diferença. -->
+  <section class="section section--tight" aria-labelledby="situacoes-titulo" data-secao="Quando procurar">
     <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Quando <span class="soft">me procurar.</span></h2>
+      <div class="emp-moments__head reveal">
+        <h2 class="display display--inline display--md" id="situacoes-titulo">Quando a empresa <span class="soft">precisa de orientação.</span></h2>
       </div>
-      <ul class="checks">
-        {moments.map((m) => (
-          <li class="check"><span class="check__mark" aria-hidden="true"><LineIcon name={m.icon} /></span><LineIcon name={m.icon} class="check__icon" /><h3>{m.title}</h3><p>{m.text}</p></li>
+      <div class="emp-moments">
+        {situationsEmpresa.map((g) => (
+          <article class:list={['emp-moment', `emp-moment--${g.tone}`, 'reveal']} aria-labelledby={`momento-${g.tone}`}>
+            <header class="emp-moment__head">
+              <p class="emp-moment__tag"><LineIcon name={g.tagIcon} />{g.tag}</p>
+              <h3 class="emp-moment__title" id={`momento-${g.tone}`}>{g.group}</h3>
+              <p class="emp-moment__note">{g.note}</p>
+            </header>
+            <ul class="emp-moment__list">
+              {g.items.map((m) => (
+                <li class="emp-moment__row"><LineIcon name={m.icon} class="emp-ring" /><h4>{m.title}</h4><p>{m.text}</p></li>
+              ))}
+            </ul>
+          </article>
         ))}
-      </ul>
+      </div>
     </div>
   </section>
 
-  <section class="section section--tight">
+  <!-- 3. Serviços: pilha de cartões centralizada. Cada cartão fica fixo um pouco abaixo do anterior e o próximo
+       desliza por cima durante a rolagem; o de trás recua levemente. Todo o conteúdo fica visível, sem clique. -->
+  <section class="section section--tight" id="servicos" aria-labelledby="servicos-titulo" data-secao="Como posso ajudar">
     <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Como posso <span class="soft">ajudar a empresa.</span></h2>
+      <div class="emp-stack__head reveal">
+        <h2 class="display display--inline display--md" id="servicos-titulo">Como posso <span class="soft">ajudar a sua empresa.</span></h2>
       </div>
-      <ul class="diffs">
-        {servicesEmpresa.map((s) => (
-          <li class="diff"><h3>{s.title}</h3><p>{s.text}</p></li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section--tight">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="display display--inline display--md">Como funciona <span class="soft">o atendimento.</span></h2>
-      </div>
-      <ol class="steps">
-        {stepsEmpresa.map((s, i) => (
-          <li class="step">
-            <span class="step__num" aria-hidden="true">{pad(i + 1)}</span>
-            <div class="step__card">
-              <h3 class="step__title">{s.title}</h3>
-              <p class="step__text">{s.text}</p>
+      <ul class="emp-stack" data-stack>
+        {servicesEmpresa.map((s, i) => (
+          <li class:list={['emp-stack__card', `emp-stack__card--${s.front}`]} style={`--i: ${i}`}>
+            <div class="emp-stack__inner">
+              <div class="emp-stack__top">
+                <LineIcon name={s.icon} class="emp-ring" />
+                <p class="emp-stack__front">{frontsEmpresa[s.front]}</p>
+              </div>
+              <h3 class="emp-stack__title">{s.title}</h3>
+              <p class="emp-stack__text">{s.text}</p>
+              <p class="emp-stack__gets"><strong>A empresa recebe</strong>{s.delivers}</p>
             </div>
           </li>
         ))}
-      </ol>
+      </ul>
+      <div class="section-cta emp-stack__cta">
+        <Button href={wa} icon="whatsapp" local="empresas-servicos" publico="empresa">Falar sobre a empresa</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. O que muda: faixa escura com uma balança em marca d'água; itens centralizados, cada um com o ícone solto
+       sobre o título, acendendo conforme a leitura -->
+  <section class="emp-dark" aria-labelledby="valor-titulo" data-secao="O que muda">
+    <span class="emp-dark__mark" aria-hidden="true"><LineIcon name="scale" /></span>
+    <div class="container">
+      <h2 class="display display--inline display--md" id="valor-titulo">O que muda <span class="soft">para a empresa.</span></h2>
+      <ul class="emp-lit">
+        {valuesEmpresa.map((v) => (
+          <li><LineIcon name={v.icon} class="emp-lit__icon" /><h3>{v.title}.</h3><p>{v.text}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. Como funciona: linha do tempo. Eixo central (à esquerda no celular) que se preenche com a rolagem;
+       em cada marco, a fase e a etapa juntas num bloco, alternando os lados. -->
+  <section class="section section--tight" id="como-funciona" aria-labelledby="etapas-titulo" data-secao="Como funciona">
+    <div class="container">
+      <div class="emp-time__head reveal">
+        <h2 class="display display--inline display--md" id="etapas-titulo">Como funciona <span class="soft">o atendimento.</span></h2>
+      </div>
+      <div class="emp-time" data-timeline>
+        <span class="emp-time__rail" aria-hidden="true"><span class="emp-time__fill" data-timeline-fill></span></span>
+        <ol class="emp-time__list">
+          {stepsEmpresa.map((s, i) => (
+            <li class="emp-time__step" data-timeline-step>
+              <span class="emp-time__node" aria-hidden="true">{pad(i + 1)}</span>
+              <div class="emp-time__body">
+                <p class="emp-time__phase">{s.phase}</p>
+                <h3 class="emp-time__title">{s.title}</h3>
+                <p class="emp-time__text">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Quem cuida do caso: foto deslocada, a frase dela em destaque e a ficha com pontilhado.
+       Competência em vez de depoimentos (vedados pelo Provimento 205/2021). -->
+  <section class="section section--tight" aria-labelledby="advogada-titulo" data-secao="Quem cuida do caso">
+    <div class="container emp-who">
+      <figure class="emp-who__photo reveal">
+        <Picture
+          src={fotoPerfil}
+          alt="Retrato da advogada trabalhista Giovanna Cabral"
+          widths={[480, 720, 1000]}
+          sizes="(min-width: 960px) 40vw, 100vw"
+          formats={['avif', 'webp']}
+        />
+      </figure>
+      <div class="reveal">
+        <h2 class="emp-who__title" id="advogada-titulo">Quem cuida do caso.</h2>
+        <p class="emp-who__quote">Na rotina da empresa, cada decisão vem acompanhada dos riscos e das alternativas, em linguagem direta.</p>
+        <p class="emp-who__bio">
+          Sou advogada trabalhista, pós-graduada em Direito e Processo do Trabalho, e já conduzi processos em todas as
+          fases e instâncias, das audiências à sustentação oral nos tribunais, atuando para trabalhadores e para empresas.
+        </p>
+        <dl class="emp-ficha">
+          <div><dt>Inscrição</dt><dd>{site.oab}</dd></div>
+          <div><dt>Formação</dt><dd>Pós em Direito e Processo do Trabalho</dd></div>
+          <div><dt>Atuação</dt><dd>Todas as instâncias</dd></div>
+          <div><dt>Atendimento</dt><dd>Online, todo o Brasil</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Perguntas frequentes: título numa linha, as perguntas logo abaixo; entram na faixa do monograma do fim padrão -->
+  <section class="section" id="duvidas" slot="antes-do-fim" aria-labelledby="duvidas-titulo" data-secao="Perguntas frequentes">
+    <div class="container faq faq--suave">
+      <div class="faq__aside reveal">
+        <h2 class="display display--inline" id="duvidas-titulo">Perguntas frequentes <span class="soft">de empresas.</span></h2>
+        <p>Não encontrou a sua? <a href={wa} target="_blank" rel="noopener" data-local="empresas-duvidas" data-publico="empresa">Pergunte pelo WhatsApp</a>.</p>
+      </div>
+      <div class="faq__list reveal">
+        {faqEmpresa.map(({ q, a, link }) => (
+          <details>
+            <summary><h3 class="faq__q">{q}</h3></summary>
+            <p>{a}{link && <> <a href={link.href}>{link.label}</a>.</>}</p>
+          </details>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import { initLeitura, initTimeline } from '../scripts/leitura';
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  initLeitura();
+
+  // Serviços: enquanto o próximo cartão sobe por cima, o de trás recua um pouco (escala e opacidade do conteúdo)
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-stack] .emp-stack__card')];
+  const updateStack = () => {
+    cards.forEach((card, i) => {
+      const next = cards[i + 1];
+      if (!next || reduce) { card.style.removeProperty('--p'); return; }
+      const top = card.getBoundingClientRect().top;
+      const h = card.offsetHeight;
+      const covered = 1 - (next.getBoundingClientRect().top - top) / h;
+      card.style.setProperty('--p', Math.min(1, Math.max(0, covered)).toFixed(3));
+    });
+  };
+  addEventListener('scroll', () => requestAnimationFrame(updateStack), { passive: true });
+  addEventListener('resize', updateStack);
+  updateStack();
+
+  initTimeline();
+
+  // O que muda: cada frase acende ao passar pelo meio da tela e continua acesa; volta a apagar só se a pessoa subir
+  const lit = [...document.querySelectorAll<HTMLElement>('.emp-lit li')];
+  if (reduce) lit.forEach((li) => li.classList.add('is-lit'));
+  else {
+    const litObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) entry.target.classList.add('is-lit');
+        else if (entry.boundingClientRect.top > 0) entry.target.classList.remove('is-lit');
+      }
+    }, { rootMargin: '0px 0px -42% 0px' });
+    lit.forEach((li) => litObserver.observe(li));
+  }
+</script>

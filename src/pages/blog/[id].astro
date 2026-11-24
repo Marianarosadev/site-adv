@@ -7,6 +7,7 @@ import PostCard from '../../components/PostCard.astro';
 import fotoPerfil from '../../assets/giovanna-perfil.jpg';
 import { site, whatsappLink, whatsappEmpresa, telLink, instagramLink } from '../../data/site';
 import LineIcon from '../../components/LineIcon.astro';
+import Icon from '../../components/Icon.astro';
 import { getPosts, postUrl, readingTime, formatDate, categorySlug, type Post } from '../../data/blog';
 
 export async function getStaticPaths() {
@@ -15,7 +16,9 @@ export async function getStaticPaths() {
 }
 
 const { post, posts } = Astro.props as { post: Post; posts: Post[] };
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+// Índice do artigo: os intertítulos (##) na ordem do texto.
+const toc = headings.filter((h) => h.depth === 2);
 const { title, seoTitle, description, date, updated, category, audience, cover } = post.data;
 // As datas do .md (ex.: 2026-11-10) viram meia-noite em UTC, que em Goiânia ainda é o dia anterior.
 // No schema e no og:type elas saem com o fuso de Brasília, para o Google mostrar o dia certo.
@@ -39,6 +42,8 @@ const related = [
 ].slice(0, 3);
 
 const url = new URL(postUrl(post), Astro.site).href;
+// Compartilhar pelo WhatsApp: api.whatsapp.com, e não wa.me, para não contar como contato na medição do Layout.
+const shareWa = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`;
 const schema = [
   {
     '@context': 'https://schema.org',
@@ -81,67 +86,101 @@ const schema = [
   tema={`blog-${post.id}`}
   publico={publico}
   ogImage={ogImage}
+  leitura
 >
-  <article class="article">
-    <header class="container article__head">
-      <nav class="crumbs" aria-label="Você está em">
-        <a href="/">Início</a> <span aria-hidden="true">/</span> <a href="/blog/">Artigos</a>
-        <span aria-hidden="true">/</span> <a href={`/blog/?tema=${categorySlug(category)}`}>{category}</a>
-      </nav>
-      <h1 class="article__title">{title}</h1>
-      <p class="article__lead">{description}</p>
-      <div class="article__byline">
-        <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
-        <span>
-          <strong>{site.fullName}</strong> · {site.oab}<br />
-          <time datetime={date.toISOString()}>{formatDate(date)}</time>
-          {updated && <> · atualizado em <time datetime={updated.toISOString()}>{formatDate(updated)}</time></>}
-          {' · '}{readingTime(post)}
-        </span>
+  <article class="post">
+    <!-- Topo: a foto do artigo ao fundo, sob o véu vinho das páginas de tema, porém mais baixo e sem movimento:
+         aqui o que importa é chegar logo ao texto. Sem foto, fica o vinho liso com o tema em marca d'água. -->
+    <header class:list={['post-top', { 'post-top--plain': !cover }]}>
+      {cover ? (
+        <div class="post-top__bg" aria-hidden="true">
+          <Picture
+            src={cover.src}
+            alt=""
+            widths={[640, 1000, 1600]}
+            sizes="100vw"
+            formats={['avif', 'webp']}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      ) : (
+        <span class="post-top__mark" aria-hidden="true">{category}</span>
+      )}
+      <div class="container post-top__inner">
+        <nav class="post-top__crumbs" aria-label="Você está em">
+          <a href="/">Início</a> <span aria-hidden="true">/</span> <a href="/blog/">Artigos</a>
+          <span aria-hidden="true">/</span> <a href={`/blog/?tema=${categorySlug(category)}`}>{category}</a>
+        </nav>
+        <p class="post-top__kicker"><Icon name="book" />Artigo · {category}</p>
+        <h1 class="post-top__title">{title}</h1>
+        <p class="post-top__lead">{description}</p>
+        <div class="post-top__byline">
+          <Picture src={fotoPerfil} alt="" widths={[88]} sizes="44px" formats={['avif', 'webp']} loading="eager" />
+          <span>
+            <strong>{site.fullName}</strong> · {site.oab}<br />
+            <time datetime={date.toISOString()}>{formatDate(date)}</time>
+            {updated && <> · atualizado em <time datetime={updated.toISOString()}>{formatDate(updated)}</time></>}
+            {' · '}{readingTime(post)}
+          </span>
+        </div>
       </div>
+      {cover && <p class="post-top__credit">Imagem ilustrativa · Foto: {cover.credit} / Unsplash</p>}
     </header>
 
-    {cover && (
-      <figure class="container article__cover">
-        <Picture
-          src={cover.src}
-          alt={cover.alt}
-          widths={[480, 800, 1200, 1600]}
-          sizes="(min-width: 1184px) 1120px, calc(100vw - 32px)"
-          formats={['avif', 'webp']}
-          loading="eager"
-          fetchpriority="high"
-        />
-        <figcaption>Imagem ilustrativa · Foto: {cover.credit} / Unsplash</figcaption>
-      </figure>
-    )}
-
-    <div class="container">
-      <div class="article__body prose">
-        <Content />
-      </div>
-
-      <aside class="article__cta" aria-label="Fale comigo">
-        <h2>Ficou com alguma dúvida sobre o {empresa ? 'caso da empresa' : 'seu caso'}?</h2>
-        <p>Me conte o que aconteceu pelo WhatsApp ou por telefone. Cada situação tem particularidades.</p>
-        <div class="hero__actions">
-          <Button href={wa} icon="whatsapp" local="artigo" tema={`blog-${post.id}`} publico={publico}>Falar no WhatsApp</Button>
-          <Button href={telLink} icon="phone" local="artigo" tema={`blog-${post.id}`} publico={publico}>Ligar</Button>
+    <div class="container post-layout">
+      <!-- Índice do artigo: fixo ao lado do texto no desktop, com o tópico atual marcado; no celular, fechado no
+           começo do texto. Logo abaixo, compartilhar. -->
+      <aside class="post-side">
+        {toc.length > 1 && (
+          <details class="post-toc" data-toc>
+            <summary>Neste artigo <span>{toc.length} tópicos</span></summary>
+            <ol>
+              {toc.map((h) => <li><a href={`#${h.slug}`} data-toc-link={h.slug}>{h.text}</a></li>)}
+            </ol>
+          </details>
+        )}
+        <div class="post-share">
+          <span class="post-share__label">Compartilhar</span>
+          <button type="button" class="post-share__btn" data-copy={url}><span data-copy-label>Copiar link</span></button>
+          <a class="post-share__btn" href={shareWa} target="_blank" rel="noopener">Enviar no WhatsApp</a>
         </div>
-        <a class="insta-link article__social" href={instagramLink} target="_blank" rel="noopener" data-local="artigo-instagram">
-          <LineIcon name="instagram" /><span>Mais conteúdos como este no Instagram · @{site.instagram}</span>
-        </a>
       </aside>
 
-      <p class="article__disclaimer">
-        Conteúdo de caráter exclusivamente informativo, que não substitui a análise de um caso concreto nem constitui
-        consultoria jurídica.
-      </p>
+      <div class="post-main">
+        <div class="post-body">
+          <Content />
+        </div>
+
+        <!-- Fim do texto: quem escreveu, com a foto, e o convite para conversar -->
+        <aside class="post-author" aria-label="Sobre a autora">
+          <Picture src={fotoPerfil} alt="" widths={[160, 240]} sizes="96px" formats={['avif', 'webp']} class="post-author__photo" />
+          <div>
+            <p class="post-author__label">Escrito por</p>
+            <p class="post-author__name">{site.fullName}</p>
+            <p class="post-author__role">Advogada trabalhista · {site.oab} · {site.title}</p>
+            <h2 class="post-author__ask">Ficou com alguma dúvida sobre o {empresa ? 'caso da empresa' : 'seu caso'}?</h2>
+            <p class="post-author__text">Me conte o que aconteceu pelo WhatsApp ou por telefone. Cada situação tem particularidades.</p>
+            <div class="post-author__actions">
+              <Button href={wa} icon="whatsapp" local="artigo" tema={`blog-${post.id}`} publico={publico}>Falar no WhatsApp</Button>
+              <Button href={telLink} icon="phone" class="post-author__call" local="artigo" tema={`blog-${post.id}`} publico={publico}>Ligar</Button>
+            </div>
+            <a class="insta-link post-author__social" href={instagramLink} target="_blank" rel="noopener" data-local="artigo-instagram">
+              <LineIcon name="instagram" /><span>Mais conteúdos como este no Instagram · @{site.instagram}</span>
+            </a>
+          </div>
+        </aside>
+
+        <p class="post-disclaimer">
+          Conteúdo de caráter exclusivamente informativo, que não substitui a análise de um caso concreto nem constitui
+          consultoria jurídica.
+        </p>
+      </div>
     </div>
   </article>
 
   {related.length > 0 && (
-    <section class="section section--tight" aria-labelledby="relacionados">
+    <section class="section section--tight post-related" aria-labelledby="relacionados">
       <div class="container">
         <div class="section-head">
           <h2 class="display display--md" id="relacionados">Leia <span class="soft">também.</span></h2>
@@ -154,3 +193,53 @@ const schema = [
     </section>
   )}
 </Layout>
+
+<script>
+  import { initLeitura } from '../../scripts/leitura';
+
+  // Cada intertítulo vira uma "seção": o cabeçalho mostra o tópico atual sob o nome da advogada
+  const titles = [...document.querySelectorAll<HTMLElement>('.post-body h2[id]')];
+  titles.forEach((h) => { h.dataset.secao = h.textContent?.replace(/^\d+\.\s*/, '') ?? ''; });
+  initLeitura();
+
+  // Índice: aberto ao lado do texto no desktop; no celular começa fechado
+  const toc = document.querySelector<HTMLDetailsElement>('[data-toc]');
+  const desk = matchMedia('(min-width: 1000px)');
+  const syncToc = () => { if (toc) toc.open = desk.matches; };
+  syncToc();
+  desk.addEventListener('change', syncToc);
+
+  // Tópico atual: o último intertítulo que já passou de um terço da tela; os anteriores ficam como lidos
+  const links = [...document.querySelectorAll<HTMLElement>('[data-toc-link]')];
+  if (links.length) {
+    let ticking = false;
+    const mark = () => {
+      ticking = false;
+      const line = innerHeight * 0.33;
+      let current = -1;
+      titles.forEach((h, i) => { if (h.getBoundingClientRect().top <= line) current = i; });
+      links.forEach((a, i) => {
+        a.classList.toggle('is-current', i === current);
+        a.classList.toggle('is-read', i < current);
+        if (i === current) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+      });
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+    mark();
+    // no celular, escolher um tópico fecha o índice
+    links.forEach((a) => a.addEventListener('click', () => { if (toc && !desk.matches) toc.open = false; }));
+  }
+
+  // Copiar o endereço do artigo, com confirmação no próprio botão
+  const copy = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const copyLabel = copy?.querySelector<HTMLElement>('[data-copy-label]');
+  copy?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(copy.dataset.copy!);
+      copyLabel!.textContent = 'Link copiado';
+    } catch {
+      copyLabel!.textContent = 'Não foi possível copiar';
+    }
+    setTimeout(() => { copyLabel!.textContent = 'Copiar link'; }, 2000);
+  });
+</script>
