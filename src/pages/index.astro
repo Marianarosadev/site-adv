@@ -35,6 +35,16 @@ const shortcuts = [
 const schema = [
   {
     '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    // Nome que o Google mostra acima do título nos resultados, no lugar do domínio.
+    name: site.siteName,
+    alternateName: site.name,
+    url: Astro.site?.href,
+    inLanguage: 'pt-BR',
+    publisher: { '@id': new URL('/#escritorio', Astro.site).href },
+  },
+  {
+    '@context': 'https://schema.org',
     '@type': ['LegalService', 'Attorney'],
     // Identificador usado pelo serviço de /empresas/ para apontar para este escritório.
     '@id': new URL('/#escritorio', Astro.site).href,

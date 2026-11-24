@@ -100,7 +100,7 @@ const homologacao = process.env.SITE_ENV === 'homologacao';
     {article && <meta property="article:published_time" content={article.published} />}
     {article && <meta property="article:modified_time" content={article.modified} />}
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:site_name" content={site.siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

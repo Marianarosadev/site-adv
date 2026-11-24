@@ -3,6 +3,8 @@
 export const site = {
   name: 'Giovanna Cabral',
   fullName: 'Dra. Giovanna Cabral',
+  // Nome do site nos resultados do Google (schema WebSite e og:site_name); o mesmo do Perfil da Empresa.
+  siteName: 'Giovanna Cabral Advocacia Trabalhista',
   oab: 'OAB/GO 66.313',
   phoneDisplay: '(62) 9 9480-2180',
   phoneShort: '(62) 99480-2180',
